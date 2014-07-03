@@ -1,5 +1,6 @@
 ---
 layout: post
+comments: true
 title:  "The state of Computer Vision and AI: we are really, really far."
 excerpt: "A depressing look at the state of Computer Vision Research and AI in general. For those who like to think that AI is anywhere close."
 date:   2012-10-22 22:00:00

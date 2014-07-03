@@ -1,5 +1,6 @@
 ---
 layout: post
+comments: true
 title:  "Interview with Data Science Weekly on Neural Nets and ConvNetJS"
 excerpt: "I gave a (long) interview about my background and perspectives on neural nets."
 date:   2014-04-26 22:54:00

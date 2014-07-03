@@ -3,8 +3,13 @@ layout: default
 ---
 
 <div class="home">
-  <p class="rss-subscribe">Subscribe to posts <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
-  <br><br>
+  
+  <div style="float:right;">
+  <a href="{{ "/feed.xml" | prepend: site.baseurl }}">
+    <img src="/assets/rssicon.svg" width="50">
+  </a>
+  </div>
+  <br>
 
   <ul class="posts">
     {% for post in site.posts %}
@@ -16,4 +21,5 @@ layout: default
       </li>
     {% endfor %}
   </ul>
+
 </div>

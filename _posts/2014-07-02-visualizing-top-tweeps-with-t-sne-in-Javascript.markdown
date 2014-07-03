@@ -1,5 +1,6 @@
 ---
 layout: post
+comments: true
 title:  "Visualizing Top Tweeps with t-SNE, in Javascript"
 excerpt: "A writeup of a recent mini-project: I scraped tweets of the top 500 Twitter accounts and used t-SNE to visualize the accounts so that people who tweet similar things are nearby. My final Javascript implementation of t-SNE is released on Github as tsnejs."
 date:   2014-07-02 17:22:24

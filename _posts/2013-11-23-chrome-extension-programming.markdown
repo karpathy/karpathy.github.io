@@ -1,5 +1,6 @@
 ---
 layout: post
+comments: true
 title:  "Chrome Extension Programming: Illustrating a Basic Survival Skill with a Twitter Case Study"
 excerpt: "I illustrate a very valuable skill (Chrome Extension Programming) using a Twitter Case study. We will give Twitter a face lift, get it to refresh new tweets automatically, and highlight tweets from people who rarely tweet. All with a few lines of Javascript!"
 date:   2013-11-23 20:00:00

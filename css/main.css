@@ -151,7 +151,7 @@ a:visited { color: #205caa; }
 .posts li { margin-bottom: 30px; }
 
 .posts .post-link {
-  font-size: 24px;
+  font-size: 20px;
   letter-spacing: -1px;
   line-height: 1;
 }
@@ -169,7 +169,7 @@ a:visited { color: #205caa; }
 .post-header { margin: 10px 0 30px; }
 
 .post-header h1 {
-  font-size: 42px;
+  font-size: 36px;
   letter-spacing: -1.75px;
   line-height: 1;
   font-weight: 300;
@@ -259,6 +259,19 @@ a:visited { color: #205caa; }
 }
 
 .post pre.terminal code { background-color: #333; }
+
+/* AK custom CSS mods */
+.imgright { float: right; }
+.imgcap img {
+  border: 1px solid #999;
+  max-width: 100%;
+}
+.imgcap {
+  color: #555;
+  font-size: 14px;
+  margin-left: 20px;
+  text-align: center;
+}
 
 /* Syntax highlighting styles */
 /* ----------------------------------------------------------*/

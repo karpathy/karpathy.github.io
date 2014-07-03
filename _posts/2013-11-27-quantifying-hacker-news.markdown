@@ -1,5 +1,6 @@
 ---
 layout: post
+comments: true
 title:  "Quantifying Hacker News with 50 days of data"
 excerpt: "I scraped Hacker News Front Page and New Page every minute for 50 days and analyzed the results. How do stories rise and fall on Hacker News? What makes a successful post? Find out in this post :)"
 date:   2013-11-27 20:00:00

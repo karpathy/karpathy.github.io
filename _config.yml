@@ -1,7 +1,7 @@
 # Site settings
 title: Andrej Karpathy blog
 email: 
-description: "Andrej Karpathy Blog. Musings of a Computer Scientist."
+description: "Musings of a Computer Scientist."
 baseurl: ""
 url: "http://yourdomain.com"
 twitter_username: karpathy
