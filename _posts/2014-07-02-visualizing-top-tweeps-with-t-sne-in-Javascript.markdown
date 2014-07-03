@@ -90,3 +90,11 @@ The final code can be seen in [tsne.js file](https://github.com/karpathy/tsnejs)
 Phew! Final result, again: [t-SNE demo](http://cs.stanford.edu/people/karpathy/tsnejs/).
 
 I hope some of the references were useful. If you use tsnejs to embed some of your data, let me know!
+
+## Bonus: Word Embedding t-SNE Visualization
+
+I created another demo, this time to visualize word vector embeddings. Head [over here](http://cs.stanford.edu/people/karpathy/tsnejs/wordvecs.html) to see it. The word embeddings are trained as described in this [ACL 2012 paper](http://www.socher.org/index.php/Main/ImprovingWordRepresentationsViaGlobalContextAndMultipleWordPrototypes). 
+
+The (unsupervised) objective function makes it so that words that are interchangable (i.e. occur in very similar surrounding context) are close in the embedding. This comes across in the visualization!
+
+
