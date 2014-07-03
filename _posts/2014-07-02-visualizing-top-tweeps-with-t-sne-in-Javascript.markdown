@@ -13,13 +13,13 @@ Among these algorithms, t-SNE comes across as one that has a pleasing, intuitive
 
 Long story short, I've implemented t-SNE in JS, released it as [tsnejs on Github](https://github.com/karpathy/tsnejs), and created a small demo that uses the library to visualize the top twitter accounts based on what they talk about. In this post, I thought it might be fun to document a small 1-day project like this, from beginning to end. This also gives me an opportunity to describe some of my projects toolkit, which others might find useful.
 
-### Final demo ###
+### Final demo
 First, take a look at the [final demo](http://cs.stanford.edu/people/karpathy/tsnejs/). To create this demo I found the top 500 most followed accounts on Twitter, downloaded 200 of their tweets and then measured differences in what they tweet about. These differences are then fed to t-SNE to produce a 2-dimensional visualization, where nearby people tweet similar things. Fun!
 
-### Fetching top tweeps ###
+### Fetching top tweeps
 We first have to identify the top 500 tweeps. I googled "top twitter accounts" and found http://twitaholic.com/ , which lists them out. However, the accounts are embedded in the webpage and we need to extract them in structured format. For this, I love a recent YC startup [Kimono](https://www.kimonolabs.com/); I use it extensively to scrape structured data from websites. It lets you click the elements of interest (the Twitter handles in this case), and extracts them out in JSON. Easy as pie!
 
-### Collecting tweets ###
+### Collecting tweets
 Now we have a list of top 500 tweeps and we'd like to obtain their tweets to get an idea about what they tweet about. My library of choice for this task is [Tweepy](https://github.com/tweepy/tweepy). Their documentation is quite terrible but if you browse the source code things seem relatively simple. Here's an example call to get 200 tweets for a given user:
 
 ```python
@@ -48,7 +48,7 @@ urllib.urlretrieve(imgname, userobj.profile_image_url) # save image to disk
 
 I should mention that I write a lot of quick and dirty Python code in [IPython Notebooks](http://ipython.org/notebook.html), which I very warmly recommend. If you're writing all your Python in text editors, you're seriously missing out.
 
-## Quantifying Tweep differences ##
+### Quantifying Tweep differences
 We now have 500 tweeps and their 200 most recent tweets concatenated in 500 files. We'd now like to find who tweets about similar things. [Scikit learn](http://scikit-learn.org/stable/) is very nice for quick NLP tasks like this. In particular, we load up all the files and create a 500-long array where every element are the 200 concatenated tweets. Then we use the [TfidfVectorizer](http://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html) class to extract all words and bigrams from the text data, and to turn every user's language into one tfidf vector. This vector is a fingerprint of the language that each person uses. Here's how we can simply wire this up:
 
 ```python
@@ -66,7 +66,7 @@ In the above, `user_language_array` is the 500-element array that has the concat
 
 The tfidf vectors are returned stacked up as rows inside `X`, which has size `500 x 87,342`. Every one of the 87,342 dimensions corresponds to some unigram or bigram. For example, the 10,000th dimension could correspond to the frequency of usage of the unigram "YOLO". The vectors are L2 normalized, so the dot product between these vectors is related to the angle between any two vectors. This can be interpreted as the similarity of language. Finally, we dump the matrix and the usernames into a JSON file, and we're ready to load things up in Javascript!
 
-## The Visualization parts ##
+### The Visualization parts
 We now create an .html file and import [jQuery](http://jquery.com/) (as always), and [d3js](http://d3js.org/), which I like to use for any kind of plotting. We load up the JSON that stores our distances and usernames with jQuery, and use d3js to initialize the SVG element that will hold all the users. For starters, we plot the users at random position but we will soon arrange them so that similar users cluster nearby with t-SNE. Inspect the code on the [demo page](http://cs.stanford.edu/people/karpathy/tsnejs/) to see the jQuery and d3js parts (Ctrl+U). In the code, we see a few things I like to use:
 
 - I like to use **Google Fonts** to get prettier-than-default fonts. Here, for example I'm importing Roboto, and then using it in the CSS.
@@ -74,7 +74,7 @@ We now create an .html file and import [jQuery](http://jquery.com/) (as always),
 - Then we see **Google tracking JS code**, which lets me track statistics for the website on Google Analytics.
 - I didn't use **Bootstrap** on this website because it's very small and simple, but normally I would because this makes your website right away work nicely on mobile.
 
-## t-SNE ##
+### t-SNE
 
 <img src="/assets/tsne_eg.jpeg" width="100%">
 
