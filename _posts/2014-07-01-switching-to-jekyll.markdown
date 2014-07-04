@@ -22,17 +22,18 @@ Inspired by [Mark Reid's](https://twitter.com/mdreid) blog post [Switching from 
 
 ### Jekyll <3
 
-[Jekyll](http://jekyllrb.com/) describes itself as a tool for building *"Simple, blog-aware, static sites"*, and was originally written by one of the Github co-founders, [Tom Preston-Werner](http://tom.preston-werner.com/). It is small and transparent. Your blog workspace is a single folder with a config file, and folders for css and html templates that get filled with your content. Then all my content, for example, lives in two folders:
+[Jekyll](http://jekyllrb.com/) describes itself as a tool for building *"Simple, blog-aware, static sites"*, and was originally written by one of the Github co-founders, [Tom Preston-Werner](http://tom.preston-werner.com/). It is flat and transparent: Your blog workspace is a single folder with a config file, and a few folders for CSS and HTML templates. All my content, for example, lives in two folders:
 
 1. My blog posts are just files in a single folder `_posts`, written in [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet). Including this post, of course.
 2. My images are in a single folder `assets`.
 
-That's it. You call Jekyll from command line and it will automatically render all posts it finds in your single folder from markdown to HTML, wraps it with header/footer templates, creates the index page that lists all your posts and outputs everything into a directory `_site`, which holds your entire webpage as static content. The `_site` page can then be uploaded to a webserver wherever you like. 
+That's it. You call `$ jekyll build` from command line and it will automatically render all posts it finds in your `_posts` folder from markdown to HTML, wraps it with header/footer templates, creates the parent index page that lists all your posts and outputs everything into a directory `_site`. The `_site` directory holds your entire webpage as static content. It can then be uploaded to a webserver wherever you like.
 
-Additionally, the entire code base is small, interpretable and customizable, so it's trivial to tweak the CSS, the layout, etc. For example, I added **Google Analytics** tracking code to all my pages by tweaking the html template, and also **Disqus** comments to all my posts by tweaking the posts template with the Disqus Javascript code.
+The entire code base consists of like 7 files. It's easy to see how the HTML templates get composed to your final site. It's trivial to tweak the CSS or any of the HTML templates. For example, I added **Google Analytics** tracking code to all my pages by tweaking the html template, and also **Disqus** comments to all my posts by tweaking the posts template with the Disqus Javascript code.
 
 #### Github integration
-Lastly, as you might expect Jekyll is tightly integrated with Github: create a repository that looks like `username.github.io` and add your files to the repo. Github will automatically compile your files with Jekyll and make the `_site` folder available. For example, mine lives on [karpathy.github.io](http://karpathy.github.io/). Github therefore makes sure that your blog is beautifully backed up forever in simple markdown, and also hosts your content!
+
+Lastly, as you might expect Jekyll is tightly integrated with Github: create a repository that looks like `username.github.io` and add your files to the repo. Github will automatically compile your files with Jekyll and make the `_site` folder available. For example, mine lives on [karpathy.github.io](http://karpathy.github.io/). Thus, Github makes sure that your blog is beautifully backed up **forever in simple markdown**, and also **hosts your content**!
 
 > Jekyll strikes the balance: It's packed with just the right amount of features.
 
@@ -58,7 +59,7 @@ Hello world, this is **markdown**.
 
 ```
 
-Lets pop back out to console now. I could of course preview the changes in a local webserver, but let's just push it live right away:
+Lets pop back out to console now. I could preview the changes in a local webserver with `$ jekyll serve --watch` (the watch switch refreshes any updated files as you write them). Now let's just push it live:
 
 ```bash
 $ cd ..
@@ -67,7 +68,7 @@ $ git commit -m "new blog post"
 $ git push
 ```
 
-After the last call, Github will see that my repo has changed and automatically refreshes [karpathy.github.io](http://karpathy.github.io/) to point to the newly generated `_site`. My post is live!
+After the last command, Github will see that my repo has changed and automatically refreshes [karpathy.github.io](http://karpathy.github.io/) to point to the newly generated `_site`. My post is live!
 
 Anyway, that's just a brief taste. Check out [Jekyll](http://jekyllrb.com/) and get blogging in a sane way!
 
