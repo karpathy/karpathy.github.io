@@ -261,7 +261,7 @@ a:visited { color: #205caa; }
 .post pre.terminal code { background-color: #333; }
 
 /* AK custom CSS mods */
-.imgright { float: right; }
+.imgright { float: right; margin-left: 10px; }
 .imgcap img {
   border: 1px solid #999;
   max-width: 100%;
