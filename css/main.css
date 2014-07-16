@@ -272,6 +272,10 @@ a:visited { color: #205caa; }
   text-align: center;
 }
 
+.svgdiv {
+  width: 100%;
+  text-align: center;
+}
 /* Syntax highlighting styles */
 /* ----------------------------------------------------------*/
 
