@@ -7,17 +7,17 @@ permalink: /neuralnets/
 
 ## Understanding Neural Networks from a Programmer's Perspective
 
-Hi there, I'm a PhD student at Stanford. I've worked on Deep Learning for a few years as part of my research. Among several of my related pet projects is [ConvNetJS](http://convnetjs.com) - a Javascript library for training Neural Networks. Javascript allows one to nicely visualize what's going on and to play around with the various hyperparameter settings, but I still regularly hear from people who ask for a more thorough treatment of the topic. This article (which I plan to expand out to lengths of a book chapter) is my attempt at just that. 
+Hi there, I'm a PhD student at Stanford. I've worked on Deep Learning for a few years as part of my research. Among several of my related pet projects is [ConvNetJS](http://convnetjs.com) - a Javascript library for training Neural Networks. Javascript allows one to nicely visualize what's going on and to play around with the various hyperparameter settings, but I still regularly hear from people who ask for a more thorough treatment of the topic. This article (which I plan to slowly expand out to lengths of a few book chapters) is my attempt at just that. 
 
-At least in my case, everything about Neural Networks became much clearer when I started ignoring full-page, dense derivations of backpropagation equations and just started writing code. That's why in this tutorial there will be **very little math** (I honestly don't believe it is necessary and it can sometimes obfuscate simple concepts). Since my background is in Computer Science and Physics, I will instead develop the topic from what I refer to as **programmer's perspective**. My exposition will center around code and various physical intuitions of variables tugging on each other. Basically, I will strive to present the algorithms in a way that I wish I had come across when I was starting out.
+At least in my case, everything about Neural Networks became much clearer when I started ignoring full-page, dense derivations of backpropagation equations and just started writing code. That's why in this tutorial there will be **very little math** (I just don't believe it is necessary and it can sometimes even obfuscate simple concepts). Since my background is in Computer Science and Physics, I will instead develop the topic from what I refer to as **programmer's perspective**. My exposition will center around code and various physical intuitions of variables tugging on each other. Basically, I will strive to present the algorithms in a way that I wish I had come across when I was starting out.
 
 > "...everything became much clearer when I started writing code."
 
-I'm sure you're eager to jump right in and learn about Neural Networks, backpropagation, how they can be applied to datasets in practice, etc. But before we get there, I'd like us to first forget about all that. Let's take a step back and understand what is really going on at the core. Lets first talk about real-valued circuits.
+Perhaps you're eager to jump right in and learn about Neural Networks, backpropagation, how they can be applied to datasets in practice, etc. But before we get there, I'd like us to first forget about all that. Let's take a step back and understand what is really going on at the core. Lets first talk about real-valued circuits.
 
 ## Chapter 1: Real-valued Circuits
 
-In my opinion, the best way to think of Neural Networks is as real-valued circuits, where real values (instead of boolean values {0,1}) "flow" along edges and interact in gates. However, instead of gates such as `AND`, `OR`, `NOT`, etc, we have binary gates such as `*` (multiply), `+` (add), `max` or unary gates such as `exp`, etc. Unlike ordinary (boring) boolean circuits, however, we will eventually also have **gradients** flowing on the same edges of the circuit, but in the opposite direction! Okay, but we're getting ahead of ourselves. Let's focus and start out simple.
+In my opinion, the best way to think of Neural Networks is as real-valued circuits, where real values (instead of boolean values {0,1}) "flow" along edges and interact in gates. However, instead of gates such as `AND`, `OR`, `NOT`, etc, we have binary gates such as `*` (multiply), `+` (add), `max` or unary gates such as `exp`, etc. Unlike ordinary boolean circuits, however, we will eventually also have **gradients** flowing on the same edges of the circuit, but in the opposite direction! But we're getting ahead of ourselves. Let's focus and start out simple.
 
 ### Base Case: Single Gate in the Circuit
 Lets first consider a single, simple circuit with one gate. Here's an example:
@@ -86,17 +86,17 @@ for(var k = 0; k < 100; k++) {
 }
 ```
 
-If I just run this, I get `best_x = -1.9928, best_y = 2.9901, best_out = -5.9588`. Again, `-5.9588` is higher than `-6.0`. Great, we're done, right? No. We can do much better than this.
+If I just run this, I get `best_x = -1.9928, best_y = 2.9901, best_out = -5.9588`. Again, `-5.9588` is higher than `-6.0`. Great, we're done, right? No. This is a perfectly fine strategy for tiny problems with a few gates if you can afford the compute time, but it turns out that we can do much better.
 
 #### Numerical Gradient
 
-Here's a better way. Think of the circuit as *"wanting"* its output value to be high. When a certain set of inputs is given to it, we will compute a "tug" on every one of the input values. These tugs can also be thought of in physical terms as forces on the inputs exerted by the circuit as it pulls its output to be higher.
+Here's a better way. Remember again that in our setup we are given a gate (e.g. `*` gate) and some particular input (e.g. `x = -2, y = 3`) for it. The gate computes the output (`-6`) and now we'd like to tweak `x` and `y` to make the output higher. A nice intuition for what we're about to do is as follows: Imagine taking the output value that comes out from the circuit and tugging on it in the positive direction. This positive tension will in turn translate through the gate and induce forces on the inputs `x` and `y`. 
 
-In more technical terms, the "tug" is, in fact, the **derivative** of the output value with respect to both of its inputs (`x` and `y`). A bit of terminology clarification is in order: Technically, we usually talk about the *derivative* with respect to a single input, or about a **gradient** when there are multiple inputs. That is, the gradient is just made up of the (partial) derivative of all inputs concatenated in a vector.
+In this particular case, we can intuit that if we pull on the output (`-6`) in positive direction, there might be a positive induced force on `x` to get higher (since for example `x=-1` would give us output `-3`). On the other hand, note that we'd expect a negative force induced on `y` that pushes it to become lower (since a lower `y`, such as `y=2` would make output lower: `-4`). That's the intuition. As we go through this, it will turn out that forces I'm describing will in fact be the **derivative** of the output value with respect to its inputs (`x` and y`).
 
-> The gradient can be thought of as a force ("tug") on the inputs to increase the circuit's output value
+> The derivative can be thought of as a force ("tug") on an input as we pull on the circuit's output value to become higher
 
-It turns out that the gradient is actually very simple to compute for some specific values of `x` and `y`. All we have to do is *probe* the circuit: We'll go over every input one by one, increase it very slightly (think of it almost as turning a knob a bit) and look at what happens to the output value. The amount the output changes in response is the derivative. Following the mathematical definition of a derivative, we can write down the derivative for our function with respect to, for example `x`, as follows:
+So how do we compute the derivative? It turns out that there is a very simple procedure for this. Instead of pulling on the circuit's output we will work the other way around: we'll go over every input one by one, increase it very slightly and look at what happens to the output value. The amount the output changes in response is the derivative. Enough intuitions for now. Lets look at the mathematical definition. We can write down the derivative for our function with respect to, for example `x`, as follows:
 
 <div>
 $$
@@ -120,16 +120,13 @@ var x_derivative = (out2 - out) / h; // 3.0
 var yph = y + h; // 3.0001
 var out3 = forwardMultiplyGate(x, yph); // -6.0002
 var y_derivative = (out3 - out) / h; // -2.0
-
-// the "gradient" refers to the two of them together in a vector
-var gradient = [x_derivative, y_derivative] // vector [3, -2]
 ```
 
 Lets walk thought `x` for example. We turned the knob from `x` to `x + h` and the circuit responded by giving a higher value (note again that yes, `-5.9997` is *higher* than `-6`: `-5.9997 > -6`). The division by `h` is there to just normalize the circuit's response by the (arbitrary) value of `h` we chose to use here. Technically you want the value of `h` to be infinitesimal, but in practice `h=0.000001` or so works okay. Now, we see that the derivative w.r.t. `x` is `+3`. I'm making the positive sign explicit, because it indicates that the circuit is tugging on x to become higher. The actual value, `3` can be interpreted as the *force* of that tug.
 
 > The derivative with respect to some input can be computed by tweaking the input by a small amount and observing the effect on the output value.
 
-Notice that if we let the inputs respond to the tug by following the gradient a tiny amount (i.e. we just add the gradient on top of inputs), we can see that the value increases, as expected:
+By the way, we usually  talk about the *derivative* with respect to a single input, or about a **gradient** with respect to all the inputs. The gradient is just made up of the derivatives of all the inputs concatenated in a vector. Notice now that if we let the inputs respond to the tug by following the gradient a tiny amount (i.e. we just add the derivative on top of every input), we can see that the value increases, as expected:
 
 ```javascript
 var step_size = 0.01;
@@ -139,9 +136,9 @@ y = y + step_size * y_derivative; // y becomes 2.98
 var out_new = forwardMultiplyGate(x, y); // -5.87! exciting.
 ```
 
-As expected, the circuit now gives a slightly higher value (`-5.87 > -6.0`). That was much simpler than trying random changes to `x` and `y`, right? A fact to appreciate here is that if you take calculus you can prove that the gradient, in fact, is the direction of the steepest increase of the function. There is no need to monkey around trying out random pertubations as done in previous section. Evaluating the gradient requires just three evaluations of our circuit instead of hundreds, and gives the best tug you can hope for (locally) if you want to increase the value of the output.
+As expected, the circuit now gives a slightly higher value (`-5.87 > -6.0`). That was much simpler than trying random changes to `x` and `y`, right? A fact to appreciate here is that if you take calculus you can prove that the gradient, in fact, is the direction of the steepest increase of the function. There is no need to monkey around trying out random pertubations as done in previous section. Evaluating the gradient requires just three evaluations of our circuit instead of hundreds, and gives the best tug you can hope for (locally) if you are interested in increasing the value of the output.
 
-But. We can do *even* better.
+But. It turns out that we can do *even* better.
 
 #### Analytic Gradient
 
