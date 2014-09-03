@@ -112,4 +112,7 @@ It is clear that humans will soon only by able to outperform state of the art im
 
 As for my personal take-away from this week-long exercise, I have to say that, qualitatively, I was very impressed with the ConvNet performance. Unless the image exhibits some irregularity or tricky parts, the ConvNet confidently and robustly predicts the correct label. If you're feeling adventurous, try out [the labeling interface](http://cs.stanford.edu/people/karpathy/ilsvrc/) for yourself and draw your own conclusions. I can promise that you'll gain interesting qualitative insights into where state-of-the-art Computer Vision works, where it fails, and how.
 
+EDIT:
 
+Additional discussions:
+- [Pierre's Google+](https://plus.google.com/u/0/+PierreSermanet/posts/6wZYMuXo8PU)
