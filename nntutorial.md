@@ -1,23 +1,22 @@
 ---
 layout: page
 mathjax: true
-title: Neural Networks Tutorial
+comments: true
+title: Hacker's guide to Neural Networks
 permalink: /neuralnets/
 ---
 
-## Understanding Neural Networks from a Programmer's Perspective
+Hi there, I'm a CS PhD student at Stanford. I've worked on Deep Learning for a few years as part of my research and among several of my related pet projects is [ConvNetJS](http://convnetjs.com) - a Javascript library for training Neural Networks. Javascript allows one to nicely visualize what's going on and to play around with the various hyperparameter settings, but I still regularly hear from people who ask for a more thorough treatment of the topic. This article (which I plan to slowly expand out to lengths of a few book chapters) is my humble attempt. It's on web instead of PDF because all books should be, and eventually it will hopefully include animations/demos etc.
 
-Hi there, I'm a PhD student at Stanford. I've worked on Deep Learning for a few years as part of my research. Among several of my related pet projects is [ConvNetJS](http://convnetjs.com) - a Javascript library for training Neural Networks. Javascript allows one to nicely visualize what's going on and to play around with the various hyperparameter settings, but I still regularly hear from people who ask for a more thorough treatment of the topic. This article (which I plan to slowly expand out to lengths of a few book chapters) is my attempt at just that. 
-
-At least in my case, everything about Neural Networks became much clearer when I started ignoring full-page, dense derivations of backpropagation equations and just started writing code. That's why in this tutorial there will be **very little math** (I just don't believe it is necessary and it can sometimes even obfuscate simple concepts). Since my background is in Computer Science and Physics, I will instead develop the topic from what I refer to as **programmer's perspective**. My exposition will center around code and various physical intuitions of variables tugging on each other. Basically, I will strive to present the algorithms in a way that I wish I had come across when I was starting out.
+My personal experience with Neural Networks is that everything became much clearer when I started ignoring full-page, dense derivations of backpropagation equations and just started writing code. Thus, this tutorial will contain **very little math** (I don't believe it is necessary and it can sometimes even obfuscate simple concepts). Since my background is in Computer Science and Physics, I will instead develop the topic from what I refer to as **hackers's perspective**. My exposition will center around code and physical intuitions instead of mathematical derivations. Basically, I will strive to present the algorithms in a way that I wish I had come across when I was starting out.
 
 > "...everything became much clearer when I started writing code."
 
-Perhaps you're eager to jump right in and learn about Neural Networks, backpropagation, how they can be applied to datasets in practice, etc. But before we get there, I'd like us to first forget about all that. Let's take a step back and understand what is really going on at the core. Lets first talk about real-valued circuits.
+You might be eager to jump right in and learn about Neural Networks, backpropagation, how they can be applied to datasets in practice, etc. But before we get there, I'd like us to first forget about all that. Let's take a step back and understand what is really going on at the core. Lets first talk about real-valued circuits.
 
 ## Chapter 1: Real-valued Circuits
 
-In my opinion, the best way to think of Neural Networks is as real-valued circuits, where real values (instead of boolean values {0,1}) "flow" along edges and interact in gates. However, instead of gates such as `AND`, `OR`, `NOT`, etc, we have binary gates such as `*` (multiply), `+` (add), `max` or unary gates such as `exp`, etc. Unlike ordinary boolean circuits, however, we will eventually also have **gradients** flowing on the same edges of the circuit, but in the opposite direction! But we're getting ahead of ourselves. Let's focus and start out simple.
+In my opinion, the best way to think of Neural Networks is as real-valued circuits, where real values (instead of boolean values `{0,1}`) "flow" along edges and interact in gates. However, instead of gates such as `AND`, `OR`, `NOT`, etc, we have binary gates such as `*` (multiply), `+` (add), `max` or unary gates such as `exp`, etc. Unlike ordinary boolean circuits, however, we will eventually also have **gradients** flowing on the same edges of the circuit, but in the opposite direction. But we're getting ahead of ourselves. Let's focus and start out simple.
 
 ### Base Case: Single Gate in the Circuit
 Lets first consider a single, simple circuit with one gate. Here's an example:
@@ -54,17 +53,17 @@ As with this example, all of our gates will take or two inputs and produce a **s
 
 #### The Goal
 
-The setup we are interested in studying looks as follows:
+The problem we are interested in studying looks as follows:
 
-1. We provide a given circuit some input values (e.g. `x = -2`, `y = 3`)
+1. We provide a given circuit some specific input values (e.g. `x = -2`, `y = 3`)
 2. The circuit computes an output value (e.g. `-6`)
-3. The question then becomes: *How should the input be tweaked slightly to increase the output?*
+3. The core question then becomes: *How should one tweak the input slightly to increase the output?*
 
-For example, `x = -1.99` and `y = 2.99` gives `x * y = -5.95`, which is higher than `-6.0`. Don't get confused by this: `-5.95` is better (higher) than `-6.0`. It's an improvement of `0.05`, even though the *magnitude* of `-5.95` (the distance from zero) happens to be lower.
+In this case, in what direction should we change `x,y` to get a number larger than `-6`? Note that, for example, `x = -1.99` and `y = 2.99` gives `x * y = -5.95`, which is higher than `-6.0`. Don't get confused by this: `-5.95` is better (higher) than `-6.0`. It's an improvement of `0.05`, even though the *magnitude* of `-5.95` (the distance from zero) happens to be lower.
 
-#### Random Local Search
+#### Strategy #1: Random Local Search
 
-Okay. So wait, we have a circuit, we have some inputs and we just want to tweak them slightly to increase the output value? How is this hard? We can "forward" the circuit to compute the output for any given `x` and `y`. So isn't this trivial? Why don't we tweak `x` and `y` randomly and keep track of the modification that works best:
+Okay. So wait, we have a circuit, we have some inputs and we just want to tweak them slightly to increase the output value? Why is this hard? We can easily "forward" the circuit to compute the output for any given `x` and `y`. So isn't this trivial? Why don't we tweak `x` and `y` randomly and keep track of the tweak that works best:
 
 ```javascript
 // circuit with single gate for now
@@ -80,23 +79,26 @@ for(var k = 0; k < 100; k++) {
   var y_try = y + tweak_amount * (Math.random() * 2 - 1); // tweak y a bit
   var out = forwardMultiplyGate(x_try, y_try);
   if(out > best_out) {
+    // best improvement yet! Keep track of the x and y
     best_out = out; 
     best_x = x_try, best_y = y_try;
   }
 }
 ```
 
-If I just run this, I get `best_x = -1.9928, best_y = 2.9901, best_out = -5.9588`. Again, `-5.9588` is higher than `-6.0`. Great, we're done, right? No. This is a perfectly fine strategy for tiny problems with a few gates if you can afford the compute time, but it turns out that we can do much better.
+When I run this, I get `best_x = -1.9928`, `best_y = 2.9901`, and `best_out = -5.9588`. Again, `-5.9588` is higher than `-6.0`. So, we're done, right? Not quite: This is a perfectly fine strategy for tiny problems with a few gates if you can afford the compute time, but it won't do if we want to eventually consider huge circuits with millions of inputs. It turns out that we can do much better.
 
-#### Numerical Gradient
+#### Stategy #2: Numerical Gradient
 
-Here's a better way. Remember again that in our setup we are given a gate (e.g. `*` gate) and some particular input (e.g. `x = -2, y = 3`) for it. The gate computes the output (`-6`) and now we'd like to tweak `x` and `y` to make the output higher. A nice intuition for what we're about to do is as follows: Imagine taking the output value that comes out from the circuit and tugging on it in the positive direction. This positive tension will in turn translate through the gate and induce forces on the inputs `x` and `y`. 
+Here's a better way. Remember again that in our setup we are given a circuit (e.g. our circuit with a single `*` gate) and some particular input (e.g. `x = -2, y = 3`). The gate computes the output (`-6`) and now we'd like to tweak `x` and `y` to make the output higher. 
 
-In this particular case, we can intuit that if we pull on the output (`-6`) in positive direction, there might be a positive induced force on `x` to get higher (since for example `x=-1` would give us output `-3`). On the other hand, note that we'd expect a negative force induced on `y` that pushes it to become lower (since a lower `y`, such as `y=2` would make output lower: `-4`). That's the intuition. As we go through this, it will turn out that forces I'm describing will in fact be the **derivative** of the output value with respect to its inputs (`x` and y`).
+A nice intuition for what we're about to do is as follows: Imagine taking the output value that comes out from the circuit and tugging on it in the positive direction. This positive tension will in turn translate through the gate and induce forces on the inputs `x` and `y`. Forces that tell us how `x` and `y` should change to increase the output value.
 
-> The derivative can be thought of as a force ("tug") on an input as we pull on the circuit's output value to become higher
+What might those forces look like in our specific example? Thinking through it, we can intuit that the force on `x` should also be positive, because making `x` slightly larger improves the circuit's output. For example, increasing `x` from `x = -2` to `x = -1` would give us output `-3` - much larger than `-6`. On the other hand, we'd expect a negative force induced on `y` that pushes it to become lower (since a lower `y`, such as `y = 2`, down from the original `y = 3` would make output higher: `2 x -2 = -4`, again, larger than `-6`). That's the intuition to keep in mind, anyway. As we go through this, it will turn out that forces I'm describing will in fact turn out to be the **derivative** of the output value with respect to its inputs (`x` and `y`). You may have heard this term before.
 
-So how do we compute the derivative? It turns out that there is a very simple procedure for this. Instead of pulling on the circuit's output we will work the other way around: we'll go over every input one by one, increase it very slightly and look at what happens to the output value. The amount the output changes in response is the derivative. Enough intuitions for now. Lets look at the mathematical definition. We can write down the derivative for our function with respect to, for example `x`, as follows:
+> The derivative can be thought of as a force on each input as we pull on the output to become higher.
+
+So how do we exactly evaluate this force (derivative)? It turns out that there is a very simple procedure for this. We will work backwards: Instead of pulling on the circuit's output, we'll iterate over every input one by one, increase it very slightly and look at what happens to the output value. The amount the output changes in response is the derivative. Enough intuitions for now. Lets look at the mathematical definition. We can write down the derivative for our function with respect to the inputs. For example, the derivative with respect to `x` can be computed as:
 
 <div>
 $$
@@ -104,7 +106,7 @@ $$
 $$
 </div>
 
-Where \\( h \\) is small. Also, if you're not very familiar with calculus it is important to note that in the left-hand side of the equation above, the horizontal line does *not* indicate division. The entire symbol \\( \frac{\partial f(x,y)}{\partial x} \\) is a single thing: the derivative of the function \\( f(x,y) \\) with respect to \\( x \\). The horizontal line on the right *is* division. I know it's confusing but it's standard notation. Anyway, I hope it doesn't look too scary because it isn't. It's expressing exactly what I've described above, and translates directly to this code:
+Where \\( h \\) is small - it's the tweak amount. Also, if you're not very familiar with calculus it is important to note that in the left-hand side of the equation above, the horizontal line does *not* indicate division. The entire symbol \\( \frac{\partial f(x,y)}{\partial x} \\) is a single thing: the derivative of the function \\( f(x,y) \\) with respect to \\( x \\). The horizontal line on the right *is* division. I know it's confusing but it's standard notation. Anyway, I hope it doesn't look too scary because it isn't: The circuit was giving some initial output \\( f(x,y) \\), and then we changed one of the inputs by a tiny amount \\(h \\) and read the new output \\( f(x+h, y) \\). Subtracting those two quantities tells us the change, and the division by \\(h \\) just normalizes this change by the tweak amount we used. In other words it's expressing exactly what I described above and translates directly to this code:
 
 ```javascript
 var x = -2, y = 3;
@@ -122,11 +124,11 @@ var out3 = forwardMultiplyGate(x, yph); // -6.0002
 var y_derivative = (out3 - out) / h; // -2.0
 ```
 
-Lets walk thought `x` for example. We turned the knob from `x` to `x + h` and the circuit responded by giving a higher value (note again that yes, `-5.9997` is *higher* than `-6`: `-5.9997 > -6`). The division by `h` is there to just normalize the circuit's response by the (arbitrary) value of `h` we chose to use here. Technically you want the value of `h` to be infinitesimal, but in practice `h=0.000001` or so works okay. Now, we see that the derivative w.r.t. `x` is `+3`. I'm making the positive sign explicit, because it indicates that the circuit is tugging on x to become higher. The actual value, `3` can be interpreted as the *force* of that tug.
+Lets walk thought `x` for example. We turned the knob from `x` to `x + h` and the circuit responded by giving a higher value (note again that yes, `-5.9997` is *higher* than `-6`: `-5.9997 > -6`). The division by `h` is there to normalize the circuit's response by the (arbitrary) value of `h` we chose to use here. Technically, you want the value of `h` to be infinitesimal (the precise mathematical definition of the gradient is defined as the limit of the expression as `h` goes to zero), but in practice `h=0.00001` or so works fine in most cases to get a good approximation. Now, we see that the derivative w.r.t. `x` is `+3`. I'm making the positive sign explicit, because it indicates that the circuit is tugging on x to become higher. The actual value, `3` can be interpreted as the *force* of that tug.
 
-> The derivative with respect to some input can be computed by tweaking the input by a small amount and observing the effect on the output value.
+> The derivative with respect to some input can be computed by tweaking that input by a small amount and observing the change on the output value.
 
-By the way, we usually  talk about the *derivative* with respect to a single input, or about a **gradient** with respect to all the inputs. The gradient is just made up of the derivatives of all the inputs concatenated in a vector. Notice now that if we let the inputs respond to the tug by following the gradient a tiny amount (i.e. we just add the derivative on top of every input), we can see that the value increases, as expected:
+By the way, we usually  talk about the *derivative* with respect to a single input, or about a **gradient** with respect to all the inputs. The gradient is just made up of the derivatives of all the inputs concatenated in a vector (i.e. a list). Crucially, notice that if we let the inputs respond to the tug by following the gradient a tiny amount (i.e. we just add the derivative on top of every input), we can see that the value increases, as expected:
 
 ```javascript
 var step_size = 0.01;
@@ -136,19 +138,19 @@ y = y + step_size * y_derivative; // y becomes 2.98
 var out_new = forwardMultiplyGate(x, y); // -5.87! exciting.
 ```
 
-As expected, the circuit now gives a slightly higher value (`-5.87 > -6.0`). That was much simpler than trying random changes to `x` and `y`, right? A fact to appreciate here is that if you take calculus you can prove that the gradient, in fact, is the direction of the steepest increase of the function. There is no need to monkey around trying out random pertubations as done in previous section. Evaluating the gradient requires just three evaluations of our circuit instead of hundreds, and gives the best tug you can hope for (locally) if you are interested in increasing the value of the output.
+As expected, we changed the inputs by the gradient and the circuit now gives a slightly higher value (`-5.87 > -6.0`). That was much simpler than trying random changes to `x` and `y`, right? A fact to appreciate here is that if you take calculus you can prove that the gradient is, in fact, the direction of the steepest increase of the function. There is no need to monkey around trying out random pertubations as done in Strategy #1. Evaluating the gradient requires just three evaluations of the forward pass of our circuit instead of hundreds, and gives the best tug you can hope for (locally) if you are interested in increasing the value of the output.
 
 But. It turns out that we can do *even* better.
 
-#### Analytic Gradient
+#### Strategy #3: Analytic Gradient
 
-In the previous section we evaluated the gradient by probing the circuit's output value, independently for every input. This procedure gives you what we call a **numerical gradient**. This approach, however, is still expensive because we need to compute the circuit's output as we tweak every input value independently a small amount. In other words the complexity is linear in number of inputs. In practice we can have hundreds, thousands or (for neural networks) even tens to hundreds of millions of inputs, and the circuits aren't just one multiply gate but huge expressions that can be expensive to compute. We need something better.
+In the previous section we evaluated the gradient by probing the circuit's output value, independently for every input. This procedure gives you what we call a **numerical gradient**. This approach, however, is *still* expensive because we need to compute the circuit's output as we tweak every input value independently a small amount. So the complexity of evaluating the gradient is linear in number of inputs. But in practice we will have hundreds, thousands or (for neural networks) even tens to hundreds of millions of inputs, and the circuits aren't just one multiply gate but huge expressions that can be expensive to compute. We need something better.
 
-Luckily, there is an easier and *much* faster way to compute the gradient: we can use calculus to derive a direct expression for it that will be as simple to evaluate as the circuit's output value. We call this an **analytic gradient** and there will be no need for tuning the knobs one at a time. You may have seen other people who teach Neural Networks derive the gradient in huge and, frankly, scary and confusing mathematical equations. We will do none of that. We will only derive gradient for very small expressions (think base case) and then I will show you how we can compose them simply with chain rule in code (think inductive/recursive case).
+Luckily, there is an easier and *much* faster way to compute the gradient: we can use calculus to derive a direct expression for it that will be as simple to evaluate as the circuit's output value. We call this an **analytic gradient** and there will be no need for tweaking anything. You may have seen other people who teach Neural Networks derive the gradient in huge and, frankly, scary and confusing mathematical equations (if you're not well-versed in maths). But it's unnecessary. I've written plenty of Neural Nets code and I rarely have to do mathematical derivation longer than two lines, and 95% of the time it can be done without writing anything at all. That is because we will only ever derive the gradient for very small and simple expressions (think of it as the **base case**) and then I will show you how we can compose these very simply with **chain rule** to evaluate the full gradient (think inductive/recursive case).
 
 > The analytic derivative requires no tweaking of the inputs. It can be derived using mathematics (calculus).
 
-If you remember your product rules, power rules, quotient rules, etc., it's very easy to write down the derivitative with respect to both `x` and `y` for a small expression such as `x * y`. But suppose you don't remember your calculus. We can go back to basics, here's the expression for the derivative w.r.t `x`:
+If you remember your product rules, power rules, quotient rules, etc. (see e.g. [derivative rules](http://www.mathsisfun.com/calculus/derivatives-rules.html) or [wiki page](http://en.wikipedia.org/wiki/Differentiation_rules)), it's very easy to write down the derivitative with respect to both `x` and `y` for a small expression such as `x * y`. But suppose you don't remember your calculus rules. We can go back to the definition. For example, here's the expression for the derivative w.r.t `x`:
 
 <div>
 $$
@@ -156,7 +158,7 @@ $$
 $$
 </div>
 
-Okay and lets plug in our function ( \\( f(x,y) = x y \\) ) into the expression. Ready for the hardest piece of math of this entire article? Here we go:
+(Technically I'm not writing the limit as `h` goes to zero, forgive me math people). Okay and lets plug in our function ( \\( f(x,y) = x y \\) ) into the expression. Ready for the hardest piece of math of this entire article? Here we go:
 
 <div>
 $$
@@ -168,7 +170,7 @@ $$
 $$
 </div>
 
-That's interesting. The derivative with respect to `x` is just equal to `y`. Did you notice the coincidence in the previous section? We tuned the knob on `x` to `x+h` and calculated `x_derivative = 3.0`, which exactly happens to be the value of `y` in that example. It turns out that wasn't a coincidence at all because that's just what the analytic gradient tells us the `x` derivative should be for `f(x,y) = x * y`. The derivative with respect to `y`, by the way, turns out to be `x`, unsurprisingly by symmetry. So there is no need for tuning any knobs! We invoked powerful mathematics and can now transform the example into the following code:
+That's interesting. The derivative with respect to `x` is just equal to `y`. Did you notice the coincidence in the previous section? We tweaked `x` to `x+h` and calculated `x_derivative = 3.0`, which exactly happens to be the value of `y` in that example. It turns out that wasn't a coincidence at all because that's just what the analytic gradient tells us the `x` derivative should be for `f(x,y) = x * y`. The derivative with respect to `y`, by the way, turns out to be `x`, unsurprisingly by symmetry. So there is no need for any tweaking! We invoked powerful mathematics and can now transform our derivative calculation into the following code:
 
 ```javascript
 var x = -2, y = 3;
@@ -182,18 +184,25 @@ y += step_size * y_gradient; // 2.98
 var out_new = forwardMultiplyGate(x, y); // -5.87. Higher output! Nice.
 ```
 
+To compute the gradient we went from forwarding the circuit hundreds of times (Strategy #1) to forwarding it only on order of number of times twice the number of inputs (Strategy #2), to forwarding it a single time! And it gets EVEN better, since the more expensive strategies (#1 and #2) only give an approximation of the gradient, while #3 (the fastest one by far) gives you the *exact* gradient. No approximations. The only downside is that you should be comfortable with some calculus 101.
+
 Lets recap what have we learned:
 
-- We are given a circuit, some inputs and compute an output value. We are then interested in tweaking the inputs slightly to make the output higher.
-- One silly way is to **randomly search** for small pertubations of the inputs and keep track of what gives the highest increase in output.
-- We saw we can do much better by computing the gradient. Regardless of how complicated the circuit is, the **numerical gradient** is very simple (but relatively expensive) to compute. We compute it by *probing* the circuit's output value as we tweak the inputs one at a time.
-- In the end, we saw that we can be even more clever and analytically derive a direct expression to get the **analytic gradient**. It is identical to the numerical gradient and there is no need for any probing or input tweaking.
+- INPUT: We are given a circuit, some inputs and compute an output value. 
+- OUTPUT: We are then interested finding small changes to each input (independently) that would make the output higher.
+- Strategy #1: One silly way is to **randomly search** for small pertubations of the inputs and keep track of what gives the highest increase in output.
+- Strategy #2: We saw we can do much better by computing the gradient. Regardless of how complicated the circuit is, the **numerical gradient** is very simple (but relatively expensive) to compute. We compute it by *probing* the circuit's output value as we tweak the inputs one at a time.
+- Strategy #3: In the end, we saw that we can be even more clever and analytically derive a direct expression to get the **analytic gradient**. It is identical to the numerical gradient, it is fastest by far, and there is no need for any tweaking.
+
+In practice by the way (and we will get to this once again later), all Neural Network libraries always compute the analytic gradient, but the correctness of the implementation is verified by comparing it to the numerical gradient. That's because the numerical gradient is very easy to evaluate (but can be a bit expensive to compute), while the analytic gradient can contain bugs at times, but is usually extremely efficient to compute. As we will see, evaluating the gradient (i.e. while doing *backprop*, or *backward pass*) will turn out to cost about as much as evaluating the *forward pass*.
 
 ### Recursive Case: Circuits with Multiple Gates
 
-But hold on, you say: *"The analytic gradient was trivial to derive for your super-simple expression. This is useless. What do I do when the expressions are much larger? Don't the equations get huge and complex very fast?"*. Good question. Yes the expressions get much more complex. No, this doesn't make it much harder. All we have to do is derive the analytic gradient for a few small expressions as I've shown above and there is a simple way of combining them in circuits with multiple gates.
+But hold on, you say: *"The analytic gradient was trivial to derive for your super-simple expression. This is useless. What do I do when the expressions are much larger? Don't the equations get huge and complex very fast?"*. Good question. Yes the expressions get much more complex. No, this doesn't make it much harder. As we will see, every gate will be hanging out by itself, completely unaware of any details of the huge and complex circuit that it could be part of. It will only worry about its inputs and it will compute its local derivatives as seen in the previous section, except now there will be a single extra multiplication it will have to do.
 
-Lets get two gates involved with this next example:
+> A single extra multiplication will turn a single (useless gate) into a cog in complex machine that is an entire neural network.
+
+I should stop hyping it up now. I hope I've peaked your interest :). Lets drill down into details and get two gates involved with this next example:
 
 <div class="svgdiv">
 <svg width="500" height="150">
@@ -240,19 +249,19 @@ var x = -2, y = 5, z = -4;
 var f = forwardCircuit(x, y, z); // output is -12
 ```
 
-I am now using `a` and `b` as the local variables in the gate functions so that we don't get these confused with our circuit inputs `x,y,z`. As before, we are interested in finding the derivatives with respect to the three inputs `x,y,z`. But how do we compute it now that there are multiply gates involved? First, lets pretend that the `+` gate is not there and that we only have two variables in the circuit: `q,z` and a single `*` gate. Then we are back to having only a single gate, and as far as that single `*` gate is concerned, we know what the (analytic) derivates are from previous section. We can write them down (except here we're replacing `x,y` with `q,z`):
+In the above, I am using `a` and `b` as the local variables in the gate functions so that we don't get these confused with our circuit inputs `x,y,z`. As before, we are interested in finding the derivatives with respect to the three inputs `x,y,z`. But how do we compute it now that there are multiply gates involved? First, lets pretend that the `+` gate is not there and that we only have two variables in the circuit: `q,z` and a single `*` gate. Note that the `q` is is output of the `+` gate. If we don't worry about `x` and `y` but only about `q` and `z`, then we are back to having only a single gate, and as far as that single `*` gate is concerned, we know what the (analytic) derivates are from previous section. We can write them down (except here we're replacing `x,y` with `q,z`):
 
 $$
 f(q,z) = q z \hspace{0.5in} \implies \hspace{0.5in} \frac{\partial f(q,z)}{\partial q} = z, \hspace{1in} \frac{\partial f(q,z)}{\partial z} = q
 $$
 
-But wait, we don't want gradient with respect to `q`, but with respect to the inputs: `x` and `y`. Luckily, `q` is computed as a function of `x` and `y` (by addition in our example). We can write down the gradient for addition as well, it's even simpler:
+Simple enough: these are the expressions for the gradient with respect to `q` and `z`. But wait, we don't want gradient with respect to `q`, but with respect to the inputs: `x` and `y`. Luckily, `q` is computed as a function of `x` and `y` (by addition in our example). We can write down the gradient for the addition gate as well, it's even simpler:
 
 $$
 q(x,y) = x + y \hspace{0.5in} \implies \hspace{0.5in} \frac{\partial q(x,y)}{\partial x} = 1, \hspace{1in} \frac{\partial q(x,y)}{\partial y} = 1
 $$
 
-(That's right, the derivaties are just 1. If you think about it, this makes sense because to make the output of a single addition gate higher, we expect a positive tug on both `x` and `y` to make each one higher.)
+That's right, the derivaties are just 1, regardless of the actual values of `x` and `y`. If you think about it, this makes sense because to make the output of a single addition gate higher, we expect a positive tug on both `x` and `y`.
 
 #### Backpropagation
 
@@ -284,10 +293,10 @@ var derivative_f_wrt_x = derivative_q_wrt_x * derivative_f_wrt_q; // -4
 var derivative_f_wrt_y = derivative_q_wrt_y * derivative_f_wrt_q; // -4
 ```
 
-Great, we computed the gradient (the tugs) and now we can let our inputs respond to the force. Lets add the gradients on top of the inputs. The output value of the circuit better increase, up from -12!
+That's it. We computed the gradient (the forces) and now we can let our inputs respond to it by a bit. Lets add the gradients on top of the inputs. The output value of the circuit better increase, up from -12!
 
 ```javascript
-// final gradient: [-4, -4, 3]
+// final gradient, from above: [-4, -4, 3]
 var gradient_f_wrt_xyz = [derivative_f_wrt_x, derivative_f_wrt_y, derivative_f_wrt_z]
 
 // let the inputs respond to the force/tug:
@@ -302,16 +311,20 @@ var f = forwardMultiplyGate(q, z); // output is -11.59, up from -12! Nice!
 
 ```
 
-Looks like that worked! Lets now try to interpret intuitively what just happened. The circuit wants to output higher values. The last gate saw inputs `q = 3, z = -4` and computed output `-12`. This induced a force on both `q` and `z`: To increase the output value, the circuit "wants" `z` to increase, as can be seen by the positive value of the derivative(`derivative_f_wrt_z = +3`). Again, the size of this derivative can be interpreted as the magnitude of the force. On the other hand, `q` felt a stronger and downward force, since `derivative_f_wrt_q = -4`.
+Looks like that worked! Lets now try to interpret intuitively what just happened. The circuit wants to output higher values. The last gate saw inputs `q = 3, z = -4` and computed output `-12`. "Pulling" upwards on this output value induced a force on both `q` and `z`: To increase the output value, the circuit "wants" `z` to increase, as can be seen by the positive value of the derivative(`derivative_f_wrt_z = +3`). Again, the size of this derivative can be interpreted as the magnitude of the force. On the other hand, `q` felt a stronger and downward force, since `derivative_f_wrt_q = -4`. In other words the circuit wants `q` to decrease, with a force of `4`.
 
-Now we get to the second, `+` gate which outputs `q`. The `+` gate computes its derivatives and we see that it wants both `x` and `y` to increase, because this is how its output value (`q`) would become larger. BUT! Here is the **crucial point**: the gradient on `q` was computed as negative (`derivative_f_wrt_q = -4`), so the circuit wants `q` to *decrease*, and with a force of `4`! So if `q` wants to contribute to making the final output value larger, it needs to listen to the gradient signal coming from the top. In this particular case, it needs to apply tugs on `x,y` opposite of what it would normally apply, and with a force of `4`, so to speak. The multiplication by `-4` seen in the chain rule achieves exactly this: instead of applying a force on both `x` and `y` to increase by `1`, the gradient on both `x` and `y` becomes `1 x -4 = -4`. This makes sense: the circuit wants both `x` and `y` to get smaller because this will make `q` smaller, which in turn will make `f` larger.
+Now we get to the second, `+` gate which outputs `q`. By default, the `+` gate computes its derivatives which tells us how to change `x` and `y` to make `q` higher. BUT! Here is the **crucial point**: the gradient on `q` was computed as negative (`derivative_f_wrt_q = -4`), so the circuit wants `q` to *decrease*, and with a force of `4`! So if the `+` gate wants to contribute to making the final output value larger, it needs to listen to the gradient signal coming from the top. In this particular case, it needs to apply tugs on `x,y` opposite of what it would normally apply, and with a force of `4`, so to speak. The multiplication by `-4` seen in the chain rule achieves exactly this: instead of applying a positive force of `+1` on both `x` and `y` (the local derivative), the full circuit's gradient on both `x` and `y` becomes `1 x -4 = -4`. This makes sense: the circuit wants both `x` and `y` to get smaller because this will make `q` smaller, which in turn will make `f` larger.
 
-> "If this makes sense, you understand backpropagation."
+> If this makes sense, you understand backpropagation.
 
-Lets **recap** once again what we learned. In the previous chapter we saw that in the case of a single gate (or a single expression), we can derive the analytic gradient using simple calculus. We interpreted the gradient as a force, or a tug on the inputs that pulls them in a direction which would make this gate's output higher. In case of multiple gates everything stays pretty much the same way: every gate is hanging out by itself completely unaware of the circuit it is embedded in. Some inputs come in and the gate computes the derivate with respect to the inputs. The *only* difference now is that suddenly, something can pull on this gate from above. That's the gradient of the final circuit output value with respect to the ouput this gate computed. It is the circuit asking the gate to output higher or lower numbers. The gate simply takes this pull and multiplies it to all the pulls it computed for its inputs before (chain rule). This has the desired effect:
+Lets **recap** once again what we learned: 
 
-- If a gate experiences a strong positive pull from above, it will also pull harder on its own inputs. 
-- And if it experiences a negative tug, this means that circuit wants its value to decrease not increase, so it will flip the force of the pull on its inputs to make its own output value smaller.
+- In the previous chapter we saw that in the case of a single gate (or a single expression), we can derive the analytic gradient using simple calculus. We interpreted the gradient as a force, or a tug on the inputs that pulls them in a direction which would make this gate's output higher. 
+
+- In case of multiple gates everything stays pretty much the same way: every gate is hanging out by itself completely unaware of the circuit it is embedded in. Some inputs come in and the gate computes its output and the derivate with respect to the inputs. The *only* difference now is that suddenly, something can pull on this gate from above. That's the gradient of the final circuit output value with respect to the ouput this gate computed. It is the circuit asking the gate to output higher or lower numbers, and with some force. The gate simply takes this force and multiplies it to all the forces it computed for its inputs before (chain rule). This has the desired effect:
+
+1. If a gate experiences a strong positive pull from above, it will also pull harder on its own inputs, scaled by the force it is experiencing from above
+2. And if it experiences a negative tug, this means that circuit wants its value to decrease not increase, so it will flip the force of the pull on its inputs to make its own output value smaller.
 
 > A nice picture to have in mind is that as we pull on the circuit's output value at the end, this induces pulls downward through the entire circuit, all the way down to the inputs.
 
@@ -373,7 +386,7 @@ Lets look again at the our example circuit with the numbers filled in. The first
 </svg>
 </div>
 
-After a while you start to notice patterns in how the gradients flow backward in the circuits. For example, the `+` gate always takes the gradient on top and simply passes it on to all of its inputs (notice the example with -4 simply passed on to both of the inputs of `+` gate). This is because its own derivative for the inputs is just `+1`, regardless of what the actual values of the inputs are, so in the chain rule, the gradient from above is just multiplied by 1 and stays the same. Similar intuitions apply to, for example, the `max(x,y)` gate. Since the gradient of `max(x,y)` with respect to its input is `+1` for whichever one of `x`, `y` is larger and `0` for the other, this gate is during backprop effectively just a gradient "switch": it will take the gradient from above and "route" it to the input that had a higher value.
+After a while you start to notice patterns in how the gradients flow backward in the circuits. For example, the `+` gate always takes the gradient on top and simply passes it on to all of its inputs (notice the example with -4 simply passed on to both of the inputs of `+` gate). This is because its own derivative for the inputs is just `+1`, regardless of what the actual values of the inputs are, so in the chain rule, the gradient from above is just multiplied by 1 and stays the same. Similar intuitions apply to, for example, a `max(x,y)` gate. Since the gradient of `max(x,y)` with respect to its input is `+1` for whichever one of `x`, `y` is larger and `0` for the other, this gate is during backprop effectively just a gradient "switch": it will take the gradient from above and "route" it to the input that had a higher value during the forward pass.
 
 **Numerical Gradient Check.** Before we finish with this section, lets just make sure that the (analytic) gradient we computed by backprop above is correct as a sanity check. Remember that we can do this simply by computing the numerical gradient and making sure that we get `[-4, -4, 3]` for `x,y,z`. Here's the code:
 
@@ -381,13 +394,14 @@ After a while you start to notice patterns in how the gradients flow backward in
 // initial conditions
 var x = -2, y = 5, z = -4;
 
+// numerical gradient check
 var h = 0.0001;
 var x_derivative = (forwardCircuit(x+h,y,z) - forwardCircuit(x,y,z)) / h; // -4
 var y_derivative = (forwardCircuit(x,y+h,z) - forwardCircuit(x,y,z)) / h; // -4
 var z_derivative = (forwardCircuit(x,y,z+h) - forwardCircuit(x,y,z)) / h; // 3
 ```
 
-`[-4, -4, 3]`, phew! :)
+and we get `[-4, -4, 3]`, as computed with backprop. phew! :)
 
 ### Example: Single Neuron
 
@@ -409,9 +423,11 @@ $$
 \frac{\partial \sigma(x)}{\partial x} = \sigma(x) (1 - \sigma(x))
 $$
 
-That's all we need to use this gate: we know how to take an input and *forward* it through the sigmoid gate, and we also have the expression for the gradient with respect to its input, so we can also *backprop* through it. Another thing to note is that technically, the sigmoid function is made up of an entire series of gates in a line that compute more *atomic* functions: an exponentiation gate, an addition gate and a division gate. Treating it so would work perfectly fine but for this example I chose to collapse all of these gates into a single gate that just computes sigmoid in one shot.
+For example, if the sigmoid gate computes some output during forward pass (e.g. `x = 0.7`), then gradient with respect to its input will simply be `dx = (0.7) * (1 - 0.7) = 0.21`.
 
-Lets take this opportunity to carefully structure the associated code in a nice and modular way. First, I'd like you to note that every wire in our diagrams has two numbers associated with it: 
+That's all we need to use this gate: we know how to take an input and *forward* it through the sigmoid gate, and we also have the expression for the gradient with respect to its input, so we can also *backprop* through it. Another thing to note is that technically, the sigmoid function is made up of an entire series of gates in a line that compute more *atomic* functions: an exponentiation gate, an addition gate and a division gate. Treating it so would work perfectly fine but for this example I chose to collapse all of these gates into a single gate that just computes sigmoid in one shot, because the gradient expression turns out to be simple.
+
+Lets take this opportunity to carefully structure the associated code in a nice and modular way. First, I'd like you to note that every **wire** in our diagrams has two numbers associated with it: 
 
 1. the value it carries during the forward pass 
 2. the gradient (i.e the *pull*) that flows back through it in the backward pass
@@ -419,6 +435,7 @@ Lets take this opportunity to carefully structure the associated code in a nice 
 Lets create a simple `Unit` structure that will store these two values on every wire. Our gates will now operate over `Unit`s: they will take them as inputs and create them as outputs.
 
 ```javascript
+// every Unit corresponds to a wire in the diagrams
 var Unit = function(value, grad) {
   // value computed in the forward pass
   this.value = value; 
@@ -434,19 +451,23 @@ In addition to Units we also need 3 gates: `+`, `*` and `sig` (sigmoid). Lets st
 var multiplyGate = function(){ };
 multiplyGate.prototype = {
   forward: function(u0, u1) {
-    this.u0 = u0; // store pointers to input units
+    // store pointers to input Units u0 and u1 and output unit utop
+    this.u0 = u0; 
     this.u1 = u1; 
     this.utop = new Unit(u0.value * u1.value, 0.0);
     return this.utop;
   },
   backward: function() {
+    // take the gradient in output unit and chain it with the
+    // local gradients, which we derived for multiply gate before
+    // then write those gradients to those Units.
     this.u0.grad += this.u1.value * this.utop.grad;
     this.u1.grad += this.u0.value * this.utop.grad;
   }
 }
 ```
 
-The multiply gate takes two units that each hold a value and creates a unit that stores its output. The gradient is initialized to zero. Then notice that in the `backward` function call we get the gradient from the output unit we produced during the forward pass (which will by now hopefully have its gradient filled in) and multiply it with the local gradient for this gate (chain rule!). This gate computes multiplication (`u0.value * u1.value`) during forward pass, so recall that the gradient w.r.t `u0` is `u1.value` and w.r.t `u1` is `u0.value`. Also note that we are using `+=` to add onto the gradient in the `backward` function. This will allow us to possibly use the output of one gate multiple times (think of it as a branching wire), since it turns out that the gradients from these different branches just add up when computing the final gradient with respect to the circuit output. The other two gates are defined analogously:
+The multiply gate takes two units that each hold a value and creates a unit that stores its output. The gradient is initialized to zero. Then notice that in the `backward` function call we get the gradient from the output unit we produced during the forward pass (which will by now hopefully have its gradient filled in) and multiply it with the local gradient for this gate (chain rule!). This gate computes multiplication (`u0.value * u1.value`) during forward pass, so recall that the gradient w.r.t `u0` is `u1.value` and w.r.t `u1` is `u0.value`. Also note that we are using `+=` to add onto the gradient in the `backward` function. This will allow us to possibly use the output of one gate multiple times (think of it as a wire branching out), since it turns out that the gradients from these different branches just add up when computing the final gradient with respect to the circuit output. The other two gates are defined analogously:
 
 ```javascript
 var addGate = function(){ };
@@ -511,7 +532,7 @@ forwardNeuron();
 console.log('circuit output: ' + s.value); // prints 0.8808
 ```
 
-And now lets compute the gradient: Simply iterate in reverse order and call the `backward` function! Remeber that we stored the pointers to the units when we did the forward pass, so every gate has access to its inputs and also the output unit it previously produced.
+And now lets compute the gradient: Simply iterate in reverse order and call the `backward` function! Remember that we stored the pointers to the units when we did the forward pass, so every gate has access to its inputs and also the output unit it previously produced.
 
 ```javascript
 s.grad = 1.0;
@@ -551,7 +572,7 @@ var x_grad = (forwardCircuitFast(a,b,c,x+h,y) - forwardCircuitFast(a,b,c,x,y))/h
 var y_grad = (forwardCircuitFast(a,b,c,x,y+h) - forwardCircuitFast(a,b,c,x,y))/h;
 ```
 
-Indeed, these all give the same values as the backpropagated gradients `(-0.105, 0.315, 0.105, 0.105, 0.210)`. Nice! 
+Indeed, these all give the same values as the backpropagated gradients `[-0.105, 0.315, 0.105, 0.105, 0.210]`. Nice! 
 
 I hope it is clear that even though we only looked at an example of a single neuron, the code I gave above generalizes in a very straight-forward way to compute gradients of arbitrary expressions (including very deep expressions #foreshadowing). All you have to do is write small gates that compute local, simple derivatives w.r.t their inputs, wire it up in a graph, do a forward pass to compute the output value and then a backward pass that chains the gradients all the way to the input. In other words, you can use the code above to learn entire neural networks made up of as many neurons as you like, this is all there's to it! (Of course, in practice we'll want to take efficiency shortcuts. We'll look at these later).
 
