@@ -67,7 +67,7 @@ The interface consisted of the test image on the left, and 1000 classes listed o
 
 #### Analysis of errors
 
-We inspected both human and GoogLeNet errors to gain an understanding of common error types and how they compare. The analysis and insights below were derived specifically from GoogLeNet predictions, but I suspect that many of the same errors may be present in other methods. Let me copy paste the analysis from our [ILSVRC paper]((http://arxiv.org/abs/1409.0575)):
+We inspected both human and GoogLeNet errors to gain an understanding of common error types and how they compare. The analysis and insights below were derived specifically from GoogLeNet predictions, but I suspect that many of the same errors may be present in other methods. Let me copy paste the analysis from our [ILSVRC paper](http://arxiv.org/abs/1409.0575):
 
 **Types of error that both GoogLeNet human are susceptible to:**
 
