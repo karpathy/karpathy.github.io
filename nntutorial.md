@@ -485,6 +485,9 @@ addGate.prototype = {
   }
 }
 
+```
+
+```javascript
 var sigmoidGate = function() { 
   // helper function
   this.sig = function(x) { return 1 / (1 + Math.exp(-x)); };
@@ -601,37 +604,45 @@ vector -> label
 [2.1, -3] -> +1
 ```
 
-Here, we have `N = 6` **datapoints**, where every datapoint has two **features**. Three of the datapoints have **label** `+1` and the other three label `-1`. This is a silly toy example, but in practice a 1/-1 dataset could be very useful things indeed. For example spam/no spam emails, where the vectors somehow measure various features of the content of the email, such as the number of times certain ... enhancement drugs are mentioned.
+Here, we have `N = 6` **datapoints**, where every datapoint has two **features** (`D = 2`). Three of the datapoints have **label** `+1` and the other three label `-1`. This is a silly toy example, but in practice a +1/-1 dataset could be very useful things indeed: For example spam/no spam emails, where the vectors somehow measure various features of the content of the email, such as the number of times certain enhancement drugs are mentioned.
 
-Our **goal** in binary classification is to learn a parameterized function that takes a 2-dimensional vector and predicts the label. We will want to tune the parameters of the function so that its outputs are consistent with the labeling in the provided dataset. In the end we can discard the dataset and use the learned function as a label predictor for previously unseen vectors.
+**Goal**. Our goal in binary classification is to learn a function that takes a 2-dimensional vector and predicts the label. This function is usually parameterized by a certain set of parameters, and we will want to tune the parameters of the function so that its outputs are consistent with the labeling in the provided dataset. In the end we can discard the dataset and use the learned parameters to predict labels for previously unseen vectors.
 
 #### Training protocol
 
-We will eventually build up to entire neural networks and complex expressions, but lets start out simple and train a linear classifier very similar to the single neuron we saw at the end of Chapter 1. The only difference is that we'll get rid of the sigmoid because it makes things unnecessarily complicated (I only used it as an example in Chapter 1 because sigmoid neurons are historically popular but modern Neural Networks rarely use sigmoid neurons). Anyway, lets just use a simple linear function:
+We will eventually build up to entire neural networks and complex expressions, but lets start out simple and train a linear classifier very similar to the single neuron we saw at the end of Chapter 1. The only difference is that we'll get rid of the sigmoid because it makes things unnecessarily complicated (I only used it as an example in Chapter 1 because sigmoid neurons are historically popular but modern Neural Networks rarely, if ever, use sigmoid non-linearities). Anyway, lets use a simple linear function:
 
 $$
 f(x, y) = ax + by + c
 $$
 
-In this expression we think of `x` and `y` as the inputs (the 2-D vectors) and `a,b,c` as the parameters of the function that we will want to learn. For example, if `a = 1, b = -2, c = -1`, then the function will take the first datapoint (`[1.2, 0.7]`) and output `1 * 1.2 + (-2) * 0.7 + (-1) = -1.2`. Here is how the training will work:
+In this expression we think of `x` and `y` as the inputs (the 2D vectors) and `a,b,c` as the parameters of the function that we will want to learn. For example, if `a = 1, b = -2, c = -1`, then the function will take the first datapoint (`[1.2, 0.7]`) and output `1 * 1.2 + (-2) * 0.7 + (-1) = -1.2`. Here is how the training will work:
 
 1. We select a random datapoint and feed it through the circuit
 2. We will interpret the output of the circuit as a confidence that the datapoint has class `+1`. (i.e. very high values = circuit is very certain datapoint has class `+1` and very low values = circuit is certain this datapoint has class `-1`.)
-3. We will measure how well the prediction aligns with the provided labels. Intuitively, for example, if a positive example scores very low, we will want to tug in the positive direction on the circuit, demanding that it should output higher value for this datapoint. Note that this is the case for the the first datapoint: it is labeled as `+1` but our predictor unction only assigns it value `-1.2`. We will therefore tug on the circuit; We want the value to be higher.
+3. We will measure how well the prediction aligns with the provided labels. Intuitively, for example, if a positive example scores very low, we will want to tug in the positive direction on the circuit, demanding that it should output higher value for this datapoint. Note that this is the case for the the first datapoint: it is labeled as `+1` but our predictor unction only assigns it value `-1.2`. We will therefore tug on the circuit in positive direction; We want the value to be higher.
 4. The circuit will take the tug and backpropagate it to compute tugs on the inputs `a,b,c,x,y`
 5. Since we think of `x,y` as (fixed) datapoints, we will ignore the pull on `x,y`. If you're a fan of my physical analogies, think of these inputs as pegs, fixed in the ground.
 6. On the other hand, we will take the parameters `a,b,c` and make them respond to their tug (i.e. we'll perform what we call a **parameter update**). This, of course, will make it so that the circuit will output a slightly higher score on this particular datapoint in the future.
 7. Iterate! Go back to step 1.
 
-The training scheme I described above, by the way, is commonly referred as **Stochastic Gradient Descent**. The interesting part I'd like to reiterate is that `a,b,c,x,y` are all made up of the same *stuff* as far as the circuit is concerned: They are inputs to the circuit and the circuit will tug on all of them in some direction. It doesn't know the difference between parameters and datapoints. However, after the backward pass is complete we ignore all tugs on the datapoints (`x,y`) and keep swapping them in and out as we iterate over examples in the dataset. On the other hand, we keep the parameters (`a,b,c`) around and keep tugging on them every time we sample a datapoint. Over time, the pulls on these parameters will tune these values in such a way that the function outputs high scores for positive examples and low scores for negative examples.
+The training scheme I described above, is commonly referred as **Stochastic Gradient Descent**. The interesting part I'd like to reiterate is that `a,b,c,x,y` are all made up of the same *stuff* as far as the circuit is concerned: They are inputs to the circuit and the circuit will tug on all of them in some direction. It doesn't know the difference between parameters and datapoints. However, after the backward pass is complete we ignore all tugs on the datapoints (`x,y`) and keep swapping them in and out as we iterate over examples in the dataset. On the other hand, we keep the parameters (`a,b,c`) around and keep tugging on them every time we sample a datapoint. Over time, the pulls on these parameters will tune these values in such a way that the function outputs high scores for positive examples and low scores for negative examples.
 
 #### Learning a Support Vector Machine
 
-As a concrete example, lets learn a **Support Vector Machine**. The SVM is a very popular linear classifier; Its functional form is exactly as I've described in previous section, \\( f(x,y) = ax + by + c\\). At this point, if you've seen an explanation of SVMs you're probably expecting me to define the SVM loss function and see me fumble around trying to explain slack variables, large margins, kernels, duality, etc. But I'd like to instead first describe the *force specification* (I just made this term up by the way) of a Support Vector Machine, which I find much more intuitive. Here it is:
+As a concrete example, lets learn a **Support Vector Machine**. The SVM is a very popular linear classifier; Its functional form is exactly as I've described in previous section, \\( f(x,y) = ax + by + c\\). At this point, if you've seen an explanation of SVMs you're probably expecting me to define the SVM loss function and plunge into an explanation of slack variables, geometrical intuitions of large margins, kernels, duality, etc. But here, I'd like to take a different approach. Instead of definining loss functions, I would like to base the explanation on the *force specification* (I just made this term up by the way) of a Support Vector Machine, which I personally find much more intuitive. As we will see, talking about the force specification and the loss function are identical ways of seeing the same problem. Anyway, here it is:
+
+**Support Vector Machine "Force Specification":**
 
 - If we feed a positive datapoint through the SVM circuit and the output value is less than 1, pull on the circuit with force `+1`. This is a positive example so we want the score to be higher for it.
 - Conversely, if we feed a negative datapoint through the SVM and the output is greater than -1, then the circuit is giving this datapoint dangerously high score: Pull on the circuit downwards with force `-1`.
-- In addition to the pulls above, always add a small amount of pull on the parameters `a,b` (notice, not on `c`!) that pulls them towards zero. We will make this pull proprotional to the value of each of `a,b`. For example, if `a` becomes very high it will experience a strong pull of magnitude `|a|` back towards zero. This pull is something we call **regularization**, and it ensures that neither of our parameters `a` or `b` gets disproportionally large. This would be undesirable because both `a,b` get multiplied to the input features `x,y` (remember the equation is `a*x + b*y + c`), so if either of them is too high, our classifier would be overly sensitive to these features. This isn't a nice property because features can often be noisy in practice, so we awnt our classifier to change relatively smoothly if they wiggle around.
+- In addition to the pulls above, always add a small amount of pull on the parameters `a,b` (notice, not on `c`!) that pulls them towards zero. You can think of both `a,b` as being attached to a physical spring that is attached at zero. Just as with a physical spring, this will make the pull proprotional to the value of each of `a,b` (Hooke's law in physics, anyone?). For example, if `a` becomes very high it will experience a strong pull of magnitude `|a|` back towards zero. This pull is something we call **regularization**, and it ensures that neither of our parameters `a` or `b` gets disproportionally large. This would be undesirable because both `a,b` get multiplied to the input features `x,y` (remember the equation is `a*x + b*y + c`), so if either of them is too high, our classifier would be overly sensitive to these features. This isn't a nice property because features can often be noisy in practice, so we want our classifier to change relatively smoothly if they wiggle around.
+
+Lets quickly go through a small but concrete example. Suppose we start out with a random parameter setting, say, `a = 1, b = -2, c = -1`. Then:
+
+- If we feed the point `[1.2, 0.7]`, the SVM will compute score `1 * 1.2 + (-2) * 0.7 - 1 = -1.2`. This point is labeled as `+1` in the training data, so we want the score to be higher than 1. The gradient on top of the circuit will thus be positive: `+1`, which will backpropagate to `a,b,c`. Additionally, there will also be a regularization pull on `a` of `-1` (to make it smaller) and regularization pull on `b` of `+2` to make it larger, toward zero.
+- Suppose instead that we fed the datapoint `[-0.3, 0.5]` to the SVM. It computes `1 * (-0.3) + (-2) * 0.5 - 1 = -2.3`. The label for this point is `-1`, and since `-2.3` is smaller than `-1`, we see that according to our force specification the SVM should be happy: The computed score is very negative, consistent with the negative label of this example. There will be no pull at the end of the circuit (i.e it's zero), since there no changes are necessary. However, there will *still* be the regularization pull on `a` of `-1` and on `b` of `+2`. 
+
 
 Okay there's been too much text. Lets write the SVM code and take advantage of the circuit machinery we have from Chapter 1:
 
@@ -780,7 +791,7 @@ training accuracy at iteration 350: 1
 training accuracy at iteration 375: 1 
 ```
 
-We see that initially our classifier only had 33% training accuracy, but by the end all training examples are correctly classifier as the parameters `a,b,c` adjusted their values according to the pulls we exerted. We just trained an SVM! But please don't use this anywhere in production :)
+We see that initially our classifier only had 33% training accuracy, but by the end all training examples are correctly classifier as the parameters `a,b,c` adjusted their values according to the pulls we exerted. We just trained an SVM! But please don't use this code anywhere in production :) We will see how we can make things much more efficient once we understand what is going on at the core.
 
 One thing I'd like you to appreciate is that the circuit can be arbitrary expression, not just the linear prediction function we used in this example. For example, it can be an entire neural network.
 
@@ -803,29 +814,44 @@ for(var iter = 0; iter < 400; iter++) {
 
   // compute gradient and update parameters
   var step_size = 0.01;
-  a += step_size * (x * pull - a);
-  b += step_size * (y * pull - b);
+  a += step_size * (x * pull - a); // -a is from the regularization
+  b += step_size * (y * pull - b); // -b is from the regularization
   c += step_size * (1 * pull);
 }
 ```
 
-this code gives an identical result. Perhaps by now you can glance at the code and see what all the equations are doing.
+this code gives an identical result. Perhaps by now you can glance at the code and see how these equations came about.
+
+Lets **recap**. We introduced the **binary classification** problem, where we are given N D-dimensional vectors and a label +1/-1 for each. We saw that we can combine these features with a set of parameters inside a real-valued circuit (such as a **Support Vector Machine** circuit in our example). Then, we can repeatedly pass our data through the circuit and each time tweak the parameters so that the circuit's output value is consistent with the provided labels. The tweaking relied, crucially, on our ability to **backpropagate** gradients through the circuit. In the end, the final circuit can be used to predict values for unseen instances!
+
 
 #### A more Conventional Approach: Loss Functions
 
-SVMs and many other Machine Learning models are usually defined in terms of loss functions, not in terms of a "force specification". However, the force specification is the direct result of a loss function since it is the gradient of the loss. Let me clarify with the SVM example.
+Now that I've given intuition for an SVM (in terms of *force specification*), let's take a more conventional approach: SVMs (and all other Machine Learning models) are usually defined in terms of loss functions rather than force specifications. However, the force specification I described is, in fact, a direct result of a loss function since it is simply the gradient of the loss.
 
 todo...
 
 
 ### Regression
 
+An example of a different loss function
+
+todo...
+
 ### 2-layer Neural Network
+
+Stacking neurons
+
+todo...
 
 ## Chapter 3: Backprop in Practice
 
 ### Backprop: For-loop style
 
+Backprop with for loops
+
 ### Backprop: Vectorized Implementations
+
+Efficient backprop
 
 
