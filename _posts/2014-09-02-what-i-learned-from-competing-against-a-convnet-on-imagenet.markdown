@@ -107,9 +107,9 @@ We investigated the performance of trained human annotators on a sample of up to
 We expect that some sources of error may be relatively easily eliminated (e.g. robustness to filters, rotations, collages, effectively reasoning over multiple scales), while others may prove more elusive (e.g. identifying
 abstract representations of objects). On the hand, a large majority of human errors come from fine-grained categories and class unawareness. We expect that the former can be significantly reduced with fine-grained expert annotators, while the latter could be reduced with more practice and greater familiarity with ILSVRC classes.
 
-It is clear that humans will soon only by able to outperform state of the art image classification models by use of significant effort, expertise, and time. One interesting follow-up question for future investigation is how computer-level accuracy compares with human-level accuracy on more complex image understanding tasks.
+It is clear that humans will soon only be able to outperform state of the art image classification models by use of significant effort, expertise, and time. One interesting follow-up question for future investigation is how computer-level accuracy compares with human-level accuracy on more complex image understanding tasks.
 
-> "It is clear that humans will soon only by able to outperform state of the art image classification models by use of significant effort, expertise, and time."
+> "It is clear that humans will soon only be able to outperform state of the art image classification models by use of significant effort, expertise, and time."
 
 As for my personal take-away from this week-long exercise, I have to say that, qualitatively, I was very impressed with the ConvNet performance. Unless the image exhibits some irregularity or tricky parts, the ConvNet confidently and robustly predicts the correct label. If you're feeling adventurous, try out [the labeling interface](http://cs.stanford.edu/people/karpathy/ilsvrc/) for yourself and draw your own conclusions. I can promise that you'll gain interesting qualitative insights into where state-of-the-art Computer Vision works, where it fails, and how.
 
