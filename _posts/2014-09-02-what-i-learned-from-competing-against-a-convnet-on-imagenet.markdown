@@ -117,3 +117,7 @@ EDIT: additional discussions:
 
 - [Pierre's Google+](https://plus.google.com/u/0/+PierreSermanet/posts/6wZYMuXo8PU)
 - [Reddit /r/MachineLearning](http://www.reddit.com/r/MachineLearning/comments/2fg0va/what_i_learned_from_competing_against_a_convnet/)
+
+UPDATE: 
+- [ImageNet workshop page](http://image-net.org/challenges/LSVRC/2014/eccv2014) now has links to many of the teams' slides on their methods. Videos of the talks are also *coming soon*.
+- [GoogLeNet paper](http://arxiv.org/abs/1409.4842) on arXiv describes the details of their architecutre. Also of note is close runner up VGG team who describe their architecture [here](http://arxiv.org/pdf/1409.1556.pdf).
