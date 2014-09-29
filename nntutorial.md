@@ -332,7 +332,7 @@ Isn't it beautiful? The only difference between the case of a single gate and mu
 
 #### Patterns in the "backward" flow
 
-Lets look again at the our example circuit with the numbers filled in. The first circuit shows the raw values, and the second circuit shows the gradients that flow back to the inputs as discussed:
+Lets look again at the our example circuit with the numbers filled in. The first circuit shows the raw values, and the second circuit shows the gradients that flow back to the inputs as discussed. Notice that the gradient always starts off with `+1` at the end to start off the chain. This is the (default) pull on the circuit to have its value increased.
 
 <div class="svgdiv">
 <svg width="600" height="350">
@@ -484,7 +484,6 @@ addGate.prototype = {
     this.u1.grad += 1 * this.utop.grad;
   }
 }
-
 ```
 
 ```javascript
@@ -583,11 +582,170 @@ I hope it is clear that even though we only looked at an example of a single neu
 
 Speaking of neural networks with multiple neurons, now that we have a good intuitive grasp of backpropagation lets venture into the land of Machine Learning, start talking about datasets and learning parameters for deep classification/regression models!
 
-## Chapter 2: Machine Learning
+### Becoming a Backprop Ninja
 
-In the previous chapter we saw that we can feed some input through arbitrarily complex real-valued circuit, tug at the end of the circuit with some force, and backpropagation distributes that tug through the entire circuit all the way back to the inputs. If the inputs respond slightly along the final direction of their tug, the circuit will "give" a bit along the original pull direction. Maybe this is not immediately obvious, but this machinery is a powerful *hammer* for Machine Learning.
+Over time you will become much more efficient in writing the backward pass, even for complicated circuits and all at once. Lets practice backprop a bit with a few examples. In what follows, lets not worry about Unit, Circuit classes because they obfuscate things a bit, and lets just use variables such as `a,b,c,x`, and refer to their gradients as `da,db,dc,dx` respectively. Again, we think of the variables as the "forward flow" and their gradients as "backward flow" along every wire. Our first example was the `*` gate:
+
+```javascript
+var x = a * b;
+// and we saw that in backprop we simply compute:
+var da = b * dx;
+var db = a * dx;
+```
+
+In other words, the `*` gate is a *switcher* during backward pass, for lack of better word. It remembers what its inputs were, and the gradients on each one will be the value of the other during the forward pass. And then of course we have to multiply with the gradient from above, which is the chain rule. Here's the `+` gate in this condensed form:
+
+```javascript
+var x = a + b;
+// ->
+var da = 1.0 * dx;
+var db = 1.0 * dx;
+```
+
+Where `1.0` is the local gradient, and the multiplication is our chain rule. What about adding three numbers?: 
+
+```javascript
+// lets compute x = a + b + c in two steps:
+var q = a + b; // gate 1
+var x = q + c; // gate 2
+
+// backward pass:
+dc = 1.0 * dx; // backprop first gate
+dq = 1.0 * dx; 
+da = 1.0 * dq; // backprop second
+db = 1.0 * dq;
+```
+
+You can see what's happening, right? If you remember the backward flow diagram, the `+` gate simply takes the gradient on top and routes it equally to all of its inputs (because its local gradient is always simply `1.0` for all its inputs, regardless of their actual values). So we can do it much faster:
+
+```javascript
+var x = a + b + c;
+var da = 1.0 * dx; var db = 1.0 * dx; var dc = 1.0 * dx;
+```
+
+Okay, how about combining gates?:
+
+```javascript
+var x = a * b + c;
+// backprop in-one-sweep would be =>
+da = b * dx;
+db = a * dx;
+dc = 1.0 * dx;
+```
+
+If you don't see how the above happened, introduce a temporary variable `q = a * b` and then compute `x = q + c` to convince yourself. And here is our neuron, lets do it in two steps:
+
+```javascript
+// lets do our neuron in two steps:
+var q = a*x + b*y + c;
+var f = sig(q); // sig is the sigmoid function
+// and now backward pass, we are given df, and:
+var dq = (q * (1 - q)) * df;
+// and now we chain it to the inputs
+var da = x * dq;
+var dx = a * dq;
+var dy = b * dq;
+var db = y * dq;
+var dc = 1.0 * dq;
+```
+
+I hope this is starting to make a little more sense. Now how about this:
+
+```javascript
+var x = a * a;
+var da = //???
+```
+
+You can think of this as value `a` flowing to the `*` gate, but the wire gets split and becomes both inputs. This is actually simple because the backward flow of gradients always adds up. In other words nothing changes:
+
+```javascript
+var da = a * dx; // gradient into a from first branch
+da += a * dx; // and add on the gradient from the second branch
+
+// short form instead is:
+var da = 2 * a * dx;
+```
+
+In fact, if you know your power rule from calculus you would also know that if you have \\( f(a) = a^2 \\) then \\( \frac{\partial f(a)}{\partial a} = 2a \\), which is exactly what we get if we think of it as wire splitting up and being two inputs to a gate.
+
+Lets do another one:
+
+```javascript
+var x = a*a + b*b + c*c;
+// we get:
+var da = 2*a*dx;
+var db = 2*b*dx;
+var dc = 2*c*dx;
+```
+
+Okay now lets start to get more complex:
+
+```javascript
+var x = Math.pow(((a * b + c) * d), 2); // pow() is squaring function in JS
+```
+
+When cases like this come up in practice, I like to split the expression into manageable chunks:
+
+```javascript
+var x1 = a * b + c;
+var x2 = x1 * d;
+var x = x2 * x2; // this is identical to the above expression for x
+// and now in backprop we go backwards:
+var dx2 = 2 * x2 * dx; // backprop into x2
+var dd = x1 * dx2; // backprop into d
+var dx1 = d * dx2; // backprop into x1
+var da = b * dx1;
+var db = a * dx1;
+var dc = 1.0 * dx1; // done!
+```
+
+That wasn't too difficult! Those are the backprop equations for the entire expression, and we've done them piece by piece and backpropped to all the variables. Here are a few more useful functions and their local gradients that are useful in practice:
+
+```javascript
+var x = 1.0/a; // division
+var da = -1.0/(a*a);
+```
+
+Here's what it would look like in practice then:
+
+```javascript
+var x = (a+b)/(c+d);
+// lets decome it in steps then:
+var x1 = a+b;
+var x2 = c+d;
+var x3 = 1.0/x2;
+var x = x1 * x3; // equivalent to above
+// now backprop:
+var dx1 = x3 * dx;
+var dx3 = x1 * dx;
+var dx2 = (-1.0/(x2*x2)) * dx3; // local gradient as shown above, and chain rule!
+var da = 1.0 * dx1; // and finally into the original variables
+var db = 1.0 * dx1;
+var dc = 1.0 * dx2;
+var db = 1.0 * dx2;
+```
+
+Hopefully you see that we are breaking down expressions, doing the forward pass, and then for every variable (such as `a`) we derive its gradient `da` as we go backwards, one by one, applying the simple local gradients and chaining them with gradients from above. Here's another one:
+
+```javascript
+var x = Math.max(a, b);
+var da = a === x ? 1.0 * dx : 0.0;
+var db = b === x ? 1.0 * dx : 0.0;
+```
+
+Okay this is making a very simple thing hard to read. The `max` function passes on the value of the input that was largest and ignores the other ones. In the backward pass then, the max gate will simply take the gradient on top and route it to the input that actually flowed through it during the forward pass. The gate acts as a simple switch based on which input has highest value. The other inputs will have zero gradient. That's what the `===` is about, since we are testing for which input was the actual max and only routing the gradient to it.
+
+I will stop at this point. I hope you got some intuition about how you can compute entire expressions (which are made up of many gates along the way) and how you can compute backprop for every one of them.
+
+Everything we've done in this chapter comes down to this: We saw that we can feed some input through arbitrarily complex real-valued circuit, tug at the end of the circuit with some force, and backpropagation distributes that tug through the entire circuit all the way back to the inputs. If the inputs respond slightly along the final direction of their tug, the circuit will "give" a bit along the original pull direction. Maybe this is not immediately obvious, but this machinery is a powerful *hammer* for Machine Learning.
 
 > "Maybe this is not immediately obvious, but this machinery is a powerful *hammer* for Machine Learning."
+
+Lets now put this to good use in practice.
+
+## Chapter 2: Machine Learning
+
+In the last chapter we were concerned with real-valued circuits that computed possibly complex expressions of their inputs (the forward pass), and also we could compute the gradients of these expressions on the original inputs (backward pass). In this chapter we will see how useful this extremely simple mechanism is in Machine Learning.
 
 ### Binary Classification
 
