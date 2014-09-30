@@ -576,11 +576,7 @@ var y_grad = (forwardCircuitFast(a,b,c,x,y+h) - forwardCircuitFast(a,b,c,x,y))/h
 
 Indeed, these all give the same values as the backpropagated gradients `[-0.105, 0.315, 0.105, 0.105, 0.210]`. Nice! 
 
-I hope it is clear that even though we only looked at an example of a single neuron, the code I gave above generalizes in a very straight-forward way to compute gradients of arbitrary expressions (including very deep expressions #foreshadowing). All you have to do is write small gates that compute local, simple derivatives w.r.t their inputs, wire it up in a graph, do a forward pass to compute the output value and then a backward pass that chains the gradients all the way to the input. In other words, you can use the code above to learn entire neural networks made up of as many neurons as you like, this is all there's to it! (Of course, in practice we'll want to take efficiency shortcuts. We'll look at these later).
-
-> "You can use that code to learn entire neural networks, this is all there's to it!"
-
-Speaking of neural networks with multiple neurons, now that we have a good intuitive grasp of backpropagation lets venture into the land of Machine Learning, start talking about datasets and learning parameters for deep classification/regression models!
+I hope it is clear that even though we only looked at an example of a single neuron, the code I gave above generalizes in a very straight-forward way to compute gradients of arbitrary expressions (including very deep expressions #foreshadowing). All you have to do is write small gates that compute local, simple derivatives w.r.t their inputs, wire it up in a graph, do a forward pass to compute the output value and then a backward pass that chains the gradients all the way to the input.
 
 ### Becoming a Backprop Ninja
 
@@ -681,10 +677,10 @@ var dc = 2*c*dx;
 Okay now lets start to get more complex:
 
 ```javascript
-var x = Math.pow(((a * b + c) * d), 2); // pow() is squaring function in JS
+var x = Math.pow(((a * b + c) * d), 2); // pow(x,2) squares the input JS
 ```
 
-When cases like this come up in practice, I like to split the expression into manageable chunks:
+When more complex cases like this come up in practice, I like to split the expression into manageable chunks which are almost always composed of simpler expressions and then I chain them together with chain rule:
 
 ```javascript
 var x1 = a * b + c;
@@ -699,26 +695,26 @@ var db = a * dx1;
 var dc = 1.0 * dx1; // done!
 ```
 
-That wasn't too difficult! Those are the backprop equations for the entire expression, and we've done them piece by piece and backpropped to all the variables. Here are a few more useful functions and their local gradients that are useful in practice:
+That wasn't too difficult! Those are the backprop equations for the entire expression, and we've done them piece by piece and backpropped to all the variables. Notice again how for every variable during forward pass we have an equivalent variable during backward pass that contains its gradient with respect to the circuit's final output. Here are a few more useful functions and their local gradients that are useful in practice:
 
 ```javascript
 var x = 1.0/a; // division
 var da = -1.0/(a*a);
 ```
 
-Here's what it would look like in practice then:
+Here's what division might look like in practice then:
 
 ```javascript
-var x = (a+b)/(c+d);
-// lets decome it in steps then:
-var x1 = a+b;
-var x2 = c+d;
-var x3 = 1.0/x2;
+var x = (a + b)/(c + d);
+// lets decompose it in steps:
+var x1 = a + b;
+var x2 = c + d;
+var x3 = 1.0 / x2;
 var x = x1 * x3; // equivalent to above
-// now backprop:
+// and now backprop, again in reverse order:
 var dx1 = x3 * dx;
 var dx3 = x1 * dx;
-var dx2 = (-1.0/(x2*x2)) * dx3; // local gradient as shown above, and chain rule!
+var dx2 = (-1.0/(x2*x2)) * dx3; // local gradient as shown above, and chain rule
 var da = 1.0 * dx1; // and finally into the original variables
 var db = 1.0 * dx1;
 var dc = 1.0 * dx2;
@@ -733,7 +729,7 @@ var da = a === x ? 1.0 * dx : 0.0;
 var db = b === x ? 1.0 * dx : 0.0;
 ```
 
-Okay this is making a very simple thing hard to read. The `max` function passes on the value of the input that was largest and ignores the other ones. In the backward pass then, the max gate will simply take the gradient on top and route it to the input that actually flowed through it during the forward pass. The gate acts as a simple switch based on which input has highest value. The other inputs will have zero gradient. That's what the `===` is about, since we are testing for which input was the actual max and only routing the gradient to it.
+Okay this is making a very simple thing hard to read. The `max` function passes on the value of the input that was largest and ignores the other ones. In the backward pass then, the max gate will simply take the gradient on top and route it to the input that actually flowed through it during the forward pass. The gate acts as a simple switch based on which input had the highest value during forward pass. The other inputs will have zero gradient. That's what the `===` is about, since we are testing for which input was the actual max and only routing the gradient to it.
 
 Finally, lets look at the Rectified Linear Unit non-linearity (or ReLU), which you may have heard of. It is used in Neural Networks in place of the sigmoid function. It is simply thresholding at zero:
 
@@ -751,7 +747,7 @@ Everything we've done in this chapter comes down to this: We saw that we can fee
 
 > "Maybe this is not immediately obvious, but this machinery is a powerful *hammer* for Machine Learning."
 
-Lets now put this to good use in practice.
+Lets now put this machinery to good use.
 
 ## Chapter 2: Machine Learning
 
@@ -997,14 +993,14 @@ Lets **recap**. We introduced the **binary classification** problem, where we ar
 Of interest is the fact that an SVM is just a particular type of a very simple circuit (circuit that computes `score = a*x + b*y + c` where `a,b,c` are weights and `x,y` are data points). This can be easily extended to more complicated functions. For example, lets write a 2-layer Neural Network that does the binary classification. The forward pass will look like this:
 
 ```javascript
-// assume variables x,y 
+// assume inputs x,y
 var n1 = Math.max(0, a1*x + b1*y + c1); // activation of 1st hidden neuron
 var n2 = Math.max(0, a2*x + b2*y + c2); // 2nd neuron
 var n3 = Math.max(0, a3*x + b3*y + c3); // 2nd neuron
 var score = a4*n1 + b4*n2 + c4*n3 + d4; // the score
 ```
 
-That will be our circuit. The specification above is a 2-layer Neural Network that uses Rectified Linear Unit (ReLU) non-linearity on each hidden neuron. The hidden layer here consists of three neurons (n1, n2, n3). As you can see, there are now several parameters involved, which means that our classifier is more complex and can represent more intricate classifier than just a simple linear decision rule such as an SVM. Lets now train this 2-layer Neural Network, similar to the SVM example above. Only the core changes:
+The specification above is a 2-layer Neural Network with 3 hidden neurons (n1, n2, n3) that uses Rectified Linear Unit (ReLU) non-linearity on each hidden neuron. As you can see, there are now several parameters involved, which means that our classifier is more complex and can represent more intricate decision boundaries than just a simple linear decision rule such as an SVM. Another way to think about it is that every one of the three hidden neurons is a linear classifier and now we're putting an extra linear classifier on top of that. Now we're starting to go *deeper* :). Okay, lets train this 2-layer Neural Network. The code looks very similar to the SVM example code above, we just have to change the forward pass and the backward pass:
 
 ```javascript
 // random initial parameters
@@ -1092,7 +1088,7 @@ for(var iter = 0; iter < 400; iter++) {
 }
 ```
 
-And that's how you train a neural network. Obviously, you really want to modularize your code nicely but I expendad this example for you in hope that it makes things much more concrete and simpler to understand. Later, we will look at best practices when implementing these networks and we will structure the code much more neatly in a modular and more sensible way. 
+And that's how you train a neural network. Obviously, you want to modularize your code nicely but I expended this example for you in hope that it makes things much more concrete and simpler to understand. Later, we will look at best practices when implementing these networks and we will structure the code much more neatly in a modular and more sensible way. 
 
 But for now, I hope your takeaway is that a 2-layer Neural Net is really not such a scary thing: we write a forward pass expression, interpret the value at the end as a score, and then we pull on that value in positive or negative direction depending on what we want that value to be for our current particular example. The parameter update after backprop will ensure that when we see this particular example in the future, the network will be more likely to give us a value we desire, not the one it gave just before the update.
 
