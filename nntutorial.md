@@ -358,7 +358,7 @@ Lets look again at the our example circuit with the numbers filled in. The first
   <line x1="420" y1="82" x2="450" y2="82" stroke="black" stroke-width="1" />
 
   <text x="370" y="105" fill="black" text-anchor="middle" font-size="40px">*</text>
-  <text x="460" y="88" fill="black" text-anchor="middle" font-size="20px">12</text>
+  <text x="460" y="88" fill="black" text-anchor="middle" font-size="20px">-12</text>
 
   <text x="550" y="290" fill="black" text-anchor="middle" font-size="16px">(Gradients)</text>
   <rect x="130" y="220" width="100" height="100" stroke="black" stroke-width="1" fill="white" />
