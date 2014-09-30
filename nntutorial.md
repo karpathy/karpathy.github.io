@@ -1152,16 +1152,17 @@ todo... clean up this section and flesh it out, explain better, example...
 ### Modular Design Tips/Tricks
 
 Structuring the learning code:
+
 - Cost function that returns cost, gradient
 - Modules that implement forward() and backward() API
 - A Net class that maintains (static) connectivity structure
-- A Solver class that handles dynamics of learning
+- A Solver class that handles the dynamics
 - Correctness: Numerical gradient checks
 
 ### Example: Practical Neural Network Classifier
 
 - SVM cost function
-- Multiclass: structured SVM
+- Multiclass: Structured SVM
 - Multiclass: Logistic Regressions, Softmax
 
 ### Example: Regression instead of Classifier
@@ -1177,12 +1178,13 @@ Writing a Neural Net classfier in Python with numpy....
 - Monitoring of Cost function
 - Monitoring training/validation performance
 - Optimization: Using Momentum
-- Tweaking Learning rates
+- Tweaking Learning rates, learning rate schedules
 - Hyperparameter search, cross-validations
 - Common pitfalls: (e.g. dying ReLUs)
 - Handling unbalanced datasets
+- Approaches to debugging nets when something doesnt work
 
-## Chapter 4: Types of Networks in the Wild
+## Chapter 4: Networks in the Wild
 
 Case studies of models that work well in practice and have been deployed in the wild.
 
