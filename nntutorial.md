@@ -735,6 +735,16 @@ var db = b === x ? 1.0 * dx : 0.0;
 
 Okay this is making a very simple thing hard to read. The `max` function passes on the value of the input that was largest and ignores the other ones. In the backward pass then, the max gate will simply take the gradient on top and route it to the input that actually flowed through it during the forward pass. The gate acts as a simple switch based on which input has highest value. The other inputs will have zero gradient. That's what the `===` is about, since we are testing for which input was the actual max and only routing the gradient to it.
 
+Finally, lets look at the Rectified Linear Unit non-linearity (or ReLU), which you may have heard of. It is used in Neural Networks in place of the sigmoid function. It is simply thresholding at zero:
+
+```javascript
+var x = Math.max(a, 0)
+// backprop through this gate will then be:
+var da = a > 0 ? 1.0 * dx : 0.0;
+```
+
+In other words this gate simply passes the value through if it's larger than 0, or it stops the flow and sets it to zero. In the backward pass, the gate will pass on the gradient from the top if it was activated during the forawrd pass, or if the original input was below zero, it will stop the gradient flow.
+
 I will stop at this point. I hope you got some intuition about how you can compute entire expressions (which are made up of many gates along the way) and how you can compute backprop for every one of them.
 
 Everything we've done in this chapter comes down to this: We saw that we can feed some input through arbitrarily complex real-valued circuit, tug at the end of the circuit with some force, and backpropagation distributes that tug through the entire circuit all the way back to the inputs. If the inputs respond slightly along the final direction of their tug, the circuit will "give" a bit along the original pull direction. Maybe this is not immediately obvious, but this machinery is a powerful *hammer* for Machine Learning.
@@ -982,25 +992,162 @@ this code gives an identical result. Perhaps by now you can glance at the code a
 
 Lets **recap**. We introduced the **binary classification** problem, where we are given N D-dimensional vectors and a label +1/-1 for each. We saw that we can combine these features with a set of parameters inside a real-valued circuit (such as a **Support Vector Machine** circuit in our example). Then, we can repeatedly pass our data through the circuit and each time tweak the parameters so that the circuit's output value is consistent with the provided labels. The tweaking relied, crucially, on our ability to **backpropagate** gradients through the circuit. In the end, the final circuit can be used to predict values for unseen instances!
 
+#### Generalizing the SVM into a Neural Network
 
-#### A more Conventional Approach: Loss Functions
+Of interest is the fact that an SVM is just a particular type of a very simple circuit (circuit that computes `score = a*x + b*y + c` where `a,b,c` are weights and `x,y` are data points). This can be easily extended to more complicated functions. For example, lets write a 2-layer Neural Network that does the binary classification. The forward pass will look like this:
 
-Now that I've given intuition for an SVM (in terms of *force specification*), let's take a more conventional approach: SVMs (and all other Machine Learning models) are usually defined in terms of loss functions rather than force specifications. However, the force specification I described is, in fact, a direct result of a loss function since it is simply the gradient of the loss.
+```javascript
+// assume variables x,y 
+var n1 = Math.max(0, a1*x + b1*y + c1); // activation of 1st hidden neuron
+var n2 = Math.max(0, a2*x + b2*y + c2); // 2nd neuron
+var n3 = Math.max(0, a3*x + b3*y + c3); // 2nd neuron
+var score = a4*n1 + b4*n2 + c4*n3 + d4; // the score
+```
 
-todo...
+That will be our circuit. The specification above is a 2-layer Neural Network that uses Rectified Linear Unit (ReLU) non-linearity on each hidden neuron. The hidden layer here consists of three neurons (n1, n2, n3). As you can see, there are now several parameters involved, which means that our classifier is more complex and can represent more intricate classifier than just a simple linear decision rule such as an SVM. Lets now train this 2-layer Neural Network, similar to the SVM example above. Only the core changes:
+
+```javascript
+// random initial parameters
+var a1 = Math.random() - 0.5; // a random number between -0.5 and 0.5
+// ... similarly initialize all other parameters to randoms
+for(var iter = 0; iter < 400; iter++) {
+  // pick a random data point
+  var i = Math.floor(Math.random() * data.length);
+  var x = data[i][0];
+  var y = data[i][1];
+  var label = labels[i];
+
+  // compute forward pass
+  var n1 = Math.max(0, a1*x + b1*y + c1); // activation of 1st hidden neuron
+  var n2 = Math.max(0, a2*x + b2*y + c2); // 2nd neuron
+  var n3 = Math.max(0, a3*x + b3*y + c3); // 2nd neuron
+  var score = a4*n1 + b4*n2 + c4*n3 + d4; // the score
+
+  // compute the pull on top
+  var pull = 0.0;
+  if(label === 1 && score < 1) pull = 1; // we want higher output! Pull up.
+  if(label === -1 && score > -1) pull = -1; // we want lower output! Pull down.
+
+  // now compute backward pass to all parameters of the model
+
+  // backprop through the last "score" neuron
+  var dscore = pull;
+  var da4 = n1 * dscore;
+  var dn1 = a4 * dscore;
+  var db4 = n2 * dscore;
+  var dn2 = b4 * dscore;
+  var dc4 = n3 * dscore;
+  var dn3 = c4 * dscore;
+  var dd4 = 1.0 * dscore; // phew
+
+  // backprop the ReLU non-linearities, in place
+  // i.e. just set gradients to zero if the neurons did not "fire"
+  var dn3 = n3 === 0 ? 0 : dn3;
+  var dn2 = n2 === 0 ? 0 : dn2;
+  var dn1 = n1 === 0 ? 0 : dn1;
+
+  // backprop to parameters of neuron 1
+  var da1 = x * dn1;
+  var db1 = y * dn1;
+  var dc1 = 1.0 * dn1;
+  
+  // backprop to parameters of neuron 2
+  var da2 = x * dn2;
+  var db2 = y * dn2;
+  var dc2 = 1.0 * dn2;
+
+  // backprop to parameters of neuron 3
+  var da3 = x * dn3;
+  var db3 = y * dn3;
+  var dc3 = 1.0 * dn3;
+
+  // phew! End of backprop!
+  // note we could have also backpropped into x,y
+  // but we do not need these gradients. We only use the gradients
+  // on our parameters in the parameter update, and we discard x,y
+
+  // add the pulls from the regularization, tugging all multiplicative
+  // parameters (i.e. not the biases) downward, proportional to their value
+  da1 += -a1; da2 += -a2; da3 += -a3;
+  db1 += -b1; db2 += -b2; db3 += -b3;
+  da4 += -a4; db4 += -b4; dc4 += -c4;
+
+  // finally, do the parameter update
+  var step_size = 0.01;
+  a1 += step_size * da1; 
+  b1 += step_size * db1; 
+  c1 += step_size * dc1;
+  a2 += step_size * da2; 
+  b2 += step_size * db2;
+  c2 += step_size * dc2;
+  a3 += step_size * da3; 
+  b3 += step_size * db3; 
+  c3 += step_size * dc3;
+  a4 += step_size * da4; 
+  b4 += step_size * db4; 
+  c4 += step_size * dc4; 
+  d4 += step_size * dd4;
+  // wow this is tedious, please use for loops in prod.
+  // we're done!
+}
+```
+
+And that's how you train a neural network. Obviously, you really want to modularize your code nicely but I expendad this example for you in hope that it makes things much more concrete and simpler to understand. Later, we will look at best practices when implementing these networks and we will structure the code much more neatly in a modular and more sensible way. 
+
+But for now, I hope your takeaway is that a 2-layer Neural Net is really not such a scary thing: we write a forward pass expression, interpret the value at the end as a score, and then we pull on that value in positive or negative direction depending on what we want that value to be for our current particular example. The parameter update after backprop will ensure that when we see this particular example in the future, the network will be more likely to give us a value we desire, not the one it gave just before the update.
 
 
-### Regression
+### A more Conventional Approach: Loss Functions
 
-An example of a different loss function
+Now that we understand the basics of how these circuits function with data, lets adopt a more conventional approach that you might see elsewhere on the internet and in other tutorials and books. You won't see people talking too much about **force specifications**. Instead, a kit if Machine Learning algorithms are specified in terms of **loss functions** (or **cost functions**, or **objectives**).
 
-todo...
+As I develop this formalism I would also like to start to be a little more careful with how we name our variables and parameters. I'd like these equations to look similar to what you might see in a book or some other tutorial, so let me use more standard naming conventions.
 
-### 2-layer Neural Network
+Lets start with an example of a 2-dimensional Support Vector Machine. We are given a dataset of \\( N \\) examples \\( (x\_{i0}, x\_{i1}) \\) and their corresponding labels \\( y\_{i} \\) which are allowed to be either \\( +1/-1 \\) for positive or negative example respectively. And then we have three parameters \\( (w\_0, w\_1, w\_2) \\). The loss function for SVM is as follows:
 
-Stacking neurons
+$$
+L = [\sum\_{i=1}^N max(0, -y\_{i}( w\_0x\_{i0} + w\_1x\_{i1} + w\_2 ) + 1 )] + \alpha [w\_0^2 + w\_1^2]
+$$
 
-todo...
+
+The idea is that we want this mathematical expression to be zero. But since this is a Hacker's guide, before we dive into how this expression works, let me give you the equivalent in code:
+
+```javascript
+var X = [ [1.2, 0.7], [-0.3, 0.5], [-3, -1] ] // array of 2-dimensional data
+var y = [1, -1, 1] // array of labels
+var w = [0.1, 0.2, 0.3] // example: random numbers
+var alpha = 0.01; // regularization strength
+
+function cost(X, y, w) {
+  
+  var total_cost = 0.0;
+  N = X.length;
+  for(var i=0;i<N;i++) {
+    var xi = X[i];
+    var score = w[0] * xi[0] + w[1] * xi[1] + w[2];
+    var yi = y[i]; // label
+    var costi = Math.max(0, - yi * score + 1);
+    total_cost += costi;
+  }
+
+  // regularization cost: we want small weights
+  total_cost += alpha * (w[0]*w[0] + w[1]*w[1])
+
+  return total_cost;
+}
+
+```
+
+Notice how this expression works: It measures how *bad* our classifier is. For example if we have a positive example (`yi = +1`), then the only way to not accumulate any cost is to have a score that is higher than `+1`. If the score for that example is less than `1`, there will an accumulated cost for that example (and this is bad). Conversely, for the negative examples (`yi = -1`), the score must be negative and less than `-1`, otherwise we will accumulate cost.
+
+> In other words, a cost function is an expression that measuress how bad your classifier is. When the training set if perfectly classified, the cost will be zero.
+
+Notice that the last term in the loss is the regularization cost, which says that our model parameters should be small values. Due to this term the cost will never actually become zero (because this would mean all parameters of the model except the bias are exactly zero), but the closer we get, the better our classifier will become.
+
+Therefore, our objective is to **make this cost as small as possible**. Sounds familiar? We know exactly what to do: That cost function written above is our circuit. We will forward all examples through the circuit, and then compute the backward pass and update all parameters such that the circuit will output a *smaller* cost in the future. We will do this by computing the *gradient* and then updating the parameters in the *opposite direction* of the gradient (since we want to make the cost very small, not very large).
+
+todo... clean up this section and flesh it out, explain better, example...
+
 
 ## Chapter 3: Backprop in Practice
 
