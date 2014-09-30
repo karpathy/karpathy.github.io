@@ -1095,7 +1095,7 @@ But for now, I hope your takeaway is that a 2-layer Neural Net is really not suc
 
 ### A more Conventional Approach: Loss Functions
 
-Now that we understand the basics of how these circuits function with data, lets adopt a more conventional approach that you might see elsewhere on the internet and in other tutorials and books. You won't see people talking too much about **force specifications**. Instead, a kit if Machine Learning algorithms are specified in terms of **loss functions** (or **cost functions**, or **objectives**).
+Now that we understand the basics of how these circuits function with data, lets adopt a more conventional approach that you might see elsewhere on the internet and in other tutorials and books. You won't see people talking too much about **force specifications**. Instead, Machine Learning algorithms are specified in terms of **loss functions** (or **cost functions**, or **objectives**).
 
 As I develop this formalism I would also like to start to be a little more careful with how we name our variables and parameters. I'd like these equations to look similar to what you might see in a book or some other tutorial, so let me use more standard naming conventions.
 
@@ -1142,17 +1142,64 @@ Notice that the last term in the loss is the regularization cost, which says tha
 
 Therefore, our objective is to **make this cost as small as possible**. Sounds familiar? We know exactly what to do: That cost function written above is our circuit. We will forward all examples through the circuit, and then compute the backward pass and update all parameters such that the circuit will output a *smaller* cost in the future. We will do this by computing the *gradient* and then updating the parameters in the *opposite direction* of the gradient (since we want to make the cost very small, not very large).
 
+> "We know exactly what to do: The cost function written above is our circuit."
+
 todo... clean up this section and flesh it out, explain better, example...
 
 
 ## Chapter 3: Backprop in Practice
 
-### Backprop: For-loop style
+### Modular Design Tips/Tricks
 
-Backprop with for loops
+Structuring the learning code:
+- Cost function that returns cost, gradient
+- Modules that implement forward() and backward() API
+- A Net class that maintains (static) connectivity structure
+- A Solver class that handles dynamics of learning
+- Correctness: Numerical gradient checks
 
-### Backprop: Vectorized Implementations
+### Example: Practical Neural Network Classifier
 
-Efficient backprop
+- SVM cost function
+- Multiclass: structured SVM
+- Multiclass: Logistic Regressions, Softmax
+
+### Example: Regression instead of Classifier
+
+Tiny changes needed to cost function. L2 regularization.
+
+### Vectorized Implementations
+
+Writing a Neural Net classfier in Python with numpy....
+
+### Backprop in practice: Tips/Tricks
+
+- Monitoring of Cost function
+- Monitoring training/validation performance
+- Optimization: Using Momentum
+- Tweaking Learning rates
+- Hyperparameter search, cross-validations
+- Common pitfalls: (e.g. dying ReLUs)
+- Handling unbalanced datasets
+
+## Chapter 4: Types of Networks in the Wild
+
+Case studies of models that work well in practice and have been deployed in the wild.
+
+### Case Study: Convolutional Neural Networks for images
+
+Convolutional layers, pooling, AlexNet, etc.
+
+### Recurrent Neural Networks for Speech and Text
+
+Vanilla Recurrent nets
+
+### Case Study: Word2Vec
+
+Training word vector representations in NLP
+
+### Case Study: t-SNE
+
+Training embeddings for visualizing data
 
 
