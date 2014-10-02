@@ -41,4 +41,5 @@ I encourage people to try this for themselves (see my code, above), as it is ver
 Finally, here is an example of my debugging interface:
 <img src="/assets/cifar_predict.jpg" width="100%">
 
-The Matlab code used to generate these results can be found [here](http://cs.ubc.ca/~andrejk/cifar10inspect.zip).
+The Matlab code used to generate these results can be found [here](http://cs.stanford.edu/people/karpathy/cifar10inspect.zip)
+
