@@ -1233,4 +1233,8 @@ Training word vector representations in NLP
 
 Training embeddings for visualizing data
 
+## Comments
+
+This guide is a work in progress and I appreciate feedback, especially regarding parts that were unclear or only made half sense. Thank you!
+
 
