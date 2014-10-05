@@ -1099,52 +1099,74 @@ Now that we understand the basics of how these circuits function with data, lets
 
 As I develop this formalism I would also like to start to be a little more careful with how we name our variables and parameters. I'd like these equations to look similar to what you might see in a book or some other tutorial, so let me use more standard naming conventions.
 
-Lets start with an example of a 2-dimensional Support Vector Machine. We are given a dataset of \\( N \\) examples \\( (x\_{i0}, x\_{i1}) \\) and their corresponding labels \\( y\_{i} \\) which are allowed to be either \\( +1/-1 \\) for positive or negative example respectively. And then we have three parameters \\( (w\_0, w\_1, w\_2) \\). The loss function for SVM is as follows:
+#### Example: 2-D Support Vector Machine
+Lets start with an example of a 2-dimensional SVM. We are given a dataset of \\( N \\) examples \\( (x\_{i0}, x\_{i1}) \\) and their corresponding labels \\( y\_{i} \\) which are allowed to be either \\( +1/-1 \\) for positive or negative example respectively. Most importantly, as you recall we have three parameters \\( (w\_0, w\_1, w\_2) \\). The SVM loss function is then defined as follows:
 
 $$
 L = [\sum\_{i=1}^N max(0, -y\_{i}( w\_0x\_{i0} + w\_1x\_{i1} + w\_2 ) + 1 )] + \alpha [w\_0^2 + w\_1^2]
 $$
 
-
-The idea is that we want this mathematical expression to be zero. But since this is a Hacker's guide, before we dive into how this expression works, let me give you the equivalent in code:
+Notice that this expression is always positive, due to the thresholding at zero in the first expression and the squaring in the regularization. The idea is that we will want this expression to be as small as possible. Before we dive into some of its subtleties let me first translate it to code:
 
 ```javascript
-var X = [ [1.2, 0.7], [-0.3, 0.5], [-3, -1] ] // array of 2-dimensional data
+var X = [ [1.2, 0.7], [-0.3, 0.5], [3, 2.5] ] // array of 2-dimensional data
 var y = [1, -1, 1] // array of labels
 var w = [0.1, 0.2, 0.3] // example: random numbers
-var alpha = 0.01; // regularization strength
+var alpha = 0.1; // regularization strength
 
 function cost(X, y, w) {
   
-  var total_cost = 0.0;
+  var total_cost = 0.0; // L, in SVM loss function above
   N = X.length;
   for(var i=0;i<N;i++) {
+    // loop over all data points and compute their score
     var xi = X[i];
     var score = w[0] * xi[0] + w[1] * xi[1] + w[2];
+    
+    // accumulate cost based on how compatible the score is with the label
     var yi = y[i]; // label
     var costi = Math.max(0, - yi * score + 1);
+    console.log('cost for example ' + i + ' is ' + costi.toFixed(3));
     total_cost += costi;
   }
 
   // regularization cost: we want small weights
-  total_cost += alpha * (w[0]*w[0] + w[1]*w[1])
+  reg_cost = alpha * (w[0]*w[0] + w[1]*w[1])
+  console.log('regularization cost for current model is ' + reg_cost.toFixed(3));
+  total_cost += reg_cost;
 
+  console.log('total cost is ' + total_cost.toFixed(3));
   return total_cost;
 }
-
 ```
 
-Notice how this expression works: It measures how *bad* our classifier is. For example if we have a positive example (`yi = +1`), then the only way to not accumulate any cost is to have a score that is higher than `+1`. If the score for that example is less than `1`, there will an accumulated cost for that example (and this is bad). Conversely, for the negative examples (`yi = -1`), the score must be negative and less than `-1`, otherwise we will accumulate cost.
+And here is the output:
 
-> In other words, a cost function is an expression that measuress how bad your classifier is. When the training set if perfectly classified, the cost will be zero.
+```
+cost for example 0 is 0.440
+cost for example 1 is 1.370
+cost for example 2 is 0.000
+regularization cost for current model is 0.005
+total cost is 1.815 
+```
+
+Notice how this expression works: It measures how *bad* our SVM classifier is. Lets step through this explicitly:
+
+- The first datapoint `xi = [1.2, 0.7]` with label `yi = 1` will give score `0.1*1.2 + 0.2*0.7 + 0.3`, which is `0.56`. Notice, this is a positive example so we want to the score to be greater than `+1`. `0.56` is not enough. And indeed, the expression for cost for this datapoint will compute: `costi = Math.max(0, -1*0.56 + 1)`, which is `0.44`. You can think of the cost as quantifying the SVM's unhappiness.
+- The second datapoint `xi = [-0.3, 0.5]` with label `yi = -1` will give score `0.1*(-0.3) + 0.2*0.5 + 0.3`, which is `0.37`. This isn't looking very good: This score is very high for a negative example. It should be less than -1. Indeed, when we compute the cost: `costi = Math.max(0, 1*0.37 + 1)`, we get `1.37`. That's a very high cost from this example, as it is being misclassified.
+- The last example `xi = [3, 2.5]` with label `yi = 1` gives score `0.1*3 + 0.2*2.5 + 0.3`, and that is `1.1`. In this case, the SVM will compute `costi = Math.max(0, -1*1.1 + 1)`, which is in fact zero. This datapoint is being classified correctly and there is no cost associated with it.
+
+> A cost function is an expression that measuress how bad your classifier is. When the training set if perfectly classified, the cost (ignoring the regularization) will be zero.
 
 Notice that the last term in the loss is the regularization cost, which says that our model parameters should be small values. Due to this term the cost will never actually become zero (because this would mean all parameters of the model except the bias are exactly zero), but the closer we get, the better our classifier will become.
 
-Therefore, our objective is to **make this cost as small as possible**. Sounds familiar? We know exactly what to do: That cost function written above is our circuit. We will forward all examples through the circuit, and then compute the backward pass and update all parameters such that the circuit will output a *smaller* cost in the future. We will do this by computing the *gradient* and then updating the parameters in the *opposite direction* of the gradient (since we want to make the cost very small, not very large).
+> The majority of cost functions in Machine Learning consist of two parts: 1. A part that measures how well a model fits the data, and 2: Regularization, which measures some notion of how complex or likely a model is.
+
+I hope I convinced you then, that to get a very good SVM we really want to make the **cost as small as possible**. Sounds familiar? We know exactly what to do: The cost function written above is our circuit. We will forward all examples through the circuit, compute the backward pass and update all parameters such that the circuit will output a *smaller* cost in the future. Specifically, we will compute the *gradient* and then update the parameters in the *opposite direction* of the gradient (since we want to make the cost small, not large).
 
 > "We know exactly what to do: The cost function written above is our circuit."
 
-todo... clean up this section and flesh it out, explain better, example...
+todo: clean up this section and flesh it out a bit...
 
 
 ## Chapter 3: Backprop in Practice
@@ -1157,7 +1179,7 @@ Structuring the learning code:
 - Modules that implement forward() and backward() API
 - A Net class that maintains (static) connectivity structure
 - A Solver class that handles the dynamics
-- Correctness: Numerical gradient checks
+- Correctness: Numerical gradient checks and its subtleties (e.g. kinks, relative error)
 
 ### Example: Practical Neural Network Classifier
 
@@ -1169,6 +1191,10 @@ Structuring the learning code:
 
 Tiny changes needed to cost function. L2 regularization.
 
+### Example: Structured Prediction
+
+Basic idea is to train an (unnormalized) energy model
+
 ### Vectorized Implementations
 
 Writing a Neural Net classfier in Python with numpy....
@@ -1177,8 +1203,11 @@ Writing a Neural Net classfier in Python with numpy....
 
 - Monitoring of Cost function
 - Monitoring training/validation performance
+- Tweaking initial learning rates, learning rate schedules
 - Optimization: Using Momentum
-- Tweaking Learning rates, learning rate schedules
+- Optimization: LBFGS, Nesterov accelerated gradient
+- Importance of Initialization: weights and biases
+- Regularization: L2, L1, Group sparsity, Dropout
 - Hyperparameter search, cross-validations
 - Common pitfalls: (e.g. dying ReLUs)
 - Handling unbalanced datasets
@@ -1192,9 +1221,9 @@ Case studies of models that work well in practice and have been deployed in the 
 
 Convolutional layers, pooling, AlexNet, etc.
 
-### Recurrent Neural Networks for Speech and Text
+### Case Study: Recurrent Neural Networks for Speech and Text
 
-Vanilla Recurrent nets
+Vanilla Recurrent nets, bi-directional recurrent nets. Maybe overview of LSTM
 
 ### Case Study: Word2Vec
 
