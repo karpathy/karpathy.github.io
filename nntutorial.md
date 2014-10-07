@@ -49,7 +49,7 @@ $$
 f(x,y) = x y
 $$
 
-As with this example, all of our gates will take or two inputs and produce a **single** output value.
+As with this example, all of our gates will take two inputs and produce a **single** output value.
 
 #### The Goal
 
