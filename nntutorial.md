@@ -202,7 +202,7 @@ But hold on, you say: *"The analytic gradient was trivial to derive for your sup
 
 > A single extra multiplication will turn a single (useless gate) into a cog in complex machine that is an entire neural network.
 
-I should stop hyping it up now. I hope I've peaked your interest :). Lets drill down into details and get two gates involved with this next example:
+I should stop hyping it up now. I hope I've piqued your interest :). Lets drill down into details and get two gates involved with this next example:
 
 <div class="svgdiv">
 <svg width="500" height="150">
