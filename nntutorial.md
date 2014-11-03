@@ -49,7 +49,7 @@ $$
 f(x,y) = x y
 $$
 
-As with this example, all of our gates will take or two inputs and produce a **single** output value.
+As with this example, all of our gates will take two inputs and produce a **single** output value.
 
 #### The Goal
 
@@ -202,7 +202,7 @@ But hold on, you say: *"The analytic gradient was trivial to derive for your sup
 
 > A single extra multiplication will turn a single (useless gate) into a cog in complex machine that is an entire neural network.
 
-I should stop hyping it up now. I hope I've peaked your interest :). Lets drill down into details and get two gates involved with this next example:
+I should stop hyping it up now. I hope I've piqued your interest :). Lets drill down into details and get two gates involved with this next example:
 
 <div class="svgdiv">
 <svg width="500" height="150">
@@ -784,7 +784,7 @@ In this expression we think of `x` and `y` as the inputs (the 2D vectors) and `a
 
 1. We select a random datapoint and feed it through the circuit
 2. We will interpret the output of the circuit as a confidence that the datapoint has class `+1`. (i.e. very high values = circuit is very certain datapoint has class `+1` and very low values = circuit is certain this datapoint has class `-1`.)
-3. We will measure how well the prediction aligns with the provided labels. Intuitively, for example, if a positive example scores very low, we will want to tug in the positive direction on the circuit, demanding that it should output higher value for this datapoint. Note that this is the case for the the first datapoint: it is labeled as `+1` but our predictor unction only assigns it value `-1.2`. We will therefore tug on the circuit in positive direction; We want the value to be higher.
+3. We will measure how well the prediction aligns with the provided labels. Intuitively, for example, if a positive example scores very low, we will want to tug in the positive direction on the circuit, demanding that it should output higher value for this datapoint. Note that this is the case for the the first datapoint: it is labeled as `+1` but our predictor function only assigns it value `-1.2`. We will therefore tug on the circuit in positive direction; We want the value to be higher.
 4. The circuit will take the tug and backpropagate it to compute tugs on the inputs `a,b,c,x,y`
 5. Since we think of `x,y` as (fixed) datapoints, we will ignore the pull on `x,y`. If you're a fan of my physical analogies, think of these inputs as pegs, fixed in the ground.
 6. On the other hand, we will take the parameters `a,b,c` and make them respond to their tug (i.e. we'll perform what we call a **parameter update**). This, of course, will make it so that the circuit will output a slightly higher score on this particular datapoint in the future.
