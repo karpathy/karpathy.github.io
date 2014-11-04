@@ -106,7 +106,7 @@ $$
 $$
 </div>
 
-Where \\( h \\) is small - it's the tweak amount. Also, if you're not very familiar with calculus it is important to note that in the left-hand side of the equation above, the horizontal line does *not* indicate division. The entire symbol \\( \frac{\partial f(x,y)}{\partial x} \\) is a single thing: the derivative of the function \\( f(x,y) \\) with respect to \\( x \\). The horizontal line on the right *is* division. I know it's confusing but it's standard notation. Anyway, I hope it doesn't look too scary because it isn't: The circuit was giving some initial output \\( f(x,y) \\), and then we changed one of the inputs by a tiny amount \\(h \\) and read the new output \\( f(x+h, y) \\). Subtracting those two quantities tells us the change, and the division by \\(h \\) just normalizes this change by the tweak amount we used. In other words it's expressing exactly what I described above and translates directly to this code:
+Where \\( h \\) is small - it's the tweak amount. Also, if you're not very familiar with calculus it is important to note that in the left-hand side of the equation above, the horizontal line does *not* indicate division. The entire symbol \\( \frac{\partial f(x,y)}{\partial x} \\) is a single thing: the derivative of the function \\( f(x,y) \\) with respect to \\( x \\). The horizontal line on the right *is* division. I know it's confusing but it's standard notation. Anyway, I hope it doesn't look too scary because it isn't: The circuit was giving some initial output \\( f(x,y) \\), and then we changed one of the inputs by a tiny amount \\(h \\) and read the new output \\( f(x+h, y) \\). Subtracting those two quantities tells us the change, and the division by \\(h \\) just normalizes this change by the (arbitrary) tweak amount we used. In other words it's expressing exactly what I described above and translates directly to this code:
 
 ```javascript
 var x = -2, y = 3;
@@ -140,7 +140,9 @@ var out_new = forwardMultiplyGate(x, y); // -5.87! exciting.
 
 As expected, we changed the inputs by the gradient and the circuit now gives a slightly higher value (`-5.87 > -6.0`). That was much simpler than trying random changes to `x` and `y`, right? A fact to appreciate here is that if you take calculus you can prove that the gradient is, in fact, the direction of the steepest increase of the function. There is no need to monkey around trying out random pertubations as done in Strategy #1. Evaluating the gradient requires just three evaluations of the forward pass of our circuit instead of hundreds, and gives the best tug you can hope for (locally) if you are interested in increasing the value of the output.
 
-**Caution**. Let me clarify on this a bit. Before we move on it is important to note that in this very simple example, using a bigger step_size than 0.01  would always work better. For example, step size of 1.0 would have given us a much bigger improvement. The crucial thing to realize is that once the circuits get much more complex, the function from inputs to the final output will be be more chaotic and wiggly. The gradient guarantees that if you have a very small (indeed, infinitesimally small) step size, then you will definitely get a higher number when you follow its direction, and for that same step size there is no other direction that would have worked better. But if you use a bigger step size (e.g. `step_size = 0.01`) all bets are off. One analogy I've heard before is that the output value for our circuts is like the height of a hill, and we are blindfolded and trying to climb to the top. We can sense the steepness of the hill at our feet (the gradient), so when we shuffle our feet a bit we will go upwards. But if we took a big, overconfident step, we could have stepped right into a hole.
+**Bigger step is not always better.** Let me clarify on this point a bit. It is important to note that in this very simple example, using a bigger `step_size` than 0.01  will always work better. For example, `step_size = 1.0` gives output `-1` (higer, better!), and indeed infinite step size would give infinitely good results. The crucial thing to realize is that once our circuits get much more complex (e.g. entire neural networks), the function from inputs to the output value will be more chaotic and wiggly. The gradient guarantees that if you have a very small (indeed, infinitesimally small) step size, then you will definitely get a higher number when you follow its direction, and for that infinitesimally small step size there is no other direction that would have worked better. But if you use a bigger step size (e.g. `step_size = 0.01`) all bets are off. The reason we can get away with a larger step size than infinitesimally small is that our functions are usually relatively smooth. But really, we're crossing our fingers and hoping for the best.
+
+**Hill-climbing analogy.** One analogy I've heard before is that the output value of our circut is like the height of a hill, and we are blindfolded and trying to climb upwards. We can sense the steepness of the hill at our feet (the gradient), so when we shuffle our feet a bit we will go upwards. But if we took a big, overconfident step, we could have stepped right into a hole.
 
 Great, I hope I've convinced you that the numerical gradient is indeed a very useful thing to evaluate, and that it is cheap. But. It turns out that we can do *even* better.
 
@@ -263,7 +265,7 @@ $$
 q(x,y) = x + y \hspace{0.5in} \implies \hspace{0.5in} \frac{\partial q(x,y)}{\partial x} = 1, \hspace{1in} \frac{\partial q(x,y)}{\partial y} = 1
 $$
 
-That's right, the derivaties are just 1, regardless of the actual values of `x` and `y`. If you think about it, this makes sense because to make the output of a single addition gate higher, we expect a positive tug on both `x` and `y`.
+That's right, the derivaties are just 1, regardless of the actual values of `x` and `y`. If you think about it, this makes sense because to make the output of a single addition gate higher, we expect a positive tug on both `x` and `y`, regardless of their values.
 
 #### Backpropagation
 
@@ -586,12 +588,12 @@ Over time you will become much more efficient in writing the backward pass, even
 
 ```javascript
 var x = a * b;
-// and we saw that in backprop we simply compute:
+// and given gradient on x (dx), we saw that in backprop we would compute:
 var da = b * dx;
 var db = a * dx;
 ```
 
-In other words, the `*` gate is a *switcher* during backward pass, for lack of better word. It remembers what its inputs were, and the gradients on each one will be the value of the other during the forward pass. And then of course we have to multiply with the gradient from above, which is the chain rule. Here's the `+` gate in this condensed form:
+In the code above, I'm assuming that the variable `dx` is given, coming from somewhere above us in the circuit while we're doing backprop (or it is +1 by default otherwise). I'm writing it out because I want to explicitly show how the gradients get chained together. Note from the equations that the `*` gate acts as a *switcher* during backward pass, for lack of better word. It remembers what its inputs were, and the gradients on each one will be the value of the other during the forward pass. And then of course we have to multiply with the gradient from above, which is the chain rule. Here's the `+` gate in this condensed form:
 
 ```javascript
 var x = a + b;
@@ -625,7 +627,7 @@ Okay, how about combining gates?:
 
 ```javascript
 var x = a * b + c;
-// backprop in-one-sweep would be =>
+// given dx, backprop in-one-sweep would be =>
 da = b * dx;
 db = a * dx;
 dc = 1.0 * dx;
@@ -959,6 +961,8 @@ training accuracy at iteration 375: 1
 
 We see that initially our classifier only had 33% training accuracy, but by the end all training examples are correctly classifier as the parameters `a,b,c` adjusted their values according to the pulls we exerted. We just trained an SVM! But please don't use this code anywhere in production :) We will see how we can make things much more efficient once we understand what is going on at the core.
 
+**Number of iterations needed**. With this example data, with this example initialization, and with the setting of step size we used, it took about 300 iterations to train the SVM. In practice, this could be many more or many less depending on how hard or large the problem is, how you're initializating, normalizing your data, what step size you're using, and so on. This is just a toy demonstration, but later we will go over all the best practices for actually training these classifiers in practice. For example, it will turn out that the setting of the step size is very imporant and tricky. Small step size will make your model slow to train. Large step size will train faster, but if it is too large, it will make your classifier chaotically jump around and not converge to a good final result. We will eventually use witheld validation data to properly tune it to be just in the sweet spot for your particular data.
+
 One thing I'd like you to appreciate is that the circuit can be arbitrary expression, not just the linear prediction function we used in this example. For example, it can be an entire neural network.
 
 By the way, I intentionally structured the code in a modular way, but we could have trained an SVM with a much simpler code. Here is really what all of these classes and computations boil down to:
@@ -987,6 +991,8 @@ for(var iter = 0; iter < 400; iter++) {
 ```
 
 this code gives an identical result. Perhaps by now you can glance at the code and see how these equations came about.
+
+**Variable pull?** A quick note to make at this point: You may have noticed that the pull is always 1,0, or -1. You could imagine doing other things, for example making this pull proportional to how bad the mistake was. This leads to a variation on the SVM that some people refer to as *squared hinge loss* SVM, for reasons that will later become clear. Depending on various features of your dataset, that may work better or worse. For example, if you have very bad outliers in your data, e.g. a negative data point that gets a score `+100`, its influence will be relatively minor on our classifier because we will only pull with force of `-1` regardless of how bad the mistake was. In practice we refer to this property of a classifier as **robustness** to outliers.
 
 Lets **recap**. We introduced the **binary classification** problem, where we are given N D-dimensional vectors and a label +1/-1 for each. We saw that we can combine these features with a set of parameters inside a real-valued circuit (such as a **Support Vector Machine** circuit in our example). Then, we can repeatedly pass our data through the circuit and each time tweak the parameters so that the circuit's output value is consistent with the provided labels. The tweaking relied, crucially, on our ability to **backpropagate** gradients through the circuit. In the end, the final circuit can be used to predict values for unseen instances!
 
@@ -1232,6 +1238,10 @@ Training word vector representations in NLP
 ### Case Study: t-SNE
 
 Training embeddings for visualizing data
+
+## Acknowledgements
+
+Thanks a lot to the following people who made this guide better: wodenokoto (HN), zackmorris (HN).
 
 ## Comments
 
