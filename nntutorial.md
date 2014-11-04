@@ -423,7 +423,7 @@ $$
 \frac{\partial \sigma(x)}{\partial x} = \sigma(x) (1 - \sigma(x))
 $$
 
-For example, if the sigmoid gate computes some output during forward pass (e.g. `x = 0.7`), then gradient with respect to its input will simply be `dx = (0.7) * (1 - 0.7) = 0.21`.
+For example, if the input to the sigmoid gate is `x = 3`, the gate will compute output `f = 1.0 / (1.0 + Math.exp(-x)) = 0.95`, and then the (local) gradient on its input will simply be `dx = (0.95) * (1 - 0.95) = 0.0475`.
 
 That's all we need to use this gate: we know how to take an input and *forward* it through the sigmoid gate, and we also have the expression for the gradient with respect to its input, so we can also *backprop* through it. Another thing to note is that technically, the sigmoid function is made up of an entire series of gates in a line that compute more *atomic* functions: an exponentiation gate, an addition gate and a division gate. Treating it so would work perfectly fine but for this example I chose to collapse all of these gates into a single gate that just computes sigmoid in one shot, because the gradient expression turns out to be simple.
 
@@ -1126,7 +1126,9 @@ function cost(X, y, w) {
     // accumulate cost based on how compatible the score is with the label
     var yi = y[i]; // label
     var costi = Math.max(0, - yi * score + 1);
-    console.log('cost for example ' + i + ' is ' + costi.toFixed(3));
+    console.log('example ' + i + ': xi = (' + xi + ') and label = ' + yi);
+    console.log('  score computed to be ' + score.toFixed(3));
+    console.log('  => cost computed to be ' + costi.toFixed(3));
     total_cost += costi;
   }
 
@@ -1173,13 +1175,31 @@ todo: clean up this section and flesh it out a bit...
 
 ### Modular Design Tips/Tricks
 
-Structuring the learning code:
+**Motivation.** When I train Neural Networks in my projects I like to structure my code into modules. Lets go along wiht our working example of classification with Support Vector Machine, but this time worry about making the code nice and modular. If we have done our work properly, it will be trivial to extend our Support Vector Machine into a full neural network and barely any code will have to be changed.
 
-- Cost function that returns cost, gradient
-- Modules that implement forward() and backward() API
-- A Net class that maintains (static) connectivity structure
-- A Solver class that handles the dynamics
-- Correctness: Numerical gradient checks and its subtleties (e.g. kinks, relative error)
+**Driver.** Lets re-write our Example 2-D SVM from last section properly. When I write Neural Nets code, I always have an entry point to the program in a class (or file) that I call *Driver*. The Driver worries about all kinds of data-specific things such as I/O, data batching, and user options. Here is a simple Driver for the SVM:
+
+```javascript
+
+// inputs to Driver are the data and options
+var X = [ [1.2, 0.7], [-0.3, 0.5], [3, 2.5], ... ] // array of 2-dimensional data
+var y = [1, -1, 1, ...] // array of labels
+var w = [0.1, 0.2, 0.3]
+
+var params = {}
+params.regc = 0.1; // regularization strength
+params.learning_rate = 0.001; // learning_rate
+
+
+```
+
+
+
+
+
+
+
+
 
 ### Example: Practical Neural Network Classifier
 
