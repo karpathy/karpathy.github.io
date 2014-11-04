@@ -140,7 +140,9 @@ var out_new = forwardMultiplyGate(x, y); // -5.87! exciting.
 
 As expected, we changed the inputs by the gradient and the circuit now gives a slightly higher value (`-5.87 > -6.0`). That was much simpler than trying random changes to `x` and `y`, right? A fact to appreciate here is that if you take calculus you can prove that the gradient is, in fact, the direction of the steepest increase of the function. There is no need to monkey around trying out random pertubations as done in Strategy #1. Evaluating the gradient requires just three evaluations of the forward pass of our circuit instead of hundreds, and gives the best tug you can hope for (locally) if you are interested in increasing the value of the output.
 
-But. It turns out that we can do *even* better.
+**Caution**. Let me clarify on this a bit. Before we move on it is important to note that in this very simple example, using a bigger step_size than 0.01  would always work better. For example, `step_size = 1` would have given us a much bigger improvement. The crucial thing to realize is that once the circuits get much more complex, the function from inputs to the final output will be be more chaotic and wiggly. The gradient guarantees that if you have a very small (indeed, infinitesimally small) step size, then you will definitely get a higher number when you follow its direction, and for that same step size there is no other direction that would have worked better. But if you use a bigger step size (e.g. `step_size = 0.01`) all bets are off. One analogy I've heard before is that the output value for our circuts is like the height of a hill, and we are blindfolded and trying to climb to the top. We can sense the steepness of the hill at our feet (the gradient), so when we shuffle our feet a bit we will go upwards. But if we took a big, overconfident step, we could have stepped right into a hole.
+
+Great, I hope I've convinced you that the numerical gradient is indeed a very useful thing to evaluate, and that it is cheap. But. It turns out that we can do *even* better.
 
 #### Strategy #3: Analytic Gradient
 
