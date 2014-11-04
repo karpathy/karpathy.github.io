@@ -1173,33 +1173,11 @@ todo: clean up this section and flesh it out a bit...
 
 ## Chapter 3: Backprop in Practice
 
-### Modular Design Tips/Tricks
-
-**Motivation.** When I train Neural Networks in my projects I like to structure my code into modules. Lets go along wiht our working example of classification with Support Vector Machine, but this time worry about making the code nice and modular. If we have done our work properly, it will be trivial to extend our Support Vector Machine into a full neural network and barely any code will have to be changed.
-
-**Driver.** Lets re-write our Example 2-D SVM from last section properly. When I write Neural Nets code, I always have an entry point to the program in a class (or file) that I call *Driver*. The Driver worries about all kinds of data-specific things such as I/O, data batching, and user options. Here is a simple Driver for the SVM:
-
-```javascript
-
-// inputs to Driver are the data and options
-var X = [ [1.2, 0.7], [-0.3, 0.5], [3, 2.5], ... ] // array of 2-dimensional data
-var y = [1, -1, 1, ...] // array of labels
-var w = [0.1, 0.2, 0.3]
-
-var params = {}
-params.regc = 0.1; // regularization strength
-params.learning_rate = 0.001; // learning_rate
-
-
-```
-
-
-
-
-
-
-
-
+- Cost function that returns cost, gradient
+- Layer Modules that implement forward() and backward() API
+- A Net class that maintains (static) connectivity structure
+- A Solver class that handles the network dynamics and parameter updates
+- Correctness: Numerical gradient checks and its subtleties (e.g. kinks, relative error)
 
 ### Example: Practical Neural Network Classifier
 
