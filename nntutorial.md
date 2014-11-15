@@ -1004,7 +1004,7 @@ Of interest is the fact that an SVM is just a particular type of a very simple c
 // assume inputs x,y
 var n1 = Math.max(0, a1*x + b1*y + c1); // activation of 1st hidden neuron
 var n2 = Math.max(0, a2*x + b2*y + c2); // 2nd neuron
-var n3 = Math.max(0, a3*x + b3*y + c3); // 2nd neuron
+var n3 = Math.max(0, a3*x + b3*y + c3); // 3rd neuron
 var score = a4*n1 + b4*n2 + c4*n3 + d4; // the score
 ```
 
@@ -1024,7 +1024,7 @@ for(var iter = 0; iter < 400; iter++) {
   // compute forward pass
   var n1 = Math.max(0, a1*x + b1*y + c1); // activation of 1st hidden neuron
   var n2 = Math.max(0, a2*x + b2*y + c2); // 2nd neuron
-  var n3 = Math.max(0, a3*x + b3*y + c3); // 2nd neuron
+  var n3 = Math.max(0, a3*x + b3*y + c3); // 3rd neuron
   var score = a4*n1 + b4*n2 + c4*n3 + d4; // the score
 
   // compute the pull on top
@@ -1096,9 +1096,9 @@ for(var iter = 0; iter < 400; iter++) {
 }
 ```
 
-And that's how you train a neural network. Obviously, you want to modularize your code nicely but I expended this example for you in hope that it makes things much more concrete and simpler to understand. Later, we will look at best practices when implementing these networks and we will structure the code much more neatly in a modular and more sensible way. 
+And that's how you train a neural network. Obviously, you want to modularize your code nicely but I expended this example for you in the hope that it makes things much more concrete and simpler to understand. Later, we will look at best practices when implementing these networks and we will structure the code much more neatly in a modular and more sensible way. 
 
-But for now, I hope your takeaway is that a 2-layer Neural Net is really not such a scary thing: we write a forward pass expression, interpret the value at the end as a score, and then we pull on that value in positive or negative direction depending on what we want that value to be for our current particular example. The parameter update after backprop will ensure that when we see this particular example in the future, the network will be more likely to give us a value we desire, not the one it gave just before the update.
+But for now, I hope your takeaway is that a 2-layer Neural Net is really not such a scary thing: we write a forward pass expression, interpret the value at the end as a score, and then we pull on that value in a positive or negative direction depending on what we want that value to be for our current particular example. The parameter update after backprop will ensure that when we see this particular example in the future, the network will be more likely to give us a value we desire, not the one it gave just before the update.
 
 
 ### A more Conventional Approach: Loss Functions
@@ -1166,7 +1166,7 @@ Notice how this expression works: It measures how *bad* our SVM classifier is. L
 - The second datapoint `xi = [-0.3, 0.5]` with label `yi = -1` will give score `0.1*(-0.3) + 0.2*0.5 + 0.3`, which is `0.37`. This isn't looking very good: This score is very high for a negative example. It should be less than -1. Indeed, when we compute the cost: `costi = Math.max(0, 1*0.37 + 1)`, we get `1.37`. That's a very high cost from this example, as it is being misclassified.
 - The last example `xi = [3, 2.5]` with label `yi = 1` gives score `0.1*3 + 0.2*2.5 + 0.3`, and that is `1.1`. In this case, the SVM will compute `costi = Math.max(0, -1*1.1 + 1)`, which is in fact zero. This datapoint is being classified correctly and there is no cost associated with it.
 
-> A cost function is an expression that measuress how bad your classifier is. When the training set if perfectly classified, the cost (ignoring the regularization) will be zero.
+> A cost function is an expression that measuress how bad your classifier is. When the training set is perfectly classified, the cost (ignoring the regularization) will be zero.
 
 Notice that the last term in the loss is the regularization cost, which says that our model parameters should be small values. Due to this term the cost will never actually become zero (because this would mean all parameters of the model except the bias are exactly zero), but the closer we get, the better our classifier will become.
 
