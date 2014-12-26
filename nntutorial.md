@@ -743,7 +743,7 @@ var x = Math.max(a, 0)
 var da = a > 0 ? 1.0 * dx : 0.0;
 ```
 
-In other words this gate simply passes the value through if it's larger than 0, or it stops the flow and sets it to zero. In the backward pass, the gate will pass on the gradient from the top if it was activated during the forawrd pass, or if the original input was below zero, it will stop the gradient flow.
+In other words this gate simply passes the value through if it's larger than 0, or it stops the flow and sets it to zero. In the backward pass, the gate will pass on the gradient from the top if it was activated during the forward pass, or if the original input was below zero, it will stop the gradient flow.
 
 I will stop at this point. I hope you got some intuition about how you can compute entire expressions (which are made up of many gates along the way) and how you can compute backprop for every one of them.
 
@@ -788,7 +788,7 @@ In this expression we think of `x` and `y` as the inputs (the 2D vectors) and `a
 
 1. We select a random datapoint and feed it through the circuit
 2. We will interpret the output of the circuit as a confidence that the datapoint has class `+1`. (i.e. very high values = circuit is very certain datapoint has class `+1` and very low values = circuit is certain this datapoint has class `-1`.)
-3. We will measure how well the prediction aligns with the provided labels. Intuitively, for example, if a positive example scores very low, we will want to tug in the positive direction on the circuit, demanding that it should output higher value for this datapoint. Note that this is the case for the the first datapoint: it is labeled as `+1` but our predictor unction only assigns it value `-1.2`. We will therefore tug on the circuit in positive direction; We want the value to be higher.
+3. We will measure how well the prediction aligns with the provided labels. Intuitively, for example, if a positive example scores very low, we will want to tug in the positive direction on the circuit, demanding that it should output higher value for this datapoint. Note that this is the case for the the first datapoint: it is labeled as `+1` but our predictor function only assigns it value `-1.2`. We will therefore tug on the circuit in positive direction; We want the value to be higher.
 4. The circuit will take the tug and backpropagate it to compute tugs on the inputs `a,b,c,x,y`
 5. Since we think of `x,y` as (fixed) datapoints, we will ignore the pull on `x,y`. If you're a fan of my physical analogies, think of these inputs as pegs, fixed in the ground.
 6. On the other hand, we will take the parameters `a,b,c` and make them respond to their tug (i.e. we'll perform what we call a **parameter update**). This, of course, will make it so that the circuit will output a slightly higher score on this particular datapoint in the future.
@@ -933,7 +933,7 @@ for(var iter = 0; iter < 400; iter++) {
   var label = labels[i];
   svm.learnFrom(x, y, label);
 
-  if(iter % 25 == 0) { // every 10 iterations... 
+  if(iter % 25 == 0) { // every 25 iterations... 
     console.log('training accuracy at iter ' + iter + ': ' + evalTrainingAccuracy());
   }
 }
@@ -961,7 +961,7 @@ training accuracy at iteration 375: 1
 
 We see that initially our classifier only had 33% training accuracy, but by the end all training examples are correctly classifier as the parameters `a,b,c` adjusted their values according to the pulls we exerted. We just trained an SVM! But please don't use this code anywhere in production :) We will see how we can make things much more efficient once we understand what is going on at the core.
 
-**Number of iterations needed**. With this example data, with this example initialization, and with the setting of step size we used, it took about 300 iterations to train the SVM. In practice, this could be many more or many less depending on how hard or large the problem is, how you're initializating, normalizing your data, what step size you're using, and so on. This is just a toy demonstration, but later we will go over all the best practices for actually training these classifiers in practice. For example, it will turn out that the setting of the step size is very imporant and tricky. Small step size will make your model slow to train. Large step size will train faster, but if it is too large, it will make your classifier chaotically jump around and not converge to a good final result. We will eventually use witheld validation data to properly tune it to be just in the sweet spot for your particular data.
+**Number of iterations needed**. With this example data, with this example initialization, and with the setting of step size we used, it took about 300 iterations to train the SVM. In practice, this could be many more or many less depending on how hard or large the problem is, how you're initializing, normalizing your data, what step size you're using, and so on. This is just a toy demonstration, but later we will go over all the best practices for actually training these classifiers in practice. For example, it will turn out that the setting of the step size is very imporant and tricky. Small step size will make your model slow to train. Large step size will train faster, but if it is too large, it will make your classifier chaotically jump around and not converge to a good final result. We will eventually use witheld validation data to properly tune it to be just in the sweet spot for your particular data.
 
 One thing I'd like you to appreciate is that the circuit can be arbitrary expression, not just the linear prediction function we used in this example. For example, it can be an entire neural network.
 
