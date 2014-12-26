@@ -703,7 +703,7 @@ That wasn't too difficult! Those are the backprop equations for the entire expre
 
 ```javascript
 var x = 1.0/a; // division
-var da = -1.0/(a*a);
+var da = (-1.0/(a*a)) * dx;
 ```
 
 Here's what division might look like in practice then:
