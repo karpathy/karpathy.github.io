@@ -120,5 +120,13 @@ EDIT: additional discussions:
 
 UPDATE: 
 
-- [ImageNet workshop page](http://image-net.org/challenges/LSVRC/2014/eccv2014) now has links to many of the teams' slides on their methods. Videos of the talks are also *coming soon*.
-- [GoogLeNet paper](http://arxiv.org/abs/1409.4842) on arXiv describes the details of their architecutre. Also of note is close runner up VGG team who describe their architecture [here](http://arxiv.org/pdf/1409.1556.pdf).
+- [ImageNet workshop page](http://image-net.org/challenges/LSVRC/2014/eccv2014) now has links to many of the teams' slides and videos.
+- [GoogLeNet paper](http://arxiv.org/abs/1409.4842) on arXiv describes the details of their architecutre.
+
+UPDATE2 (14 Feb 2015):
+
+There have now been several reported results that surpass my 5.1% error on ImageNet. I'm astonished to see such rapid progress. At the same time, I think we should keep in mind the following:
+
+> Human accuracy is not a point. It lives on a tradeoff curve.
+
+We trade off human effort and expertise with the error rate: I am one point on that curve with 5.1%. My labmates with almost no training and less patience are another point, with even up to 15% error. And based on some calculations that consider my exact error types and hypothesizing which ones may be easier to fix than others, it's not unreasonable to suggest that a group of very dedicated humans might push this down to 3%, with about 2% being an optimistic error rate lower bound. I know it's not as exciting as having a single number, but it's the right way of thinking about it. See more details in my recent [Google+ post](https://plus.google.com/+AndrejKarpathy/posts/dwDNcBuWTWf).
