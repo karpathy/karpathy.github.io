@@ -14,6 +14,8 @@ My personal experience with Neural Networks is that everything became much clear
 
 You might be eager to jump right in and learn about Neural Networks, backpropagation, how they can be applied to datasets in practice, etc. But before we get there, I'd like us to first forget about all that. Let's take a step back and understand what is really going on at the core. Lets first talk about real-valued circuits.
 
+*Update note*: I suspended my work on this guide a while ago and redirected a lot of my energy to teaching CS231n (Convolutional Neural Networks) class at Stanford. The notes are on [cs231.github.io](http://cs231n.github.io) and the course slides can be found [here](http://cs231n.stanford.edu/syllabus.html). These materials are highly related to material here, but possibly more polished.  
+
 ## Chapter 1: Real-valued Circuits
 
 In my opinion, the best way to think of Neural Networks is as real-valued circuits, where real values (instead of boolean values `{0,1}`) "flow" along edges and interact in gates. However, instead of gates such as `AND`, `OR`, `NOT`, etc, we have binary gates such as `*` (multiply), `+` (add), `max` or unary gates such as `exp`, etc. Unlike ordinary boolean circuits, however, we will eventually also have **gradients** flowing on the same edges of the circuit, but in the opposite direction. But we're getting ahead of ourselves. Let's focus and start out simple.
