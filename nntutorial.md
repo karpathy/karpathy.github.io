@@ -14,7 +14,7 @@ My personal experience with Neural Networks is that everything became much clear
 
 You might be eager to jump right in and learn about Neural Networks, backpropagation, how they can be applied to datasets in practice, etc. But before we get there, I'd like us to first forget about all that. Let's take a step back and understand what is really going on at the core. Lets first talk about real-valued circuits.
 
-*Update note*: I suspended my work on this guide a while ago and redirected a lot of my energy to teaching CS231n (Convolutional Neural Networks) class at Stanford. The notes are on [cs231.github.io](http://cs231n.github.io) and the course slides can be found [here](http://cs231n.stanford.edu/syllabus.html). These materials are highly related to material here, but possibly more polished.  
+*Update note*: I suspended my work on this guide a while ago and redirected a lot of my energy to teaching CS231n (Convolutional Neural Networks) class at Stanford. The notes are on [cs231.github.io](http://cs231n.github.io) and the course slides can be found [here](http://cs231n.stanford.edu/syllabus.html). These materials are highly related to material here, but more comprehensive and sometimes more polished.
 
 ## Chapter 1: Real-valued Circuits
 
@@ -1180,22 +1180,16 @@ I hope I convinced you then, that to get a very good SVM we really want to make 
 
 todo: clean up this section and flesh it out a bit...
 
-
 ## Chapter 3: Backprop in Practice
 
-- Cost function that returns cost, gradient
-- Layer Modules that implement forward() and backward() API
-- A Net class that maintains (static) connectivity structure
-- A Solver class that handles the network dynamics and parameter updates
-- Correctness: Numerical gradient checks and its subtleties (e.g. kinks, relative error)
+### Building up a library
 
 ### Example: Practical Neural Network Classifier
 
-- SVM cost function
 - Multiclass: Structured SVM
-- Multiclass: Logistic Regressions, Softmax
+- Multiclass: Logistic Regression, Softmax
 
-### Example: Regression instead of Classifier
+### Example: Regression
 
 Tiny changes needed to cost function. L2 regularization.
 
@@ -1249,4 +1243,4 @@ Thanks a lot to the following people who made this guide better: wodenokoto (HN)
 
 This guide is a work in progress and I appreciate feedback, especially regarding parts that were unclear or only made half sense. Thank you!
 
-
+Some of the Javascript code in this tutorial has been translated to Python by Ajit, find it over on [Github](https://github.com/urwithajit9/HG_NeuralNetwork).
