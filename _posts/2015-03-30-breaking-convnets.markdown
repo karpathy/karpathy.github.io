@@ -2,7 +2,7 @@
 layout: post
 comments: true
 title:  "Breaking Linear Classifiers on ImageNet"
-excerpt: "I haven't seen anyone try to train linear classifiers in ImageNet. In this post we'll train them with Caffe and then break them"
+excerpt: "There have been a few recent papers that fool ConvNets by taking a correctly classified image and perturbing it in an imperceptible way to produce an image that is misclassified. In this post I show that ConvNets are an overkill: Simple linear classifiers are in fact susceptible to the same fooling strategy."
 date:   2015-03-30 20:00:00
 mathjax: true
 ---
