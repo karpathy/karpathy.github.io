@@ -157,7 +157,7 @@ As closing words for this post, the takeaway is that ConvNets still work very we
 
 With wishful thinking, one might hope that ConvNets would produce all-diffuse probabilities in regions outside the training data, but there is no part in an ordinary objective (e.g. mean cross-entropy loss) that explicitly enforces this constraint. Indeed, it seems that  the class scores in these regions of space are all over the place, and worse, a straight-forward attempt to patch this up by introducing a background class and iteratively adding fooling images as a new *background* class during training are not effective in mitigating the problem.
 
-It currently seems that to fix this problem we need to change our objectives, and/or our forward functional norms. However, as far as I know we haven't found very good candidates for either. To be continued.
+It currently seems that to fix this problem we need to change our objectives, and/or our forward functional forms. However, as far as I know we haven't found very good candidates for either. To be continued.
 
 #### Further Reading
 
