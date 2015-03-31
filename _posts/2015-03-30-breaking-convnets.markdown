@@ -93,7 +93,7 @@ A linear classifier over image pixels implies that every class score is computed
 
 > By the way, a linear classifier gets about 3.0% top-1 accuracy on ImageNet :)
 
-Now that we've trained the model parameters we can start to produce fooling images. This turns out to be quite trivial in the case of linear classifiers and no backpropagation is required. This is because when your score function is a dot product \\(s = w^Tx\\), when the gradient on the image \\(x\\) is simply \\(\nabla\_x s = w\\). That is, we take an image we would like to start out with, and then if we wanted to fool the model into thinking that it is some other class (e.g. goldfish), we have to take the weights corresponding to the desired class, and add some fraction of those weights to the image:
+Now that we've trained the model parameters we can start to produce fooling images. This turns out to be quite trivial in the case of linear classifiers and no backpropagation is required. This is because when your score function is a dot product \\(s = w^Tx\\), then the gradient on the image \\(x\\) is simply \\(\nabla\_x s = w\\). That is, we take an image we would like to start out with, and then if we wanted to fool the model into thinking that it is some other class (e.g. goldfish), we have to take the weights corresponding to the desired class, and add some fraction of those weights to the image:
 
 <div class="imgcap">
   <img src="/assets/break/fool2.jpeg">
@@ -153,4 +153,4 @@ It currently seems that to fix this problem we need to change our objectives, an
 #### Further Reading
 
 - You can fool ConvNets as part of [CS231n Assignment #3 IPython Notebook](http://cs231n.github.io/assignment3/).
-- [IPython Notebook](http://cs.stanford.edu/people/karpathy/break_linear_classifier.ipynb) for this experiment. Also my [Caffe linear classifier](http://cs.stanford.edu/people/karpathy/caffe_linear_imagenet.zip) protos you like.
+- [IPython Notebook](http://cs.stanford.edu/people/karpathy/break_linear_classifier.ipynb) for this experiment. Also my [Caffe linear classifier](http://cs.stanford.edu/people/karpathy/caffe_linear_imagenet.zip) protos if you like.
