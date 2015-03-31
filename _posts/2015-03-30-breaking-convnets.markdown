@@ -96,8 +96,9 @@ A linear classifier over image pixels implies that every class score is computed
 Now that we've trained the model parameters we can start to produce fooling images. This turns out to be quite trivial in the case of linear classifiers and no backpropagation is required. This is because when your score function is a dot product \\(s = w^Tx\\), then the gradient on the image \\(x\\) is simply \\(\nabla\_x s = w\\). That is, we take an image we would like to start out with, and then if we wanted to fool the model into thinking that it is some other class (e.g. goldfish), we have to take the weights corresponding to the desired class, and add some fraction of those weights to the image:
 
 <div class="imgcap">
-  <img src="/assets/break/fool2.jpeg">
+<img src="/assets/break/fool2.jpeg">
 <img src="/assets/break/fool1.jpeg">
+<img src="/assets/break/fish.jpeg">
 <div class="thecap">
   Fooled linear classifier: The starting image (left) is classified as a kit fox. That's incorrect, but then what can you expect from a linear classifier? However, if we add a small amount "goldfish" weights to the image (top row, middle), suddenly the classifier is convinced that it's looking at one with high confidence. We can distort it with the school bus template instead if we wanted to.
 </div>
