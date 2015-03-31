@@ -37,13 +37,13 @@ And a set of very closely related results was later followed by [Deep Neural Net
 
 I should make the point quickly that these results are not completely new to Computer Vision, and that some have observed the same problems even with our older features, e.g. HOG features. See [Exploring the Representation Capabilities of the HOG Descriptor](http://ieeexplore.ieee.org/xpl/articleDetails.jsp?tp=&arnumber=6130416&contentType=Conference+Publications&queryText%3Dexploring+representation+capabilities+of+HOG) for details.
 
-The conclusion seems to be that we can take any arbitrary image and classify it as whatever class we want by adding tiny, imperceptible noise patterns. Worse, it was found that a reasonable fraction of fooling images **generalize** across different Convolutional Networks, so this isn't some kind of fragile property of the new image or some overfitting property of the model. There's something more general about the type of introduced noise that seems to fool many other models. In some sense, it is much more accurate to speak about *fooling subspaces* rather than *fooling images*. The latter erroneously makes them seem like tiny points in the super-high-dimensional image space, perhaps similar to rational numbers along the real numbers, when instead they are better thought of as entire intervals. Of course, this work raises security concerns because an adversary could conceivably generate a fooling image of any class on their own computer and upload it to some service with a malicious intent.
+The conclusion seems to be that we can take any arbitrary image and classify it as whatever class we want by adding tiny, imperceptible noise patterns. Worse, it was found that a reasonable fraction of fooling images **generalize** across different Convolutional Networks, so this isn't some kind of fragile property of the new image or some overfitting property of the model. There's something more general about the type of introduced noise that seems to fool many other models. In some sense, it is much more accurate to speak about *fooling subspaces* rather than *fooling images*. The latter erroneously makes them seem like tiny points in the super-high-dimensional image space, perhaps similar to rational numbers along the real numbers, when instead they are better thought of as entire intervals. Of course, this work raises security concerns because an adversary could conceivably generate a fooling image of any class on their own computer and upload it to some service with a malicious intent, with a non-zero probability of it fooling the server-side model (e.g. circumventing racy filters).
 
 > What is going on?
 
 These results are interesting and worrying, but they have also led to a good amount of confusion among laymen. The most important point of this entire post is the following: 
 
-**These results are not specific to images, ConvNets, and they are also not a "flaw" in Deep Learning**. A lot of these results were reported with ConvNets running on images because pictures are fun to look at and ConvNets are state-of-the-art, but in fact the core flaw extends to many other domains (e.g. speech recognition systems), and most importantly, also to simple, shallow, good old-fashioned Linear Classifiers (Softmax classifier, or Linear Support Vector Machines, etc.). As we will see, this *linear* nature is problematic, and because Deep Learning models use linear functions to build up the architecture, they inherit their flaw.
+**These results are not specific to images, ConvNets, and they are also not a "flaw" in Deep Learning**. A lot of these results were reported with ConvNets running on images because pictures are fun to look at and ConvNets are state-of-the-art, but in fact the core flaw extends to many other domains (e.g. speech recognition systems), and most importantly, also to simple, shallow, good old-fashioned Linear Classifiers (Softmax classifier, or Linear Support Vector Machines, etc.). As we will see, this *linear* nature is problematic, and because Deep Learning models use linear functions to build up the architecture, they inherit their flaw. However, Deep Learning by itself is not the cause of the issue. In fact, Deep Learning offers tangible hope for a solution, since we can use all the wiggle of composed functions to design more resistant architectures or objectives.
 
 ### How fooling methods work
 
@@ -66,9 +66,9 @@ Notice how this worked: we held the input image fixed, and we wiggled the model 
 
 > Creating fooling images: "What happens to the score of (whatever class you want) when I wiggle this pixel?"
 
-We compute the gradient just as before with backpropagation, and then we can perform an *image update* instead of a parameter update, with the end result being that we increase the score of whatever class we want. E.g. we can take the banana image and wiggle every pixel according to the gradient of that image on the cat class. This would change the image a tiny amount, but the score of *cat* would now increase. Somewhat unintuitively, it turns out that you don't have to change the image too much to toggle the image from being classified correctly as a banana, to being classified as anything else (e.g. cat).
+We compute the gradient just as before with backpropagation, and then we can perform an **image update** instead of a parameter update, with the end result being that we increase the score of whatever class we want. E.g. we can take the banana image and wiggle every pixel according to the gradient of that image on the cat class. This would change the image a tiny amount, but the score of *cat* would now increase. Somewhat unintuitively, it turns out that you don't have to change the image too much to toggle the image from being classified correctly as a banana, to being classified as anything else (e.g. cat).
 
-In short, to create a fooling image we start from whatever image we want (an actual image, or even a noise pattern), and then use backpropagation to compute the gradient of the image pixels on any class score, and nudge it along. We may, but do not have to, repeat the process a few times. Note that this process is very efficient and takes negligible time if you have access to the parameters of the ConvNet (backprop is fast), but it is possible to do this even if you do not have access to the parameters but only to the class scores at the end. In this case, it is possible to compute the data gradient numerically, or to to use other local stochastic search strategies, etc.
+In short, to create a fooling image we start from whatever image we want (an actual image, or even a noise pattern), and then use backpropagation to compute the gradient of the image pixels on any class score, and nudge it along. We may, but do not have to, repeat the process a few times. You can interpret backpropagation in this setting as using dynamic programming to compute the most damaging local perturbation to the input. Note that this process is very efficient and takes negligible time if you have access to the parameters of the ConvNet (backprop is fast), but it is possible to do this even if you do not have access to the parameters but only to the class scores at the end. In this case, it is possible to compute the data gradient numerically, or to to use other local stochastic search strategies, etc. Note that due to the latter approach, even non-differentiable classifiers (e.g. Random Forests) are not safe (but I haven't seen anyone empirically confirm this yet).
 
 ### Fooling a Linear Classifier on ImageNet
 
@@ -91,7 +91,7 @@ A linear classifier over image pixels implies that every class score is computed
 </div>
 </div>
 
-> By the way, a linear classifier gets about 3.0% top-1 accuracy on ImageNet :)
+By the way, I haven't seen anyone report linear classification accuracy on ImageNet before, but it turns out to be about 3.0% top-1 accuracy (and about 10% top-5) on ImageNet. I haven't done a completely exhaustive hyperparameter sweep but I did a few rounds of manual binary search.
 
 Now that we've trained the model parameters we can start to produce fooling images. This turns out to be quite trivial in the case of linear classifiers and no backpropagation is required. This is because when your score function is a dot product \\(s = w^Tx\\), then the gradient on the image \\(x\\) is simply \\(\nabla\_x s = w\\). That is, we take an image we would like to start out with, and then if we wanted to fool the model into thinking that it is some other class (e.g. goldfish), we have to take the weights corresponding to the desired class, and add some fraction of those weights to the image:
 
@@ -122,6 +122,14 @@ Of course, these examples are not as impactful as the ones that use a ConvNet be
 - Low regularization gives more noisy templates but seems to work better that all-smooth templates. It is less resistant to fooling.
 
 Intuitively, it seems that higher regularization leads to smaller weights, which means that one must change the image more dramatically to change the score by some amount. It's not immediately obvious if and how this conclusion translates to deeper models.
+
+<div class="imgcap">
+<img src="/assets/break/rapeseed.jpeg">
+<img src="/assets/break/rapeseed2.jpeg">
+<div class="thecap">
+  Linear classifier with lower regularization (which leads to more noisy class weights) is easier to fool (top). Higher regularization produces more diffuse filters and is harder to fool (bottom). That is, it's harder to achieve very confident wrong answers (however, with weights so small it is hard to achieve very confident correct answers too). To flip the label to a wrong class, more visually obvious perturbations are also needed.
+</div>
+</div>
 
 ### Toy Example
 
