@@ -133,7 +133,7 @@ Intuitively, it seems that higher regularization leads to smaller weights, which
 
 ### Toy Example
 
-We can understand this process in even more detail by condensing the problem to the smallest toy example that displays the problem. Suppose we train a binary logistic regression, where we define the probability of class 1 as \\(P(y = 1 \mid x; w,b) = \sigma(w^Tx + b)\\), where \\(\sigma(z) = 1/(1+e^{-z})\\) is the sigmoid function. That is, this classifier computes the score \\(s = w^Tx+b\\) and then decides whether or not it should be classified as class 1 or 0 based on whether or not \\(s > 0.5\\). Suppose further that we had the following setup:
+We can understand this process in even more detail by condensing the problem to the smallest toy example that displays the problem. Suppose we train a binary logistic regression, where we define the probability of class 1 as \\(P(y = 1 \mid x; w,b) = \sigma(w^Tx + b)\\), where \\(\sigma(z) = 1/(1+e^{-z})\\) is the sigmoid function that squashes the class 1 score \\(s = w^Tx+b\\) into range between 0 and 1, where 0 is mapped to 0.5. This classifier hence decides that the class of the input is 1 if \\(s > 0\\), or equivalently if the class 1 probability is more than 50% (i.e. \\(\sigma(s) > 0.5\\)). Suppose further that we had the following setup:
 
 ```javascript
 x = [2, -1, 3, -2, 2, 2, 1, -4, 5, 1] // input
