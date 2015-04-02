@@ -13,7 +13,7 @@ Yet, a second group of seemingly baffling results has emerged that brings up an 
 
 <div class="imgcap">
 <img src="/assets/break/breakconv.png">
-<div class="thecap"></div>
+<div class="thecap">Figure from <a href="http://arxiv.org/abs/1412.6572">Explaining and Harnessing Adversarial Examples</a> by Goodfellow et al.</div>
 </div>
 
 This topic has recently gained attention starting with [Intriguing properties of neural networks](http://arxiv.org/abs/1312.6199) by Szegedy et al. last year. They had a very similar set of images:
@@ -151,7 +151,7 @@ Doing the dot product again we see that suddenly the score becomes 2. This is no
 
 ### Conclusions
 
-I should point out that [Explaining and Harnessing Adversarial Examples](http://arxiv.org/abs/1412.6572) by Goodfellow et al. is a required reading on this topic. This paper was the first to articulate and point out the linear functions flaw, and more generally argued that there is a tension between models that are easy to train (e.g. models that have linear models) and models that resist adversarial perturbations.
+I should point out that [Explaining and Harnessing Adversarial Examples](http://arxiv.org/abs/1412.6572) by Goodfellow et al. is a required reading on this topic. This paper was the first to articulate and point out the linear functions flaw, and more generally argued that there is a tension between models that are easy to train (e.g. models that use linear functions) and models that resist adversarial perturbations.
 
 As closing words for this post, the takeaway is that ConvNets still work very well in practice. Unfortunately, it seems that their competence is relatively limited to a small region around the data manifold that contains natural-looking images and distributions, and that once we artificially push images away from this manifold by computing noise patterns with backpropagation, we stumble into parts of image space where all bets are off, and where the linear functions in the network induce large subspaces of fooling inputs.
 
