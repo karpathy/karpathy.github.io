@@ -140,7 +140,7 @@ x = [2, -1, 3, -2, 2, 2, 1, -4, 5, 1] // input
 w = [-1, -1, 1, -1, 1, -1, 1, 1, -1, 1] // weight vector
 ```
 
-If you do the dot product, you get `-3`. Hence, probability of class 1 is `1/(1+e^(-(-3))) = 0.0474`. In other words the classifier is 95% certain that this is example is class 0. We're now going to try to fool the classifier. That is, we want to find a tiny change to `x` in such a way that the score comes out much higher. It's quite clear what this change should be: In every dimension where the weight is positive, we want to slightly increase the input. Conversely, in every dimension where the weight is negative, we want the input to be slightly lower. In other words, an adversarial `xad` might be:
+If you do the dot product, you get `-3`. Hence, probability of class 1 is `1/(1+e^(-(-3))) = 0.0474`. In other words the classifier is 95% certain that this is example is class 0. We're now going to try to fool the classifier. That is, we want to find a tiny change to `x` in such a way that the score comes out much higher. Since the score is computed with a dot product (multiply corresponding elements in `x` and `w` then add it all up), with a little bit of thought it's clear what this change should be: In every dimension where the weight is positive, we want to slightly increase the input (to get slightly more score). Conversely, in every dimension where the weight is negative, we want the input to be slightly lower (again, to get slightly more score). In other words, an adversarial `xad` might be:
 
 ```javascript
 // xad = x + 0.5w gives:
