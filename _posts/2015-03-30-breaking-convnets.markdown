@@ -43,7 +43,7 @@ The conclusion seems to be that we can take any arbitrary image and classify it 
 
 These results are interesting and worrying, but they have also led to a good amount of confusion among laymen. The most important point of this entire post is the following: 
 
-**These results are not specific to images, ConvNets, and they are also not a "flaw" in Deep Learning**. A lot of these results were reported with ConvNets running on images because pictures are fun to look at and ConvNets are state-of-the-art, but in fact the core flaw extends to many other domains (e.g. speech recognition systems), and most importantly, also to simple, shallow, good old-fashioned Linear Classifiers (Softmax classifier, or Linear Support Vector Machines, etc.). As we will see, this *linear* nature is problematic, and because Deep Learning models use linear functions to build up the architecture, they inherit their flaw. However, Deep Learning by itself is not the cause of the issue. In fact, Deep Learning offers tangible hope for a solution, since we can use all the wiggle of composed functions to design more resistant architectures or objectives.
+**These results are not specific to images, ConvNets, and they are also not a "flaw" in Deep Learning**. A lot of these results were reported with ConvNets running on images because pictures are fun to look at and ConvNets are state-of-the-art, but in fact the core flaw extends to many other domains (e.g. speech recognition systems), and most importantly, also to simple, shallow, good old-fashioned Linear Classifiers (Softmax classifier, or Linear Support Vector Machines, etc.). This was pointed out and articulated in [Explaining and Harnessing Adversarial Examples](http://arxiv.org/abs/1412.6572) by Goodfellow et al. We'll carry out a few experiments very similar to the ones presented in this paper, and see that it is in fact this *linear* nature that is problematic. And because Deep Learning models use linear functions to build up the architecture, they inherit their flaw. However, Deep Learning by itself is not the cause of the issue. In fact, Deep Learning offers tangible hope for a solution, since we can use all the wiggle of composed functions to design more resistant architectures or objectives.
 
 ### How fooling methods work
 
@@ -72,9 +72,11 @@ In short, to create a fooling image we start from whatever image we want (an act
 
 ### Fooling a Linear Classifier on ImageNet
 
-ConvNets, of course, do not express a linear function from images to class scores; They are a complex Deep Learning model that expresses a highly non-linear function. However, the components that make up a ConvNet *are* linear: Convolution of a filter with its input is a linear operation (we are sliding a filter through the input and computing dot products - a linear operation), and matrix multiplications are also a linear function.
+As I mentioned before (and as described in more detail in [Goodfellow et al.](http://arxiv.org/abs/1412.6572)), it is the use of linear functions that makes our models susceptible for an attack. ConvNets, of course, do not express a linear function from images to class scores; They are a complex Deep Learning model that expresses a highly non-linear function. However, the components that make up a ConvNet *are* linear: Convolution of a filter with its input is a linear operation (we are sliding a filter through the input and computing dot products - a linear operation), and matrix multiplications are also a linear function.
 
-So here's a fun experiment we'll do. Lets forget about ConvNets - they are a distracting overkill as far as the core flaw goes. Instead, lets break a linear classifier and lets also keep with the theme of breaking models on images because they are fun to look at. Here is the setup:
+So here's a fun experiment we'll do. Lets forget about ConvNets - they are a distracting overkill as far as the core flaw goes. Instead, lets fool a linear classifier and lets also keep with the theme of breaking models on images because they are fun to look at.
+
+Here is the setup:
 
 - Take 1.2 million images in ImageNet
 - Resize them to 64x64 (full-sized images would train longer)
@@ -100,7 +102,7 @@ Now that we've trained the model parameters we can start to produce fooling imag
 <img src="/assets/break/fool1.jpeg">
 <img src="/assets/break/fish.jpeg">
 <div class="thecap">
-  Fooled linear classifier: The starting image (left) is classified as a kit fox. That's incorrect, but then what can you expect from a linear classifier? However, if we add a small amount "goldfish" weights to the image (top row, middle), suddenly the classifier is convinced that it's looking at one with high confidence. We can distort it with the school bus template instead if we wanted to.
+  Fooled linear classifier: The starting image (left) is classified as a kit fox. That's incorrect, but then what can you expect from a linear classifier? However, if we add a small amount "goldfish" weights to the image (top row, middle), suddenly the classifier is convinced that it's looking at one with high confidence. We can distort it with the school bus template instead if we wanted to. Similar figures (but on the MNIST digits dataset) can be seen in Figure 2 of <a href="http://arxiv.org/abs/1412.6572">Goodfellow et al.</a>
 </div>
 </div>
 
@@ -116,7 +118,7 @@ We can also start from random noise and achieve the same effect:
 
 Of course, these examples are not as impactful as the ones that use a ConvNet because the ConvNet gives state of the art performance while a linear classifier barely gets to 3% accuracy, but it illustrates the point that even with a simple, shallow function it is still possible to play around with the input in imperceptible ways and get almost arbitrary results.
 
-**Regularization**. There is one subtle comment to make regarding regularization strength. In these experiments, increasing the regularization strength gave nicer, smoother and more diffuse weights but generalized to validation data *worse* than some of my best classifiers that displayed more noisy patterns. For example, the nice and smooth templates I've shown only achieve 1.6% accuracy. My best model that achieves 3.0% accuracy has noisier weights (as seen in the middle column of the fooling images). Another model with very low regularization reaches 2.8% and its fooling images are virtually indistinguishable yet produce 100% confidences in the wrong class. In particular:
+**Regularization**. There is one subtle comment to make regarding regularization strength. In my experiments above, increasing the regularization strength gave nicer, smoother and more diffuse weights but generalized to validation data *worse* than some of my best classifiers that displayed more noisy patterns. For example, the nice and smooth templates I've shown only achieve 1.6% accuracy. My best model that achieves 3.0% accuracy has noisier weights (as seen in the middle column of the fooling images). Another model with very low regularization reaches 2.8% and its fooling images are virtually indistinguishable yet produce 100% confidences in the wrong class. In particular:
 
 - High regularization gives smoother templates, but at some point starts to works worse. However, it is more resistant to fooling. (The fooling images look noticeably different from their original)
 - Low regularization gives more noisy templates but seems to work better that all-smooth templates. It is less resistant to fooling.
@@ -151,15 +153,16 @@ Doing the dot product again we see that suddenly the score becomes 2. This is no
 
 ### Conclusions
 
-I should point out that [Explaining and Harnessing Adversarial Examples](http://arxiv.org/abs/1412.6572) by Goodfellow et al. is a required reading on this topic. This paper was the first to articulate and point out the linear functions flaw, and more generally argued that there is a tension between models that are easy to train (e.g. models that use linear functions) and models that resist adversarial perturbations.
+Several other related experiments can be found in [Explaining and Harnessing Adversarial Examples](http://arxiv.org/abs/1412.6572) by Goodfellow et al. This paper is a required reading on this topic. It was the first to articulate and point out the linear functions flaw, and more generally argued that there is a tension between models that are easy to train (e.g. models that use linear functions) and models that resist adversarial perturbations.
 
 As closing words for this post, the takeaway is that ConvNets still work very well in practice. Unfortunately, it seems that their competence is relatively limited to a small region around the data manifold that contains natural-looking images and distributions, and that once we artificially push images away from this manifold by computing noise patterns with backpropagation, we stumble into parts of image space where all bets are off, and where the linear functions in the network induce large subspaces of fooling inputs.
 
 With wishful thinking, one might hope that ConvNets would produce all-diffuse probabilities in regions outside the training data, but there is no part in an ordinary objective (e.g. mean cross-entropy loss) that explicitly enforces this constraint. Indeed, it seems that  the class scores in these regions of space are all over the place, and worse, a straight-forward attempt to patch this up by introducing a background class and iteratively adding fooling images as a new *background* class during training are not effective in mitigating the problem.
 
-It currently seems that to fix this problem we need to change our objectives, and/or our forward functional forms. However, as far as I know we haven't found very good candidates for either. To be continued.
+It seems that to fix this problem we need to change our objectives, our forward functional forms, or even the way we optimize our models. However, as far as I know we haven't found very good candidates for either. To be continued.
 
 #### Further Reading
 
+- Ian Goodfellow gave a talk on this work at the [RE.WORK Deep Learning Summit 2015](https://www.youtube.com/watch?v=Pq4A2mPCB0Y)
 - You can fool ConvNets as part of [CS231n Assignment #3 IPython Notebook](http://cs231n.github.io/assignment3/).
 - [IPython Notebook](http://cs.stanford.edu/people/karpathy/break_linear_classifier.ipynb) for this experiment. Also my [Caffe linear classifier](http://cs.stanford.edu/people/karpathy/caffe_linear_imagenet.zip) protos if you like.
