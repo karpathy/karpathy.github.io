@@ -570,3 +570,6 @@ RNN with and the computed of the RNN with with and the code
 ```
 
 Yes, the post was about RNN and how well it works, so clearly this works :). See you next time!
+
+EDIT (extra links): [HN discussion](https://news.ycombinator.com/item?id=9584325), [Reddit discussion](http://www.reddit.com/r/MachineLearning/comments/36s673/the_unreasonable_effectiveness_of_recurrent/).
+
