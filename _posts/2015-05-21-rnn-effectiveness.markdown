@@ -571,5 +571,19 @@ RNN with and the computed of the RNN with with and the code
 
 Yes, the post was about RNN and how well it works, so clearly this works :). See you next time!
 
-EDIT (extra links): [HN discussion](https://news.ycombinator.com/item?id=9584325), [Reddit discussion](http://www.reddit.com/r/MachineLearning/comments/36s673/the_unreasonable_effectiveness_of_recurrent/).
+**EDIT (extra links):** 
+
+Discussions:
+
+- [HN discussion](https://news.ycombinator.com/item?id=9584325)
+- Reddit discussion on [r/machinelearning](http://www.reddit.com/r/MachineLearning/comments/36s673/the_unreasonable_effectiveness_of_recurrent/)
+- Reddit discussion on [r/programming](http://www.reddit.com/r/programming/comments/36su8d/the_unreasonable_effectiveness_of_recurrent/)
+
+Replies:
+
+- [Yoav Goldberg](https://twitter.com/yoavgo) compared these RNN results to [n-gram maximum likelihood (counting) baseline](http://nbviewer.ipython.org/gist/yoavg/d76121dfde2618422139)
+- [João Felipe](https://twitter.com/seaandsailor) trained char-rnn irish folk music and [sampled music](https://soundcloud.com/seaandsailor/sets/char-rnn-composes-irish-folk-music)
+- [Bob Sturm](https://twitter.com/boblsturm) also trained char-rnn on [music in ABC notation](https://highnoongmt.wordpress.com/2015/05/22/lisls-stis-recurrent-neural-networks-for-folk-music-generation/)
+
+
 
