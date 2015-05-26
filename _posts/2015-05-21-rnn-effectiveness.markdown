@@ -144,7 +144,7 @@ VIOLA:
 I'll drink it.
 ```
 
-Remember, all the RNN knows are charaters, so in particular it samples both speaker's names and the contents. Sometimes we also get relatively extented monologue passages, such as:
+Remember, all the RNN knows are characters, so in particular it samples both speaker's names and the contents. Sometimes we also get relatively extented monologue passages, such as:
 
 ```
 VIOLA:
