@@ -172,7 +172,7 @@ I can barely recognize these samples from actual Shakespeare :) If you like Shak
 
 ### Wikipedia
 
-We saw that the LSTM can learn to spell words and copy general syntactic structures. Lets further increase the difficulty and train on structured markdown. In particular, lets take the [Hutter Prize](http://prize.hutter1.net/) 100MB dataset of raw Wikipedia and train an LSTM. Following [Graves et al.](http://arxiv.org/abs/1308.0850), I used the first 96MB for training, the rest for validation and ran a few models overnight. Alex reports performance of 1.67 Bits Per Character (BPC) with a 7-layer LSTM of 700 nodes. My best model ended up being a 3-layer LSTM with 700 nodes, achieving 1.57 BPC after 7 epochs of training. I'm not exactly sure what accounts for my better performance. Regardless, we can now sample Wikipedia articles! Below are a few fun excerpts. First, some basic markdown output:
+We saw that the LSTM can learn to spell words and copy general syntactic structures. Lets further increase the difficulty and train on structured markdown. In particular, lets take the [Hutter Prize](http://prize.hutter1.net/) 100MB dataset of raw Wikipedia and train an LSTM. Following [Graves et al.](http://arxiv.org/abs/1308.0850), I used the first 96MB for training, the rest for validation and ran a few models overnight. We can now sample Wikipedia articles! Below are a few fun excerpts. First, some basic markdown output:
 
 ```
 Naturalism and decision for the majority of Arab countries' capitalide was grounded
