@@ -7,7 +7,7 @@ date:   2015-05-21 11:00:00
 mathjax: true
 ---
 
-There's something magical about Recurrent Neural Networks (RNNs). I still remember when I trained my first recurrent network for Image Captioning. Within a few dozen minutes of training my first baby model (with rather arbitrarily-chosen hyperparameters) started to generate very nice looking descriptions of images that were on the edge of making sense. Sometimes the ratio of how simple your model is to the quality of the results you get out of it blows past your expectations, and this was one of those times. What made this result so shocking at the time was that the common wisdom was that RNNs were supposed to be difficult to train (with more experience I've in fact reached the opposite conclusion). Fast forward about a year: I'm training RNNs all the time and I've witnessed their power and robustness many times, and yet their magical outputs still find ways of amusing me. This post is about sharing some of that magic with you.
+There's something magical about Recurrent Neural Networks (RNNs). I still remember when I trained my first recurrent network for [Image Captioning](http://cs.stanford.edu/people/karpathy/deepimagesent/). Within a few dozen minutes of training my first baby model (with rather arbitrarily-chosen hyperparameters) started to generate very nice looking descriptions of images that were on the edge of making sense. Sometimes the ratio of how simple your model is to the quality of the results you get out of it blows past your expectations, and this was one of those times. What made this result so shocking at the time was that the common wisdom was that RNNs were supposed to be difficult to train (with more experience I've in fact reached the opposite conclusion). Fast forward about a year: I'm training RNNs all the time and I've witnessed their power and robustness many times, and yet their magical outputs still find ways of amusing me. This post is about sharing some of that magic with you.
 
 > We'll train RNNs to generate text character by character and ponder the question "how is that even possible?"
 
@@ -585,6 +585,5 @@ Replies:
 - [Yoav Goldberg](https://twitter.com/yoavgo) compared these RNN results to [n-gram maximum likelihood (counting) baseline](http://nbviewer.ipython.org/gist/yoavg/d76121dfde2618422139)
 - [João Felipe](https://twitter.com/seaandsailor) trained char-rnn irish folk music and [sampled music](https://soundcloud.com/seaandsailor/sets/char-rnn-composes-irish-folk-music)
 - [Bob Sturm](https://twitter.com/boblsturm) also trained char-rnn on [music in ABC notation](https://highnoongmt.wordpress.com/2015/05/22/lisls-stis-recurrent-neural-networks-for-folk-music-generation/)
-
-
+- [RNN Bible bot](https://twitter.com/RNN_Bible) by [Maximilien](https://twitter.com/the__glu/with_replies)
 
