@@ -586,5 +586,6 @@ Replies:
 - [João Felipe](https://twitter.com/seaandsailor) trained char-rnn irish folk music and [sampled music](https://soundcloud.com/seaandsailor/sets/char-rnn-composes-irish-folk-music)
 - [Bob Sturm](https://twitter.com/boblsturm) also trained char-rnn on [music in ABC notation](https://highnoongmt.wordpress.com/2015/05/22/lisls-stis-recurrent-neural-networks-for-folk-music-generation/)
 - [RNN Bible bot](https://twitter.com/RNN_Bible) by [Maximilien](https://twitter.com/the__glu/with_replies)
+- [Learning Holiness](http://cpury.github.io/learning-holiness/) learning the Bible
 - [Terminal.com snapshot](https://www.terminal.com/tiny/ZMcqdkWGOM) that has char-rnn set up and ready to go in a browser-based virtual machine (thanks [@samim](https://www.twitter.com/samim))
 
