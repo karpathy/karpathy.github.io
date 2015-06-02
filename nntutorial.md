@@ -642,7 +642,8 @@ If you don't see how the above happened, introduce a temporary variable `q = a *
 var q = a*x + b*y + c;
 var f = sig(q); // sig is the sigmoid function
 // and now backward pass, we are given df, and:
-var dq = (q * (1 - q)) * df;
+var df = 1;
+var dq = (f * (1 - f)) * df;
 // and now we chain it to the inputs
 var da = x * dq;
 var dx = a * dq;
