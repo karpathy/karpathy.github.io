@@ -585,7 +585,7 @@ Replies:
 - [Yoav Goldberg](https://twitter.com/yoavgo) compared these RNN results to [n-gram maximum likelihood (counting) baseline](http://nbviewer.ipython.org/gist/yoavg/d76121dfde2618422139)
 - [@nylk](https://twitter.com/nylk) trained char-rnn on [cooking recipes](https://gist.github.com/nylki/1efbaa36635956d35bcc). They look great!
 - [@MrChrisJohnson](https://twitter.com/MrChrisJohnson) trained char-rnn on Eminem lyrics and then synthesized a rap song with robotic voice reading it out. Hilarious :)
-- [@samim](https://twitter.com/samim) trained char-rnn on Obama Speeches. They look fun!
+- [@samim](https://twitter.com/samim) trained char-rnn on [Obama Speeches](https://medium.com/@samim/obama-rnn-machine-generated-political-speeches-c8abd18a2ea0). They look fun!
 - [João Felipe](https://twitter.com/seaandsailor) trained char-rnn irish folk music and [sampled music](https://soundcloud.com/seaandsailor/sets/char-rnn-composes-irish-folk-music)
 - [Bob Sturm](https://twitter.com/boblsturm) also trained char-rnn on [music in ABC notation](https://highnoongmt.wordpress.com/2015/05/22/lisls-stis-recurrent-neural-networks-for-folk-music-generation/)
 - [RNN Bible bot](https://twitter.com/RNN_Bible) by [Maximilien](https://twitter.com/the__glu/with_replies)
