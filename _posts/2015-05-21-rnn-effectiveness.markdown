@@ -93,6 +93,8 @@ Notice also that the first time the character "l" is input, the target is "l", b
 
 At **test time**, we feed a character into the RNN and get a distribution over what characters are likely to come next. We sample from this distribution, and feed it right back in to get the next letter. Repeat this process and you're sampling text! Lets now train an RNN on different datasets and see what happens.
 
+To further clarify, for educational purposes I also wrote a [minimal character-level RNN language model in Python/numpy](https://gist.github.com/karpathy/d4dee566867f8291f086). It is only about 100 lines long and hopefully it gives a concise, concrete and useful summary of the above if you're better at reading code than text. We'll now dive into example results, produced with the much more efficient Lua/Torch codebase.
+
 ## Fun with RNNs
 
 All 5 example character models below were trained with the [code](https://github.com/karpathy/char-rnn) I'm releasing on Github. The input in each case is a single file with some text, and we're training an RNN to predict the next character in the sequence.
@@ -530,14 +532,14 @@ Of course, a lot of these conclusions are slightly hand-wavy as the hidden state
 
 ## Source Code
 
-I hope I've convinced you that training character-level language models is a very fun exercise. You can train your own models using the [char-rnn code](https://github.com/karpathy/char-rnn) I released on Github (under MIT license). It takes one large text file and trains a character-level model that you can then sample from. Also, it helps if you have a GPU or otherwise training on CPU will be about a factor of 10x slower. In any case, if you end up training on some data and getting fun results let me know!
+I hope I've convinced you that training character-level language models is a very fun exercise. You can train your own models using the [char-rnn code](https://github.com/karpathy/char-rnn) I released on Github (under MIT license). It takes one large text file and trains a character-level model that you can then sample from. Also, it helps if you have a GPU or otherwise training on CPU will be about a factor of 10x slower. In any case, if you end up training on some data and getting fun results let me know! And if you get lost in the Torch/Lua codebase remember that all it is is just a more fancy version of this [100-line gist](https://gist.github.com/karpathy/d4dee566867f8291f086).
 
 *Brief digression.* The code is written in [Torch 7](http://torch.ch/), which has recently become my favorite deep learning framework. I've only started working with Torch/LUA over the last few months and it hasn't been easy (I spent a good amount of time digging through the raw Torch code on Github and asking questions on their *gitter* to get things done), but once you get a hang of things it offers a lot of flexibility and speed. I've also worked with Caffe and Theano in the past and I believe Torch, while not perfect, gets its levels of abstraction and philosophy right better than others. In my view the desirable features of an effective framework are: 
 
 1. CPU/GPU transparent Tensor library with a lot of functionality (slicing, array/matrix operations, etc. )
 2. An entirely separate code base in a scripting language (ideally Python) that operates over Tensors and implements all Deep Learning stuff (forward/backward, computation graphs, etc)
 3. It should be possible to easily share pretrained models (Caffe does this well, others don't), and crucially 
-4. NO compilation step (or at least not as currently done in Theano). The trend in Deep Learning is towards larger, more complex networks that are are time-unrolled in complex graphs. It is critical that these do not compile for a long time or development time greatly suffers. Second, by compiling one gives up interpretability and the ability to log/debug effectively.
+4. NO compilation step (or at least not as currently done in Theano). The trend in Deep Learning is towards larger, more complex networks that are are time-unrolled in complex graphs. It is critical that these do not compile for a long time or development time greatly suffers. Second, by compiling one gives up interpretability and the ability to log/debug effectively. If there is an *option* to compile the graph once it has been developed for efficiency in prod that's fine.
 
 ## Further Reading
 
