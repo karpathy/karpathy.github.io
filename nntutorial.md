@@ -192,7 +192,7 @@ var out_new = forwardMultiplyGate(x, y); // -5.87. Higher output! Nice.
 
 To compute the gradient we went from forwarding the circuit hundreds of times (Strategy #1) to forwarding it only on order of number of times twice the number of inputs (Strategy #2), to forwarding it a single time! And it gets EVEN better, since the more expensive strategies (#1 and #2) only give an approximation of the gradient, while #3 (the fastest one by far) gives you the *exact* gradient. No approximations. The only downside is that you should be comfortable with some calculus 101.
 
-Lets recap what have we learned:
+Lets recap what we have learned:
 
 - INPUT: We are given a circuit, some inputs and compute an output value. 
 - OUTPUT: We are then interested finding small changes to each input (independently) that would make the output higher.
@@ -206,7 +206,7 @@ In practice by the way (and we will get to this once again later), all Neural Ne
 
 But hold on, you say: *"The analytic gradient was trivial to derive for your super-simple expression. This is useless. What do I do when the expressions are much larger? Don't the equations get huge and complex very fast?"*. Good question. Yes the expressions get much more complex. No, this doesn't make it much harder. As we will see, every gate will be hanging out by itself, completely unaware of any details of the huge and complex circuit that it could be part of. It will only worry about its inputs and it will compute its local derivatives as seen in the previous section, except now there will be a single extra multiplication it will have to do.
 
-> A single extra multiplication will turn a single (useless gate) into a cog in complex machine that is an entire neural network.
+> A single extra multiplication will turn a single (useless gate) into a cog in the complex machine that is an entire neural network.
 
 I should stop hyping it up now. I hope I've piqued your interest! Lets drill down into details and get two gates involved with this next example:
 
@@ -338,7 +338,7 @@ Isn't it beautiful? The only difference between the case of a single gate and mu
 
 #### Patterns in the "backward" flow
 
-Lets look again at the our example circuit with the numbers filled in. The first circuit shows the raw values, and the second circuit shows the gradients that flow back to the inputs as discussed. Notice that the gradient always starts off with `+1` at the end to start off the chain. This is the (default) pull on the circuit to have its value increased.
+Lets look again at our example circuit with the numbers filled in. The first circuit shows the raw values, and the second circuit shows the gradients that flow back to the inputs as discussed. Notice that the gradient always starts off with `+1` at the end to start off the chain. This is the (default) pull on the circuit to have its value increased.
 
 <div class="svgdiv">
 <svg width="600" height="350">
