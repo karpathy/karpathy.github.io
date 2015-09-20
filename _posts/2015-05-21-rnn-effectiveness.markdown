@@ -439,6 +439,112 @@ os_prefix(unsigned long sys)
 
 There are too many fun parts to cover- I could probably write an entire blog post on just this part. I'll cut it short for now, but here is [1MB of sampled Linux code](http://cs.stanford.edu/people/karpathy/char-rnn/linux.txt) for your viewing pleasure.
 
+### Generating Baby Names
+
+Lets try one more for fun. Lets feed the RNN a large text file that contains 8000 baby names listed out, one per line (names obtained from [here](http://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/areas/nlp/corpora/names/)). We can feed this to the RNN and then generate new names! Here are some example names, only showing the ones that do not occur in the training data (90% don't):
+
+*Rudi
+Levette
+Berice
+Lussa
+Hany
+Mareanne
+Chrestina
+Carissy
+Marylen
+Hammine
+Janye
+Marlise
+Jacacrie
+Hendred
+Romand
+Charienna
+Nenotto
+Ette
+Dorane
+Wallen
+Marly
+Darine
+Salina
+Elvyn
+Ersia
+Maralena
+Minoria
+Ellia
+Charmin
+Antley
+Nerille
+Chelon
+Walmor
+Evena
+Jeryly
+Stachon
+Charisa
+Allisa
+Anatha
+Cathanie
+Geetra
+Alexie
+Jerin
+Cassen
+Herbett
+Cossie
+Velen
+Daurenge
+Robester
+Shermond
+Terisa
+Licia
+Roselen
+Ferine
+Jayn
+Lusine
+Charyanne
+Sales
+Sanny
+Resa
+Wallon
+Martine
+Merus
+Jelen
+Candica
+Wallin
+Tel
+Rachene
+Tarine
+Ozila
+Ketia
+Shanne
+Arnande
+Karella
+Roselina
+Alessia
+Chasty
+Deland
+Berther
+Geamar
+Jackein
+Mellisand
+Sagdy
+Nenc
+Lessie
+Rasemy
+Guen
+Gavi
+Milea
+Anneda
+Margoris
+Janin
+Rodelin
+Zeanna
+Elyne
+Janah
+Ferzina
+Susta
+Pey
+Castina*
+
+You can see many more [here](http://cs.stanford.edu/people/karpathy/namesGenUnique.txt). Some of my favorites include "Baby" (haha), "Killie", "Char", "R", "More", "Mars", "Hi", "Saddie", "With" and "Ahbort". Well that was fun.﻿ Of course, you can imagine this being quite useful inspiration when writing a novel, or naming a new startup :)
 
 ## Understanding what's going on
 
@@ -528,7 +634,7 @@ Here is another neuron that has very local behavior: it is relatively silent but
 </div>
 </div>
 
-Of course, a lot of these conclusions are slightly hand-wavy as the hidden state of the RNN is a huge, high-dimensional and largely distributed representation.
+Of course, a lot of these conclusions are slightly hand-wavy as the hidden state of the RNN is a huge, high-dimensional and largely distributed representation. These visualizations were produced with custom HTML/CSS/Javascript, you can see a sketch of what's involved [here](http://cs.stanford.edu/people/karpathy/viscode.zip) if you'd like to create something similar.
 
 ## Source Code
 
