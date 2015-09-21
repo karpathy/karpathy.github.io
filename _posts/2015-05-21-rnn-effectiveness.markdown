@@ -682,6 +682,10 @@ Yes, the post was about RNN and how well it works, so clearly this works :). See
 
 **EDIT (extra links):** 
 
+Videos:
+
+- I gave a talk on this work at the [London Deep Learning meetup (video)](https://skillsmatter.com/skillscasts/6611-visualizing-and-understanding-recurrent-networks).
+
 Discussions:
 
 - [HN discussion](https://news.ycombinator.com/item?id=9584325)
