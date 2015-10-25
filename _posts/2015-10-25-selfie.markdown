@@ -105,7 +105,7 @@ That was interesting. Lets now pull up the top 100 selfies (out of 50,000), acco
 
 Are you noticing a pattern in what the ConvNet has likely learned to look for? A few patterns stand out for me, and if you notice anything else I'd be happy to hear about in the comments. To take a good selfie, **Do**:
 
-- *Be born without a y-chromosome.* Women are consistently ranked higher than men. In particular, notice that there is not a single guy in the top 100.
+- *Be female.* Women are consistently ranked higher than men. In particular, notice that there is not a single guy in the top 100.
 - *Face should occupy about 1/3 of the image.* Notice that the position and pose of the face is quite consistent among the top images. The face always occupies about 1/3 of the image, is slightly tilted, and is positioned in the center and at the top. Which also brings me to:
 - *Cut off your forehead*. What's up with that? It looks like a popular strategy.
 - *Show your long hair*. Notice the frequent prominence of long strands of hair running down the shoulders.
