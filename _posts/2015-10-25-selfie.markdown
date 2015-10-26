@@ -189,9 +189,9 @@ If you'd liked to learn more, the best place to start for a beginner right now i
 
 Of course you'll learn much more by doing than by reading, so I'd recommend that you play with [101 Kaggle Challenges](https://www.kaggle.com/competitions), or that you develop your own side projects, in which case I warmly recommend that you not only *do* but also *write about it*, and post it places for all of us to read, for example on [/r/machinelearning](https://www.reddit.com/r/machinelearning) which has accumulated a nice community. As for recommended tools, the three common options right now are:
 
-- [Caffe]() (C++, Python/Matlab wrappers), which I used in this post. If you're looking to do basic Image Classification then Caffe is the easiest way to go, in many cases requiring you to write no code, just invoking included scripts.
+- [Caffe](http://caffe.berkeleyvision.org/) (C++, Python/Matlab wrappers), which I used in this post. If you're looking to do basic Image Classification then Caffe is the easiest way to go, in many cases requiring you to write no code, just invoking included scripts.
 - Theano-based Deep Learning libraries (Python) such as [Keras](http://keras.io/) or [Lasagne](https://github.com/Lasagne/Lasagne), which allow more flexibility.
-- [Torch]() (C++, Lua), which is what I currently use in my research. I'd recommend Torch for the most advanced users, as it offers a lot of freedom, flexibility, speed, all with quite simple abstractions.
+- [Torch](http://torch.ch/) (C++, Lua), which is what I currently use in my research. I'd recommend Torch for the most advanced users, as it offers a lot of freedom, flexibility, speed, all with quite simple abstractions.
 
 Some other slightly newer/less proven but promising libraries include [Nervana's Neon](https://github.com/NervanaSystems/neon), [CGT](http://rll.berkeley.edu/cgt/), or [Mocha](http://devblogs.nvidia.com/parallelforall/mocha-jl-deep-learning-julia/) in Julia.
 
