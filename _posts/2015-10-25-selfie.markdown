@@ -107,7 +107,7 @@ Are you noticing a pattern in what the ConvNet has likely learned to look for? A
 
 - *Be female.* Women are consistently ranked higher than men. In particular, notice that there is not a single guy in the top 100.
 - *Face should occupy about 1/3 of the image.* Notice that the position and pose of the face is quite consistent among the top images. The face always occupies about 1/3 of the image, is slightly tilted, and is positioned in the center and at the top. Which also brings me to:
-- *Cut off your forehead*. What's up with that? It looks like a popular strategy.
+- *Cut off your forehead*. What's up with that? It looks like a popular strategy, at least for women.
 - *Show your long hair*. Notice the frequent prominence of long strands of hair running down the shoulders.
 - *Oversaturate the face.* Notice the frequent occurrence of over-saturated lighting, which often makes the face look much more uniform and faded out. Related to that,
 - *Put a filter on it.* Black and White photos seem to do quite well, and most of the top images seem to contain some kind of a filter that fades out the image and decreases the contrast.
@@ -137,7 +137,7 @@ As a last point, note that a good portion of the variability between what makes 
 
 Amusingly, note that the general rule of thumb we observed before (*no group photos*) is broken with the famous group selfie of Ellen DeGeneres and others from the Oscars, yet the ConvNet thinks this is actually a very good selfie, placing it on the 2nd row! Nice! :)
 
-Another one of our rules of thumb (*no y chromosomes*) is confidently defied by Chris Pratt's body (also 2nd row), and honorable mentions go to Justin Beiber's raised eyebrows and Stephen Collbert / Jimmy Fallon duo (3rd row). James Franco's selfie shows quite a lot more skin than Chris', but the ConvNet is not very impressed (4th row). Neither was I.
+Another one of our rules of thumb (*no males*) is confidently defied by Chris Pratt's body (also 2nd row), and honorable mentions go to Justin Beiber's raised eyebrows and Stephen Collbert / Jimmy Fallon duo (3rd row). James Franco's selfie shows quite a lot more skin than Chris', but the ConvNet is not very impressed (4th row). Neither was I.
 
 Lastly, notice again the importance of style. There are several uncontroversially-good-looking people who still appear on the bottom of the list, due to bad framing (e.g. head too large possibly for J Lo), bad lighting, etc.
 
