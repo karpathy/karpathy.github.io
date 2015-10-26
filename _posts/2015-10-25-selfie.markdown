@@ -34,7 +34,7 @@ Over the next few years we had perfected, simplified, and scaled up the original
 
 - **simple**: one operation is repeated over and over few tens of times starting with the raw image.
 - **fast**, processing an image in few tens of milliseconds
-- **they work** very well (e.g. see [this post]((http://karpathy.github.io/2014/09/02/what-i-learned-from-competing-against-a-convnet-on-imagenet/)) where I struggle to classify images better than the GoogLeNet)
+- **they work** very well (e.g. see [this post](http://karpathy.github.io/2014/09/02/what-i-learned-from-competing-against-a-convnet-on-imagenet/) where I struggle to classify images better than the GoogLeNet)
 - and by the way, in some ways they seem to work similar to our own visual cortex (see e.g. [this paper](http://arxiv.org/abs/1406.3284))
 
 
