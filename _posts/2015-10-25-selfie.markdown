@@ -87,7 +87,7 @@ At this point you may object that the way I'm deciding if a selfie is good or ba
 
 ### What makes a good #selfie ?
 
-Okay, so we collected 2 million selfies, decided which ones are probably good or bad based on the number of likes they received, fed all of it to Caffe and trained a ConvNet. The ConvNet "looked" at every one of the 2 million selfies several tens of times, and tuned its filters in a way that best allows it to separate good selfies from bad ones. We can't very easily inspect exactly what it found (it's all jumbled up in 140 million numbers that together define the filters). However, we can set it loose on selfies that it has never seen before and try to understand what it's doing by looking at which images it likes and which ones it does not.
+Okay, so we collected 2 million selfies, decided which ones are probably good or bad based on the number of likes they received (controlling for the number of followers), fed all of it to Caffe and trained a ConvNet. The ConvNet "looked" at every one of the 2 million selfies several tens of times, and tuned its filters in a way that best allows it to separate good selfies from bad ones. We can't very easily inspect exactly what it found (it's all jumbled up in 140 million numbers that together define the filters). However, we can set it loose on selfies that it has never seen before and try to understand what it's doing by looking at which images it likes and which ones it does not.
 
 I took 50,000 selfies from my test data (i.e. the ConvNet hasn't seen these before). As a first visualization, in the image below I am showing a *continuum* visualization, with the best selfies on the top row, the worst selfies on the bottom row, and every row in between is a continuum:
 
@@ -112,6 +112,15 @@ If you'd like to see more here is a link to [top 1000 selfies (3.5MB)](http://cs
 - *Oversaturate the face.* Notice the frequent occurrence of over-saturated lighting, which often makes the face look much more uniform and faded out. Related to that,
 - *Put a filter on it.* Black and White photos seem to do quite well, and most of the top images seem to contain some kind of a filter that fades out the image and decreases the contrast.
 - *Add a border.* You will notice a frequent appearance of horizontal/vertical white borders.
+
+Interestingly, not all of these rules apply to males. I manually went through the top 2000 selfies and picked out the top males, here's what we get:
+
+<div class="imgcap">
+<img src="/assets/selfie/males.jpg" style="border:none;">
+<div class="thecap" style="text-align:center">Best few male selfies taken from the top 2,000 selfies.</div>
+</div>
+
+In this case we see don't see any cut off foreheads. Instead, most selfies seem to be a slightly broader shot with head fully in the picture, and shoulders visible. It also looks like many of them have a fancy hair style with slightly longer hair combed upwards. However, we still do see the prominance of faded facial features.
 
 Lets also look at some of the worst selfies, which the ConvNet is quite certain would not receive a lot of likes. I am showing the images in a much smaller and less identifiable format because my intention is for us to learn about the broad patterns that decrease the selfie's quality, not to shine light on people who happened to take a bad selfie. Here they are:
 
