@@ -1,6 +1,6 @@
 ---
 layout: post
-comments: false
+comments: true
 title:  "Short Story on AI: A Cognitive Discontinuity."
 excerpt: "The first part of a short story collection that has been on my mind for a long while. Exciting! :)"
 date:   2015-11-14 11:00:00
