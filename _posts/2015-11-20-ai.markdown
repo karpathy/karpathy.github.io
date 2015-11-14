@@ -13,7 +13,7 @@ p {
 }
 </style>
 
-The idea of writing a collection of short stories has been on my mind for a while. This post is my first ever half-serious attempt at a story, and what better way to kick things off than with a story on AI and what that might look like if you extrapolate our current technology. I'll warn you right now - it's not very good, I didn't try too long to polish it, and that's okay. Practice makes perfect, and you've got to start somewhere. Now here are some crackpot ideas expressed in terrible writing for you :)
+The idea of writing a collection of short stories has been on my mind for a while. This post is my first ever half-serious attempt at a story, and what better way to kick things off than with a story on AI and what that might look like if you extrapolate our current technology.
 
 <hr style="border:none; height:1px; background-color: #333;">
 
