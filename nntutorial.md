@@ -612,9 +612,9 @@ var q = a + b; // gate 1
 var x = q + c; // gate 2
 
 // backward pass:
-dc = 1.0 * dx; // backprop first gate
+dc = 1.0 * dx; // backprop gate 2
 dq = 1.0 * dx; 
-da = 1.0 * dq; // backprop second
+da = 1.0 * dq; // backprop gate 1
 db = 1.0 * dq;
 ```
 
