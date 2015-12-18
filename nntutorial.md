@@ -725,7 +725,7 @@ var dx2 = (-1.0/(x2*x2)) * dx3; // local gradient as shown above, and chain rule
 var da = 1.0 * dx1; // and finally into the original variables
 var db = 1.0 * dx1;
 var dc = 1.0 * dx2;
-var db = 1.0 * dx2;
+var dd = 1.0 * dx2;
 ```
 
 Hopefully you see that we are breaking down expressions, doing the forward pass, and then for every variable (such as `a`) we derive its gradient `da` as we go backwards, one by one, applying the simple local gradients and chaining them with gradients from above. Here's another one:
