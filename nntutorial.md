@@ -267,7 +267,7 @@ $$
 q(x,y) = x + y \hspace{0.5in} \implies \hspace{0.5in} \frac{\partial q(x,y)}{\partial x} = 1, \hspace{1in} \frac{\partial q(x,y)}{\partial y} = 1
 $$
 
-That's right, the derivaties are just 1, regardless of the actual values of `x` and `y`. If you think about it, this makes sense because to make the output of a single addition gate higher, we expect a positive tug on both `x` and `y`, regardless of their values.
+That's right, the derivatives are just 1, regardless of the actual values of `x` and `y`. If you think about it, this makes sense because to make the output of a single addition gate higher, we expect a positive tug on both `x` and `y`, regardless of their values.
 
 #### Backpropagation
 
@@ -612,9 +612,9 @@ var q = a + b; // gate 1
 var x = q + c; // gate 2
 
 // backward pass:
-dc = 1.0 * dx; // backprop first gate
+dc = 1.0 * dx; // backprop gate 2
 dq = 1.0 * dx; 
-da = 1.0 * dq; // backprop second
+da = 1.0 * dq; // backprop gate 1
 db = 1.0 * dq;
 ```
 
@@ -725,7 +725,7 @@ var dx2 = (-1.0/(x2*x2)) * dx3; // local gradient as shown above, and chain rule
 var da = 1.0 * dx1; // and finally into the original variables
 var db = 1.0 * dx1;
 var dc = 1.0 * dx2;
-var db = 1.0 * dx2;
+var dd = 1.0 * dx2;
 ```
 
 Hopefully you see that we are breaking down expressions, doing the forward pass, and then for every variable (such as `a`) we derive its gradient `da` as we go backwards, one by one, applying the simple local gradients and chaining them with gradients from above. Here's another one:
