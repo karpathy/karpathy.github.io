@@ -559,7 +559,7 @@ tyntd-iafhatawiaoihrdemot  lytdws  e ,tfti, astai f ogoh eoase rrranbyne 'nhthne
 plia tklrgd t o idoe ns,smtt   h ne etie h,hregtrs nigtike,aoaenns lng
 ```
 
-However, notice that at least it is starting to get an idea about words separated by spaces. Except sometimes it inserts two spaces. It also doesn't know that comma is amost always followed by a space. At 300 iterations we see that the model starts to get an idea about quotes and periods:
+However, notice that at least it is starting to get an idea about words separated by spaces. Except sometimes it inserts two spaces. It also doesn't know that comma is almost always followed by a space. At 300 iterations we see that the model starts to get an idea about quotes and periods:
 
 ```
 "Tmont thithey" fomesscerliund
