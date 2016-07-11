@@ -54,7 +54,7 @@ This was also around the time when the Kinect came out, so I thought I'd give 3D
 
 1. There is no obvious/clean way to plug a neural network into 3D data.
 2. Reasoning about the difference between occluded / empty space is a huge pain.
-3. It is very hard to collect data at scale. Neural nets love data and here I was playing around with datasets on order of 100 scenes, with no ideas about how this could be possibly scale.
+3. It is very hard to collect data at scale. Neural nets love data and here I was playing around with datasets on order of 100 scenes, with no ideas about how this could be possibly scaled.
 4. I was working with fully static 3D environments. No movement, no people, no fun.
 
 I ended up doing a bit of Unsupervised Object Discovery in my 3D meshes and publishing it at a robotics conference, where it was most relevant (<a href="http://cs.stanford.edu/people/karpathy/discovery/">Object Discovery in 3D scenes via Shape Analysis</a>). I was happy that I found a very simple, efficient and surprisingly effective way of computing objectness over 3D meshes, but it wasn't what I set out to do. I followed up on the project a bit while working with Sebastian Thrun for my last rotation, but I remained unsatisfied and unfulfilled. There was no brain stuff, no huge datasets to learn from, and even if it all worked, it would work on static, boring scenes.
