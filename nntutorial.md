@@ -746,7 +746,7 @@ var x = Math.max(a, 0)
 var da = a > 0 ? 1.0 * dx : 0.0;
 ```
 
-In other words this gate simply passes the value through if it's larger than 0, or it stops the flow and sets it to zero. In the backward pass, the gate will pass on the gradient from the top if it was activated during the forawrd pass, or if the original input was below zero, it will stop the gradient flow.
+In other words this gate simply passes the value through if it's larger than 0, or it stops the flow and sets it to zero. In the backward pass, the gate will pass on the gradient from the top if it was activated during the forward pass, or if the original input was below zero, it will stop the gradient flow.
 
 I will stop at this point. I hope you got some intuition about how you can compute entire expressions (which are made up of many gates along the way) and how you can compute backprop for every one of them.
 
@@ -1099,7 +1099,7 @@ for(var iter = 0; iter < 400; iter++) {
 }
 ```
 
-And that's how you train a neural network. Obviously, you want to modularize your code nicely but I expended this example for you in the hope that it makes things much more concrete and simpler to understand. Later, we will look at best practices when implementing these networks and we will structure the code much more neatly in a modular and more sensible way. 
+And that's how you train a neural network. Obviously, you want to modularize your code nicely but I expanded this example for you in the hope that it makes things much more concrete and simpler to understand. Later, we will look at best practices when implementing these networks and we will structure the code much more neatly in a modular and more sensible way. 
 
 But for now, I hope your takeaway is that a 2-layer Neural Net is really not such a scary thing: we write a forward pass expression, interpret the value at the end as a score, and then we pull on that value in a positive or negative direction depending on what we want that value to be for our current particular example. The parameter update after backprop will ensure that when we see this particular example in the future, the network will be more likely to give us a value we desire, not the one it gave just before the update.
 
@@ -1114,7 +1114,7 @@ As I develop this formalism I would also like to start to be a little more caref
 Lets start with an example of a 2-dimensional SVM. We are given a dataset of \\( N \\) examples \\( (x\_{i0}, x\_{i1}) \\) and their corresponding labels \\( y\_{i} \\) which are allowed to be either \\( +1/-1 \\) for positive or negative example respectively. Most importantly, as you recall we have three parameters \\( (w\_0, w\_1, w\_2) \\). The SVM loss function is then defined as follows:
 
 $$
-L = [\sum\_{i=1}^N max(0, -y\_{i}( w\_0x\_{i0} + w\_1x\_{i1} + w\_2 ) + 1 )] + \alpha [w\_0^2 + w\_1^2]
+L = [\sum_{i=1}^N max(0, -y_{i}( w_0x_{i0} + w_1x_{i1} + w_2 ) + 1 )] + \alpha [w_0^2 + w_1^2]
 $$
 
 Notice that this expression is always positive, due to the thresholding at zero in the first expression and the squaring in the regularization. The idea is that we will want this expression to be as small as possible. Before we dive into some of its subtleties let me first translate it to code:
