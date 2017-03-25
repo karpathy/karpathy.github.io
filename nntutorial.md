@@ -185,7 +185,7 @@ var x_gradient = y; // by our complex mathematical derivation above
 var y_gradient = x;
 
 var step_size = 0.01;
-x += step_size * x_gradient; // -2.03
+x += step_size * x_gradient; // -1.97
 y += step_size * y_gradient; // 2.98
 var out_new = forwardMultiplyGate(x, y); // -5.87. Higher output! Nice.
 ```
