@@ -1,0 +1,147 @@
+---
+layout: post
+comments: true
+title:  "Vision System for Autonomous Navigation of Underwater Vehicles"
+excerpt: "Vision System for Autonomous Navigation of Underwater Vehicles"
+date:   2017-03-29 11:00:00
+mathjax: false
+---
+
+### Abstract
+
+Remotely Operated (Underwater) Vehicles (ROVs) are increasingly being used for inspection of offshore/underwater structures. However the visual data acquired underwater is often poor in quality due lack of sufficient/uniform illumination, haze due to atmospheric light reflected by the suspended particles in the murky water, selective absorption of different wavelengths causing colour imbalance and subsequently poor contrast, etc. We propose to rectify these problems using various Dehazing and Enhancement algorithms. We also attempt to solve the problem of autonomous navigation using absolute depth maps obtained from the enhanced monocular images. 
+
+The Vision System developed first dehazes and enhances the video frame to improve the image quality which is then used for further feature extraction. To solve the problem of autonomous navigation, the use of absolute depth maps is proposed. The depth maps are used for perceiving the structure, 2D shape and third dimension depth, of the scene to detect and avoid obstacles. 
+
+To solve the Image Dehazing problem Dark Channel Prior, Color Attenuation Prior, ConvNet based DehazeNet and Non-Local Image Dehazing algorithms were implemented and their results were compared. Using the Non-Local Image Dehazing algorithm the Contrast-toNoise Ratio (CNR) was increased by 20-50 on test images. 
+
+To uncover the visual cues hiding in low-light setting, Gamma Correction, CLAHE and Illumination Map Estimation based algorithm were implemented. The Illumination Map Estimation based algorithm was able to increase average local contrast by around 20-40 on test images. 
+
+To solve the problem of autonomous navigation, we estimate the depth maps from the enhanced monocular images, we use Deep Convolutional Neural Networks to extract the depth relevant features in a fully supervised training setting. The estimated depth maps are also refined using regularization and the pixel cluster with most depth is proposed as suitable navigation direction. Finally to summarize the inspected area a framework for mosaicking video is proposed which if combined with the mosaic of depth map can provide the full three dimensional setting of the scene.
+### Results
+
+Image Dehazing
+
+<div class="imgcap">
+<img src="/assets/ddp/test1dehaze.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/test2dehaze.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/test3dehaze.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/test5dehaze.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/test6dehaze.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/test9dehaze.jpg">
+</div>
+
+Low Light Image Enhancement
+
+<div class="imgcap">
+<img src="/assets/ddp/test1enhance.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/test2enhance.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/test3enhance.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/test5enhance.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/test6enhance.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/test9enhance.jpg">
+</div>
+
+Depth Map Estimation from Single Monocular Images using Deep Convolutinal Neural Fields
+
+<div class="imgcap">
+<img src="/assets/ddp/w1.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/w2.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/w3.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/w4.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/w5.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/w6.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/w7.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/w8.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/w9.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/w10.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/w11.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/w12.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/w13.jpg">
+</div>
+
+Overall
+
+<div class="imgcap">
+<img src="/assets/ddp/allres1.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/allres2.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/allres3.jpg">
+</div>
+
+<div class="imgcap">
+<img src="/assets/ddp/allres4.jpg">
+</div>
+
+

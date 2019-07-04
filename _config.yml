@@ -1,11 +1,11 @@
 # Site settings
-title: Andrej Karpathy blog
+title: Sagar Pathrudkar
 email: 
-description: "Musings of a Computer Scientist."
+description: "random"
 baseurl: ""
-url: "http://karpathy.github.io"
-twitter_username: karpathy
-github_username:  karpathy
+url: "http://sagarpath.github.io"
+twitter_username: sagarpath
+github_username:  sagarpath
 
 # Build settings
 markdown: kramdown

@@ -4,4 +4,4 @@ title: About
 permalink: /about/
 ---
 
-See my [website](http://cs.stanford.edu/people/karpathy/).
+I am **Sagar Pathrudkar**, a Dual Degree student at IIT Madras working on Autonomous Systems. 
