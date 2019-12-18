@@ -45,11 +45,11 @@ Enough about my introduction to Machine Learning. Now to give the taste to you g
 
 Imagine that you have some data like this,
 
-![linear data](/assets/img/data.png)
+![linear data]({{site.baseurl}}/assets/img/data.png)
 
 Now in order to find a good fit to the data, you need to find a best fit line, something like this,
 
-![linear regression](/assets/img/lr.png)
+![linear regression]({{site.baseurl}}/assets/img/lr.png)
 
 In this case, you would use linear regression, a most basic Machine Learning algorithm to fit linear data. Now, since actually teaching linear regression is beyond the scope of this post, I will intrigue your minds with something else.
 
@@ -59,16 +59,16 @@ The cost function allows us to eyeball (if it is in 2 or 3 dimensions only) the 
 
 There are different kinds of cost functions. Some are scary like this,
 
-![big cost function](/assets/img/oofgd.png)
+![big cost function]({{site.baseurl}}/assets/img/oofgd.png)
 
 Or this,
 
-![another big cost function](/assets/img/oofgd1.png)
+![another big cost function]({{site.baseurl}}/assets/img/oofgd1.png)
 
 
 However, for linear regression, our cost function will be this,
 
-![linear regression cost function](/assets/img/gd.png)
+![linear regression cost function]({{site.baseurl}}/assets/img/gd.png)
 
 
 Think of your program as the black ball on the cost function. Let's say your parameters (what you model uses to predict an answer for a new test data point) place you, the model, on some non-zero cost value on the graph. Now, you calculate your cost function's derivative and subtract and move toward's the negative direction (you always want to reduce your cost). As you do this, hopefully, you approach the minimum which consequently reduces your derivative, making you take smaller steps, ensuring that when you get to the minimum, you stay there. At this point, your model has learned as much as it can, and is ready to be used to make predictions for new data.
