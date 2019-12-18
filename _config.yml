@@ -2,7 +2,7 @@
 title: Ramansh Sharma blog
 email:
 description: "Musings of a Computer Science student."
-baseurl: \blog
+baseurl: '\blog'
 url: "http://ramanshsharma2806.github.io/blog"
 twitter_username: ramanshsharma1
 github_username:  ramanshsharma2806
