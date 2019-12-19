@@ -413,9 +413,9 @@ a:visited { color: #205caa; }
   .post-content h2 { font-size: 28px; }
   .post-content h3 { font-size: 22px; }
   .post-content h4 { font-size: 18px; }
-  .post-content blockquote { padding-left: 10px; }
+  .post-content blockquote { width: 50%; }
   .post-content ul,
-  .post-content ol { padding-left: 10px; }
+  .post-content ol { width: 50%; }
 
   .site-footer .column {
     float: none;
