@@ -7,15 +7,15 @@ comments: true
 
 It was about two years ago.
 
-My junior year (and afterwards senior year) Computer Science teacher and my lifelong mentor used the term 'Machine Learning'. I had no idea what it meant at that point of time. My first impression of it was that it had something to do with how machines learned (wow, I know right!) and hardware....stuff? But what I did not know was just how much my world was going to change because of it.
+My junior year (and afterwards senior year) Computer Science teacher and my lifelong mentor used the term 'Machine Learning' while explaining something to the senior kids. I had no idea what it meant at that point of time. My first impression of it was that it had something to do with how machines learned (wow, I know right!) and hardware....stuff? But what I did not know was just how much my world was going to change because of it.
 
-I did nothing at that time but when I heard that my friend from senior year went to [MIT's Beaver Works program](https://beaverworks.ll.mit.edu/CMS/bw/bwsi), I looked it up a bit. After all, who did not want a chance to attend the one of the most elite summer programs for computer science and **Machine Learning**. There it came again. I conferred with my teacher and when asked whether I will be able to do it, she replied with a smile-
+I did not do anything at that time to learn about it but when I heard that my friend from senior year went to [MIT's Beaver Works program](https://beaverworks.ll.mit.edu/CMS/bw/bwsi), I looked it up a bit. After all, who did not want a chance to attend MIT for one of the most elite summer programs for computer science and **Machine Learning**. There it came again. I conferred with my teacher and asked whether I will be able to do it, to which she replied with a smile-
 
 
 > Yes, but you will lose sleep.
 
 
-We laughed and I signed up for the Beaver Works online edx course. There were four modules as per I remember. First three were for python which were relatively easy (and the requirement for applying to the summer program). I finished them and completed the programming assignments. But I was not able to attend the summer course because I was not a US Citizen or permanent resident. Sad story that destroyed my dreams aside, I am happy I was introduced to my true calling.
+We laughed and I signed up for the Beaver Works online edx course. There were four modules as per I remember. First three were for python and numpy which were relatively easy (the requirements for applying to the summer program). I finished them and completed the programming assignments. But I was not able to attend the summer course because I was not a US Citizen or permanent resident. Sad story that destroyed my dreams aside, I am happy I was introduced to my true calling.
 
 
 The online course gave us a few links to get started on Machine Learning ourselves. I looked around and stumbled upon [Michael Nielsen's tutorial](http://neuralnetworksanddeeplearning.com/index.html) but it might as well had been ancient greek for me.
@@ -24,15 +24,15 @@ I found some udemy courses but they were too black boxed. They started with supp
 ```python
 model = sklearn.svm.SVC()
 model.train(X)
-model.test(y)
+prediction = model.test(X_test)
 ```
 
-This was not only notoriously incomprehensive but devoid of any true conceptual learning. I did not understand anything that was happening.
+This was not only notoriously incomprehensive but devoid of any true conceptual learning. I did not understand anything that was happening and felt largely unsatisfied.
 
 
-I wanted to truly learn Machine Learning, grasp and assimilate its ideas and concepts, embody its culture, and enclose myself with it forever. Alright, excuse me for the cheesy part but its true, I wanted to learn what it is all about but from the beginning, and at a controlled pace.
+I wanted to truly learn Machine Learning, grasp and assimilate its ideas and concepts, embody its culture, and enclose myself with it forever. Alright, excuse me for the cheesy part but it's true, I wanted to learn what it is all about but from the beginning, and at a controlled pace.
 
-It took me some time, tried this [hackerearth tutorial](https://www.hackerearth.com/practice/machine-learning/prerequisites-of-machine-learning/basic-probability-models-and-rules/tutorial/) but to no vain, and finally, quite accidentally, stumbled upon this [Stanford University course](https://www.coursera.org/learn/machine-learning).
+It took me some time, even tried this [hackerearth tutorial](https://www.hackerearth.com/practice/machine-learning/prerequisites-of-machine-learning/basic-probability-models-and-rules/tutorial/) but to no vain, and finally, quite accidentally, stumbled upon this [Stanford University course](https://www.coursera.org/learn/machine-learning).
 
 The Stanford course changed my life. It begins from the absolute start, Dr. Andrew Ng starts explaining where Machine Learning is used in industries and how extremely fascinating it is.
 > The 11 week course is perfect for every beginner to get started
@@ -74,8 +74,10 @@ However, for linear regression, our cost function will be this,
 Think of your program as the black ball on the cost function. Let's say your parameters (what you model uses to predict an answer for a new test data point) place you, the model, on some non-zero cost value on the graph. Now, you calculate your cost function's derivative and subtract and move toward's the negative direction (you always want to reduce your cost). As you do this, hopefully, you approach the minimum which consequently reduces your derivative, making you take smaller steps, ensuring that when you get to the minimum, you stay there. At this point, your model has learned as much as it can, and is ready to be used to make predictions for new data.
 
 
-That's it! If you understood that, no matter how trivial it seems, you understand the basic concept of Machine Learning. Just remember this *Homeric hymn*
+That's it! If you understood that, no matter how trivial it seems, you understand the basic concept of Machine Learning. Just remember this *Homeric hymn*-
 
 > The key isn’t success, it’s to fail expensively and learn from it- Robert Walker [[link](https://twitter.com/SirRobertWalker/status/1157527028628779008)]
 
-Drop your comments below if you'd like to share something or reach out to me! Thank you for reading all the way to the end.
+Drop your comments below if you'd like to share something, ask any questions (_**requests for future posts are strongly considered**_) or simply reach out to me at [sharmar@bxscience.edu](mailto:sharmar@bxscience.edu)!
+
+Thank you for reading all the way to the end.
