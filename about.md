@@ -4,6 +4,8 @@ title: About
 permalink: /about/
 ---
 
+![my image]({{site.baseurl}}/assets/img/me.png)
+
 Hi, my name is Ram! I am a freshman at SRM Institute of Science and Technology, Ramapuram.
 I am majoring in Computer Science with a specialization in Machine Learning.
 
