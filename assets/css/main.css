@@ -414,10 +414,12 @@ a:visited { color: #205caa; }
   .post-content h3 { font-size: 22px; }
   .post-content h4 { font-size: 18px; }
   .page-content blockquote { width: 50%;
-  text-align: center;}
+  text-align: center;
+  position: relative;}
   .page-content ul,
   .page-content ol { width: 50%;
-  text-align: center;}
+  text-align: center;
+  position: relative;}
 
   .site-footer .column {
     float: none;
