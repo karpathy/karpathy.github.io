@@ -1,9 +1,7 @@
 ---
 layout: post
-title:  "An Extensive Look at Linear Regression"
-comments: true
+title:  Python for beginners tutorial (plus some tips on good practices)
+comments: false
 ---
 
-I am very tired...
-
-Tired of you boring me with these details.
+This post is still under production.

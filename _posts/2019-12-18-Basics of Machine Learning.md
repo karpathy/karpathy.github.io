@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Machine Learning for everybody"
+title:  Machine Learning for everybody
 comments: true
 ---
 
