@@ -1,7 +1,6 @@
 ---
 layout: post
 title:  "Machine Learning for everybody"
-author: "Ram"
 comments: true
 ---
 
