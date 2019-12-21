@@ -35,7 +35,7 @@ first_name = first_name[0].upper() + first_name[1:]
 
 You ever have that feeling when your computer science teacher just feeds you the information and you just feel awfully guilty about blindly using it. No? I do though.
 
-And that is exactly what I felt. My junior year teacher took meticulous efforts to not let this happen. Luckily, Java has a nice documentation provided by Oracle [here][https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html].
+And that is exactly what I felt. My junior year teacher took meticulous efforts to not let this happen. Luckily, Java has a nice documentation provided by Oracle [here](https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html).
 
 But my sophomore year teacher has absolutely no qualms in spoiling his students. __Let me tell you something dear readers. There is no shortcut to learning how to code!__ Yes, after you are more than a beginner, somewhat mediocre, you can assert the claim that you justifiably use shortcuts for speed and performance, but to get there, you have to do hard grunt work. And yes, you can make the argument that I am still using the online docs. But you are never going to wake up one day and have every single Python3 function memorized, but inevitably, will have to search them.
 
