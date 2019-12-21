@@ -6,9 +6,9 @@ comments: true
 
 So let me tell you about a story.
 
-It was about four years ago, my sophomore year at [The Bronx High School of Science](1). One of my courses that semester was "Coding for All". We started with the basic turtle programs. And no, it was not like having an actual pet :(
+It was about four years ago, my sophomore year at [The Bronx High School of Science](https://bxscience.edu/). One of my courses that semester was "Coding for All". We started with the basic turtle programs. And no, it was not like having an actual pet :(
 
-However, I did learn a lot from that class. It is surprising how much a 10-12 week class with more than half of the kids watching Youtube and browsing Reddit can teach you. It was my first introduction to true computer science. I learnt functions, variables, scripts, ord() and chr() functions, and a couple of other things. My final project was this [Encoder Decoder game](2) which by the way is still completely functional. You can download the script, run it with a special 'key' and generate an encrypted message which you can send your friends and tell them your key for them to decrypt it. What's important is my experience with it.
+However, I did learn a lot from that class. It is surprising how much a 10-12 week class with more than half of the kids watching Youtube and browsing Reddit can teach you. It was my first introduction to true computer science. I learnt functions, variables, scripts, ord() and chr() functions, and a couple of other things. My final project was this [Encoder Decoder game](https://github.com/ramanshsharma2806/EncoderDecoder-game) which by the way is still completely functional. You can download the script, run it with a special 'key' and generate an encrypted message which you can send your friends and tell them your key for them to decrypt it. What's important is my experience with it.
 
 ## My experience with Coding for All
 
@@ -35,7 +35,7 @@ first_name = first_name[0].upper() + first_name[1:]
 
 You ever have that feeling when your computer science teacher just feeds you the information and you just feel awfully guilty about blindly using it. No? I do though.
 
-And that is exactly what I felt. My junior year teacher took meticulous efforts to not let this happen. Luckily, Java has a nice documentation provided by Oracle [here][3].
+And that is exactly what I felt. My junior year teacher took meticulous efforts to not let this happen. Luckily, Java has a nice documentation provided by Oracle [here][https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html].
 
 But my sophomore year teacher has absolutely no qualms in spoiling his students. __Let me tell you something dear readers. There is no shortcut to learning how to code!__ Yes, after you are more than a beginner, somewhat mediocre, you can assert the claim that you justifiably use shortcuts for speed and performance, but to get there, you have to do hard grunt work. And yes, you can make the argument that I am still using the online docs. But you are never going to wake up one day and have every single Python3 function memorized, but inevitably, will have to search them.
 
@@ -65,7 +65,7 @@ This note is for people who have approached me regarding programming at college.
 
 + __Patience__. Machine Learning is the most popular field out there right now. You must be lured to it probably out of money, top jobs at big companies like Google, Microsoft, OpenAI, and its sheer awesomeness. But if you want to make it to these things, you will have to learn a lot, which will undeniably take time.
 
-+ __Effort and Persistence__. You will have to go to online courses (like the Stanford University one I mentioned in this [post](4)), or read [tensorflow docs](5), or work on your project for weeks, scrape data, wait for the model to train, and fail, and I kid you not, debug hundreds of lines of code. It will be scary. It will be dirty. But hear me when I say that at the end, you will come out to the top and understand it all.
++ __Effort and Persistence__. You will have to go to online courses (like the Stanford University one I mentioned in this [post](https://ramanshsharma2806.github.io/blog/2019/12/18/Basics-of-Machine-Learning/)), or read [tensorflow docs](https://www.tensorflow.org/api_docs/python/tf/Tensor?version=stable), or work on your project for weeks, scrape data, wait for the model to train, and fail, and I kid you not, debug hundreds of lines of code. It will be scary. It will be dirty. But hear me when I say that at the end, you will come out to the top and understand it all.
 
 
 Again, for my friends at SRM Ramapuram, I can help you get started, help you debug your code, but I cannot help you code. That physical action of you striking keyboard keys to type out syntax in a logical manner, will have to come from you.
@@ -76,7 +76,7 @@ I apologize I am giving off a pessimistic vibe in this post (it is entirely true
 
 But as promised, I will give a basic python tutorial now. Some notes before I start -
 
-- If you want to follow along, I suggest downloading [PyCharm](6). It is personally my favorite and go-to editor for Python, absolutely 100% recommend it.
+- If you want to follow along, I suggest downloading [PyCharm](https://www.jetbrains.com/pycharm/download/#section=mac). It is personally my favorite and go-to editor for Python, absolutely 100% recommend it.
 
 - The tutorial will not be too extensive, it will be a mere demonstration of the workflow of python and its control flow (if else statements) structure.
 
@@ -86,7 +86,7 @@ But as promised, I will give a basic python tutorial now. Some notes before I st
 ![lets get started]({{site.baseurl}}/assets/img/yohoo.png){: style="max-width: 99%; max-height: 99%;"}
 
 
-I will be explaining parts of the program in comments, part outside like this. I will be borrowing code my EncoderDecoder project to specify certain things. Otherwise, I am going to be explaining things impromptu. The purpose of this tutorial is not for me to compete with Coursera and [pythonlikeyoumeanit.com](7), but for you to get a *sense* of python really fast.
+I will be explaining parts of the program in comments, part outside like this. I will be borrowing code my EncoderDecoder project to specify certain things. Otherwise, I am going to be explaining things impromptu. The purpose of this tutorial is not for me to compete with Coursera and [pythonlikeyoumeanit.com](https://www.pythonlikeyoumeanit.com/), but for you to get a *sense* of python really fast.
 
 ##### Variables
 
@@ -227,16 +227,4 @@ it is to code in python. What I just showed you is merely a taste of what python
 
 If you liked this post and learned something from it, please let me know in the comments below. It will help me create my future content. **Posts request are taken**. Thank you for reading all the way to the end! :)
 
-And if you want to see the true godly power of Python, just watch [this](8) video of David Beazley shocking everyone at PyCon India 2019 - [link](8).
-
-
-
-
-[1]: https://bxscience.edu/
-[2]: https://github.com/ramanshsharma2806/EncoderDecoder-game
-[3]: https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html
-[4]: https://ramanshsharma2806.github.io/blog/2019/12/18/Basics-of-Machine-Learning/
-[5]: https://www.tensorflow.org/api_docs/python/tf/Tensor?version=stable
-[6]: https://www.jetbrains.com/pycharm/download/#section=mac
-[7]: https://www.pythonlikeyoumeanit.com/
-[8]: https://www.youtube.com/watch?v=VUT386_GKI8&t=2104s&ab_channel=PythonIndia
+And if you want to see the true godly power of Python, just watch [this](https://www.youtube.com/watch?v=VUT386_GKI8&t=2104s&ab_channel=PythonIndia) video of David Beazley shocking everyone at PyCon India 2019 - [link](https://www.youtube.com/watch?v=VUT386_GKI8&t=2104s&ab_channel=PythonIndia).
