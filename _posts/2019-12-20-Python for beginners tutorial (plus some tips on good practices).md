@@ -4,7 +4,9 @@ title:  Python for beginners tutorial (plus some tips on good practices)
 comments: true
 ---
 
-So let me tell you about a story. It was about four years ago, my sophomore year at [The Bronx High School of Science](1). One of my courses that semester was "Coding for All". We started with the basic turtle programs. And no, it was not like having an actual pet :(
+So let me tell you about a story.
+
+It was about four years ago, my sophomore year at [The Bronx High School of Science](1). One of my courses that semester was "Coding for All". We started with the basic turtle programs. And no, it was not like having an actual pet :(
 
 However, I did learn a lot from that class. It is surprising how much a 10-12 week class with more than half of the kids watching Youtube and browsing Reddit can teach you. It was my first introduction to true computer science. I learnt functions, variables, scripts, ord() and chr() functions, and a couple of other things. My final project was this [Encoder Decoder game](2) which by the way is still completely functional. You can download the script, run it with a special 'key' and generate an encrypted message which you can send your friends and tell them your key for them to decrypt it. What's important is my experience with it.
 
@@ -81,7 +83,7 @@ But as promised, I will give a basic python tutorial now. Some notes before I st
 - Please leave comments at the end. It doesn't take long to do so, and helps me a ton to form my future posts. If you enjoy these blog posts, please do so.
 
 
-![lets get started]({{site.baseurl}}/assets/img/yohoo.png)
+![lets get started]({{site.baseurl}}/assets/img/yohoo.png){: style="max-width: 99%; max-height: 99%;"}
 
 
 I will be explaining parts of the program in comments, part outside like this. I will be borrowing code my EncoderDecoder project to specify certain things. Otherwise, I am going to be explaining things impromptu. The purpose of this tutorial is not for me to compete with Coursera and [pythonlikeyoumeanit.com](7), but for you to get a *sense* of python really fast.
