@@ -40,7 +40,7 @@ The Stanford course changed my life. It begins from the absolute start, Dr. Andr
 
 It's true, this course, although painfully uses MATLAB (sorry Dr. Ng), but makes you do the grunt work and implement Machine Learning algorithms from scratch. And no, MATLAB does not have PyCharm's code completion.
 
-Enough about my introduction to Machine Learning. Now to give the taste to you guys, let's get started with this.
+Enough about my introduction to Machine Learning. Now to give you guys a taste of this, let's get started with this.
 
 Imagine that you have some data like this,
 
@@ -72,6 +72,7 @@ However, for linear regression, our cost function will be this,
 
 Think of your program as the black ball on the cost function. Let's say your parameters (what you model uses to predict an answer for a new test data point) place you, the model, on some non-zero cost value on the graph. Now, you calculate your cost function's derivative and subtract and move toward's the negative direction (you always want to reduce your cost). As you do this, hopefully, you approach the minimum which consequently reduces your derivative, making you take smaller steps, ensuring that when you get to the minimum, you stay there. At this point, your model has learned as much as it can, and is ready to be used to make predictions for new data.
 
+## Conclusion
 
 That's it! If you understood that, no matter how trivial it seems, you understand the basic concept of Machine Learning. Just remember this *Homeric hymn*-
 
