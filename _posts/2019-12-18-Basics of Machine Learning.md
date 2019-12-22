@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  Machine Learning for everybody
+excerpt: "My personal Machine Learning experience and a taste of what it's all about."
 comments: true
 ---
 

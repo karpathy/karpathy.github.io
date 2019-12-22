@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  Python for beginners tutorial (plus some tips on good practices)
+excerpt: "A collection of important advice and a basic tutorial for Python for beginners."
 comments: true
 ---
 
