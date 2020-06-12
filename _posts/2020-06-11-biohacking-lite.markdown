@@ -140,3 +140,4 @@ Clearly, my actual weight loss (red) turned out to be slower than expected one b
 **(later edits)**
 
 - discussion on [hacker news](https://news.ycombinator.com/item?id=23501021)
+- if you'd like to shortcut my rambling my TLDR final diet in order of importance: Eat only from 12-8pm. Do not drink any calories (no soda, no alcohol, no juices, avoid milk). Avoid processed food (follow Michael Pollan's heuristic of only shopping on the outer walls of a grocery store, staying clear of its center). Avoid sugar like the plague, including to a slightly lesser extent natural sugar (apples, bananas, pears, etc - we've "weaponized" these fruits via strong artificial selection into actual candy bars), berries are ~okay. For meat stick to fish, occasional chicken is okay, avoid beef/pork. Avoid carbohydrates and "empty calories" (bread, pasta, potatoes, rice), replace with fats and proteins.
