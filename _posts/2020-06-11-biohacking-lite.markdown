@@ -135,3 +135,8 @@ Clearly, my actual weight loss (red) turned out to be slower than expected one b
 </div>
 
 **Summary** So there you have it. DEXA scans are severely affected by hydration (which is hard to control) and BIA is making stuff up entirely, so we don't get to fully resolve the mystery of the slower-than-expected weight loss. But overall, maintaining an average deficit of 500kcal per day did lead to about 60% of the expected weight loss over the course of a year. More importantly, we studied the process by which our Sun's free energy powers blog posts via a transformation of nuclear binding energy to electromagnetic radiation to heat. The photons power the fixing of carbon in CO2 and hydrogen in H2O into C-C/C-H rich organic molecules in plants, which we digest and break back down via a "slow" stepwise combustion in our cell's cytosols and mitochondria, which "charges" some (ATP) molecular springs, which provide the "umph" that fires the neurons and moves the fingers. Also, any excess energy is stockpiled by the body as fat, so we need to intake less of it or "waste" some of it away on movement to discharge our primary battery and breath out our weight. It's been super fun to self-study these topics (which I skipped in high school), and I hope this post was an interesting intro to some of it. Okay great. I'll now go eat some cookies, because yolo.
+
+<br><br>
+**(later edits)**
+
+- discussion on [hacker news](https://news.ycombinator.com/item?id=23501021)
