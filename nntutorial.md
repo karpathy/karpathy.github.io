@@ -4,6 +4,7 @@ mathjax: true
 comments: true
 title: Hacker's guide to Neural Networks
 permalink: /neuralnets/
+includelink: false
 ---
 
 **Note: this is now a very old tutorial that I'm leaving up, but I don't believe should be referenced or used. Better materials include CS231n course lectures, slides, and notes, or the Deep Learning book**.

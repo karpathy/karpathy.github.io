@@ -2,6 +2,7 @@
 layout: page
 title: About
 permalink: /about/
+includelink: true
 ---
 
-See my [website](http://cs.stanford.edu/people/karpathy/).
+See my [website](https://karpathy.ai/).
