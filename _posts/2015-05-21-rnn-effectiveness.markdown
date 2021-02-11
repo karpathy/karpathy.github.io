@@ -222,7 +222,6 @@ In case you were wondering, the yahoo url above doesn't actually exist, the mode
 ==External links==
 * [http://www.romanology.com/ Constitution of the Netherlands and Hispanic Competition for Bilabial and Commonwealth Industry (Republican Constitution of the Extent of the Netherlands)]
 
-{{African American_and_Australian_Parliament{|}}
 ```
 
 Sometimes the model snaps into a mode of generating random but valid XML:
