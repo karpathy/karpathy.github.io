@@ -15,6 +15,7 @@ p {
     font-family: sans-serif;
     font-size: 15px;
     font-weight: 300;
+    overflow-wrap: break-word; /* allow wrapping of very very long strings, like txids */
 }
 .post pre,
 .post code {
@@ -804,7 +805,7 @@ class PublicKey(Point):
 
 ```
 
-We are not yet ready to take this class for a spin because you'll note there is one more necessary dependency here, which is the b58 encoding function `b58encode`. This is just a Bitcoin-specific encoding of bytes that uses base 58, of characters of the alphabet that are very unambiguous. For example it does not use 'O' and '0', because they are very easy to mess up on paper. So we have to take our Bitcoin address (which is 25 bytes in its raw form) and convert it to base 58 and print out the characters. The raw 25 bytes of our address though contain 1 byte for a Version (the Bitcoin "main net" is `b'\x00'`, while the Bitcoin "test net" uses `b'\x6f'`), then the 20 bytes from the hash digest, and finally 4 bytes for a checksum so we can throw an error with `1 - 1/2**4 = 93.75%` probability in case a user messes up typing in their Bitcoin address into some textbox. So here is the b58 encoding:
+We are not yet ready to take this class for a spin because you'll note there is one more necessary dependency here, which is the b58 encoding function `b58encode`. This is just a Bitcoin-specific encoding of bytes that uses base 58, of characters of the alphabet that are very unambiguous. For example it does not use 'O' and '0', because they are very easy to mess up on paper. So we have to take our Bitcoin address (which is 25 bytes in its raw form) and convert it to base 58 and print out the characters. The raw 25 bytes of our address though contain 1 byte for a Version (the Bitcoin "main net" is `b'\x00'`, while the Bitcoin "test net" uses `b'\x6f'`), then the 20 bytes from the hash digest, and finally 4 bytes for a checksum so we can throw an error with `1 - 1/2**32 = 99.99999998%` probability in case a user messes up typing in their Bitcoin address into some textbox. So here is the b58 encoding:
 
 
 ```python
@@ -1503,3 +1504,4 @@ If you'd like to dig deeper I found [Mastering Bitcoin](https://www.amazon.com/M
 
 Hope you learned something and that this was fun!
 
+Edit: [HN discussion](https://news.ycombinator.com/item?id=27593772)
