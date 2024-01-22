@@ -127,7 +127,7 @@ Clearly, my actual weight loss (red) turned out to be slower than expected one b
 
 **BIA vs DEXA**. Unfortunately, we can see that the BIA measurement provided by my scale disagrees with DEXA results by a lot. That said, I am also forced to interpret the DEXA scan with skepticism specifically for the lean body mass amount, which is [affected by hydration level](https://www.bodyspec.com/blog/post/will_drinking_water_affect_my_scan), with water showing up mostly as lean body mass. In particular, during my third measurement I was fasted and in ketosis. Hence my glycogen levels were low and I was less hydrated, which I believe showed up as a dramatic loss of muscle. That said, focusing on fat, both approaches show me losing body fat at roughly the same rate, though they are off by an absolute offset.
 
-**BIA**. An additional way to see that BIA is making stuff up is that it shows me losing lean body mass over time. I find this relatively unlikely because during the entire course of this experiment I exercised regularly and was able to monotonically increase my strength in terms of weight and reps for most exercises (e.g. bench press, pull ups, etc.). So that makes no sense either ¯\\_(ツ)_/¯
+**BIA**. An additional way to see that BIA is making stuff up is that it shows me losing lean body mass over time. I find this relatively unlikely because during the entire course of this experiment I exercised regularly and was able to monotonically increase my strength in terms of weight and reps for most exercises (e.g. bench press, pull ups, etc.). So that makes no sense either ¯\\\_(ツ)_/¯
 
 <div class="imgcap">
 <img src="/assets/bio/dexa.png">
