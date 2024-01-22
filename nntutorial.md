@@ -749,7 +749,7 @@ var x = Math.max(a, 0)
 var da = a > 0 ? 1.0 * dx : 0.0;
 ```
 
-In other words this gate simply passes the value through if it's larger than 0, or it stops the flow and sets it to zero. In the backward pass, the gate will pass on the gradient from the top if it was activated during the forawrd pass, or if the original input was below zero, it will stop the gradient flow.
+In other words this gate simply passes the value through if it's larger than 0, or it stops the flow and sets it to zero. In the backward pass, the gate will pass on the gradient from the top if it was activated during the forward pass, or if the original input was below zero, it will stop the gradient flow.
 
 I will stop at this point. I hope you got some intuition about how you can compute entire expressions (which are made up of many gates along the way) and how you can compute backprop for every one of them.
 
@@ -939,7 +939,7 @@ for(var iter = 0; iter < 400; iter++) {
   var label = labels[i];
   svm.learnFrom(x, y, label);
 
-  if(iter % 25 == 0) { // every 10 iterations... 
+  if(iter % 25 == 0) { // every 25 iterations... 
     console.log('training accuracy at iter ' + iter + ': ' + evalTrainingAccuracy());
   }
 }
