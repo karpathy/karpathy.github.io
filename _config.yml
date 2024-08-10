@@ -1,11 +1,11 @@
 # Site settings
-title: Andrej Karpathy blog
-email: 
-description: "Musings of a Computer Scientist."
+title: The New Blog
+email:
+description: "Atonement for a temporarily embarrassed scientist"
 baseurl: ""
-url: "http://karpathy.github.io"
-twitter_username: karpathy
-github_username:  karpathy
+url: "http://seamusbarnes.github.io"
+twitter_username: Seaumus_Barnes
+github_username: seamusbarnes
 
 # Build settings
 markdown: kramdown
