@@ -3,20 +3,22 @@ layout: post
 comments: false
 title: "A New Compass and a New Map"
 excerpt: "<img src='/assets/posts/medieval_map.jpg' width=100% atl='test'>Where have I been and where am I going?"
-date: 2023-11-11
+date: 2023-11-13
 ---
 
-<img src="/assets/posts/medieval_map.jpg" width="100%" />
+<img src="/assets/posts/medieval_map.jpg" width='100%'>
 
-Like many mediocre students I spent much of my adult life not making any proper career decisions. Undegrad, masters, PhD, postdoc... All default paths I took for lack of a better offer. I did all these things only to wake up one morning in my late 20s and and realise I got a PhD by accident, in an area I don't care about. I accidently became a photonics engineer and I have realised, 7 years after starting my PhD in photonics, that I don't actually like photonics... Well, that's embarrassing.
+Like many mediocre students I spent much of my adult life without making any decisive career decisions. Undegrad, masters, PhD, postdoc... All default paths taken for lack of a better offer. I did all these things only to wake up one morning in my late 20s and and realise I had gotten a PhD by accident, in an area I don't care about. I accidently became a photonics engineer and I have realised, 7 years after starting my PhD in photonics, that I don't actually like photonics... Well, that's embarrassing.
 
-What should you do when you wake up and find you have been sleep walking in the wrong direction? Stop, take a deep breath, and reorient yorself. Or in other words `Why do we fall down Mr. Batman? So we can pick ourselves back up again. - Michael Caine`, or something like that. In my case I have been falling down and getting back up for the last 15 years. That's quite normal in the grand scheme of things, hustle a bit here, hustle a bit there, procrastinate a bit here, procrastinate a bit there, make slow progress in random directions thanks to Brownian motion and a weak prevailing wind. But you only have to get up and stay up once, and then all those falls no longer matter. Or if you can't stay up, learn to stay up longer between falls.
+What should you do when you wake up and find you have been sleep walking in the wrong direction? Stop, take a deep breath, and re-orient yorself. In my case I have been falling down and getting back up for the last 15 years. That's quite normal in the grand scheme of things, a little hustle here, a little hustle there, a little procrastination here, a little procrastination there, make slow progress in random directions thanks to Brownian motion and a weak prevailing wind. But you only have to get up and stay up once, and then all those falls no longer matter. Or if you can't stay up, learn to stay up longer between falls.
 
-I can't remember the exact moment I decided to throw in the towel on the photonics career, but it was around the time chatGPT-4 came out. I asked it a technical question and the complexity and correctness of its answer blew me away. For the first time in my life I thought "this feels like magic". It was unreasonably good. It's insane than next token prediction can generate such complex chains of apparent reasoning. I knew immediately I needed to understand how it worked, and instead of being satisfied with a few high-level youtube infotainment videos, I wanted to get my hands dirty and build this stuff for real. I read Superintelligence in 2014 and I've been interested in AI and AI ethics since then, but now it felt like I had to do more than think and read about it. I had to get under the hood and build.
+I can't remember the exact moment I decided to throw in the towel on the photonics career, but it was around the time chatGPT-4 was released. I asked it a technical question and the complexity and correctness of its answer blew me away. For the first time in my life I thought "this feels like magic". It was unreasonably good. It's insane than next token prediction can generate such complex chains of apparent reasoning. I knew immediately I needed to understand how it worked, and instead of being satisfied with a few high-level youtube infotainment videos, I wanted to get my hands dirty and build this stuff for real. I read Superintelligence in 2014 and I've been interested in AI and AI ethics since then, but now it felt like I had to do more than think and read about it. I had to get under the hood and build.
 
 For me, if you want an impact on the future technically, basically all other technological development pales in comparison to AI. It is 1995, the internet is booming, and if you don't know how to code, you're going to miss it[^1]. I have decided that for me, this is the most important thing to work on, and everything else can wait. There is only one tiny, insignificant detail, I don't know machine learning or how to code[^2]. But knowledge and experience isn't a barrier to entry. The only barriers to entry are in your mind, all you have to do is step over them.
 
-![](/images/just_do_it.jpg)
+<div style="text-align: center;">
+    <img src="/assets/posts/just_do_it.jpg" width="50%" />
+</div>
 
 ## Where I'm Up To
 
