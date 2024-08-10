@@ -5,8 +5,6 @@ title: "Introductions"
 excerpt: "<img src='/assets/posts/ocean_cropped.png' width=100% alt='test'><p>The end is nigh. The beginning is nigh. What does it reveal about your approach to something when it always feels like you are at the beginning, or always in the middle, or always at the end? Perspective, as usual, is everything.</p>"
 ---
 
----
-
 <img src="/assets/posts/ocean_cropped.png" width="100%" />
 
 The end is nigh. The beginning is nigh. What does it reveal about your approach to something when it always feels like you are at the beginning, or always in the middle, or always at the end? Perspective as usual is everything.
