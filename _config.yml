@@ -1,11 +1,12 @@
 # Site settings
 title: The New Blog
 email:
-description: "Atonement for a temporarily embarrassed scientist"
+description: "Atonement for a Temporarily Embarrassed Scientist"
 baseurl: ""
 url: "http://seamusbarnes.github.io"
 twitter_username: Seaumus_Barnes
 github_username: seamusbarnes
+remote_theme: flancast90/millidocs-dark
 
 # Build settings
 markdown: kramdown

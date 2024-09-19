@@ -140,6 +140,9 @@ a:visited { color: #205caa; }
   background-color: #fff;
 }
 
+p {
+  text-align: justify;
+}
 
 /* Home styles */
 /* ----------------------------------------------------------*/
