@@ -1,7 +1,7 @@
 ---
 layout: post
 comments: true
-title:  "The state of Computer Vision and AI: we are really, really far."
+title:  "The state of Computer Vision and AI: we are really, really far away."
 excerpt: "A depressing look at the state of Computer Vision Research and AI in general. For those who like to think that AI is anywhere close."
 date:   2012-10-22 22:00:00
 ---
@@ -24,7 +24,7 @@ But for me it is also one of those examples that make me sad about the outlook f
 
 I could go on, but the point here is that you've used a HUGE amount of information in that half second when you look at the picture and laugh. Information about the 3D structure of the scene, confounding visual elements like mirrors, identities of people, affordances and how people interact with objects, physics (how a particular instrument works,  leaning and what that does), people, their tendency to be insecure about weight, you've reasoned about the situation from the point of view of the person on the scale, what he is aware of, what his intents are and what information is available to him, and you've reasoned about people reasoning about people. You've also thought about the dynamics of the scene and made guesses about how the situation will unfold in the next few seconds visually, how it will unfold in the thoughts of people involved, and you reasoned about how likely or unlikely it is for people of particular identity/status to carry out some action. Somehow all these things come together to "make sense" of the scene.
 
-It is mind-boggling that all of the above inferences unfold from a brief glance at a 2D array of R,G,B values. The core issue issue is that the pixel values are just a tip of a huge iceberg and deriving the entire shape and size of the icerberg from prior knowledge is the most difficult task ahead of us. How can we even begin to go about writing an algorithm that can reason about the scene like I did? Forget for a moment the inference algorithm that is capable of putting all of this together; How do we even begin to gather data that can support these inferences (for example how a scale works)? How do we go about even giving the computer a chance?
+It is mind-boggling that all of the above inferences unfold from a brief glance at a 2D array of R,G,B values. The core issue is that the pixel values are just a tip of a huge iceberg and deriving the entire shape and size of the icerberg from prior knowledge is the most difficult task ahead of us. How can we even begin to go about writing an algorithm that can reason about the scene like I did? Forget for a moment the inference algorithm that is capable of putting all of this together; How do we even begin to gather data that can support these inferences (for example how a scale works)? How do we go about even giving the computer a chance?
 
 Now consider that the state of the art techniques in Computer Vision are tested on things like Imagenet (task of assigning 1-of-k labels for entire images), or Pascal VOC detection challenge (+ include bounding boxes). There is also quite a bit of work on pose estimation, action recognition, etc., but it is all specific, disconnected, and only half works. I hate to say it but the state of CV and AI is pathetic when we consider the task ahead, and when we think about how we can ever go from here to there. The road ahead is long, uncertain and unclear.  
 

@@ -4,7 +4,10 @@ mathjax: true
 comments: true
 title: Hacker's guide to Neural Networks
 permalink: /neuralnets/
+includelink: false
 ---
+
+**Note: this is now a very old tutorial that I'm leaving up, but I don't believe should be referenced or used. Better materials include CS231n course lectures, slides, and notes, or the Deep Learning book**.
 
 Hi there, I'm a [CS PhD student at Stanford](http://cs.stanford.edu/people/karpathy/). I've worked on Deep Learning for a few years as part of my research and among several of my related pet projects is [ConvNetJS](http://convnetjs.com) - a Javascript library for training Neural Networks. Javascript allows one to nicely visualize what's going on and to play around with the various hyperparameter settings, but I still regularly hear from people who ask for a more thorough treatment of the topic. This article (which I plan to slowly expand out to lengths of a few book chapters) is my humble attempt. It's on web instead of PDF because all books should be, and eventually it will hopefully include animations/demos etc.
 
@@ -13,6 +16,8 @@ My personal experience with Neural Networks is that everything became much clear
 > "...everything became much clearer when I started writing code."
 
 You might be eager to jump right in and learn about Neural Networks, backpropagation, how they can be applied to datasets in practice, etc. But before we get there, I'd like us to first forget about all that. Let's take a step back and understand what is really going on at the core. Lets first talk about real-valued circuits.
+
+*Update note*: I suspended my work on this guide a while ago and redirected a lot of my energy to teaching CS231n (Convolutional Neural Networks) class at Stanford. The notes are on [cs231.github.io](http://cs231n.github.io) and the course slides can be found [here](http://cs231n.stanford.edu/syllabus.html). These materials are highly related to material here, but more comprehensive and sometimes more polished.
 
 ## Chapter 1: Real-valued Circuits
 
@@ -49,7 +54,7 @@ $$
 f(x,y) = x y
 $$
 
-As with this example, all of our gates will take two inputs and produce a **single** output value.
+As with this example, all of our gates will take one or two inputs and produce a **single** output value.
 
 #### The Goal
 
@@ -106,7 +111,7 @@ $$
 $$
 </div>
 
-Where \\( h \\) is small - it's the tweak amount. Also, if you're not very familiar with calculus it is important to note that in the left-hand side of the equation above, the horizontal line does *not* indicate division. The entire symbol \\( \frac{\partial f(x,y)}{\partial x} \\) is a single thing: the derivative of the function \\( f(x,y) \\) with respect to \\( x \\). The horizontal line on the right *is* division. I know it's confusing but it's standard notation. Anyway, I hope it doesn't look too scary because it isn't: The circuit was giving some initial output \\( f(x,y) \\), and then we changed one of the inputs by a tiny amount \\(h \\) and read the new output \\( f(x+h, y) \\). Subtracting those two quantities tells us the change, and the division by \\(h \\) just normalizes this change by the tweak amount we used. In other words it's expressing exactly what I described above and translates directly to this code:
+Where \\( h \\) is small - it's the tweak amount. Also, if you're not very familiar with calculus it is important to note that in the left-hand side of the equation above, the horizontal line does *not* indicate division. The entire symbol \\( \frac{\partial f(x,y)}{\partial x} \\) is a single thing: the derivative of the function \\( f(x,y) \\) with respect to \\( x \\). The horizontal line on the right *is* division. I know it's confusing but it's standard notation. Anyway, I hope it doesn't look too scary because it isn't: The circuit was giving some initial output \\( f(x,y) \\), and then we changed one of the inputs by a tiny amount \\(h \\) and read the new output \\( f(x+h, y) \\). Subtracting those two quantities tells us the change, and the division by \\(h \\) just normalizes this change by the (arbitrary) tweak amount we used. In other words it's expressing exactly what I described above and translates directly to this code:
 
 ```javascript
 var x = -2, y = 3;
@@ -124,7 +129,7 @@ var out3 = forwardMultiplyGate(x, yph); // -6.0002
 var y_derivative = (out3 - out) / h; // -2.0
 ```
 
-Lets walk thought `x` for example. We turned the knob from `x` to `x + h` and the circuit responded by giving a higher value (note again that yes, `-5.9997` is *higher* than `-6`: `-5.9997 > -6`). The division by `h` is there to normalize the circuit's response by the (arbitrary) value of `h` we chose to use here. Technically, you want the value of `h` to be infinitesimal (the precise mathematical definition of the gradient is defined as the limit of the expression as `h` goes to zero), but in practice `h=0.00001` or so works fine in most cases to get a good approximation. Now, we see that the derivative w.r.t. `x` is `+3`. I'm making the positive sign explicit, because it indicates that the circuit is tugging on x to become higher. The actual value, `3` can be interpreted as the *force* of that tug.
+Lets walk through `x` for example. We turned the knob from `x` to `x + h` and the circuit responded by giving a higher value (note again that yes, `-5.9997` is *higher* than `-6`: `-5.9997 > -6`). The division by `h` is there to normalize the circuit's response by the (arbitrary) value of `h` we chose to use here. Technically, you want the value of `h` to be infinitesimal (the precise mathematical definition of the gradient is defined as the limit of the expression as `h` goes to zero), but in practice `h=0.00001` or so works fine in most cases to get a good approximation. Now, we see that the derivative w.r.t. `x` is `+3`. I'm making the positive sign explicit, because it indicates that the circuit is tugging on x to become higher. The actual value, `3` can be interpreted as the *force* of that tug.
 
 > The derivative with respect to some input can be computed by tweaking that input by a small amount and observing the change on the output value.
 
@@ -140,7 +145,11 @@ var out_new = forwardMultiplyGate(x, y); // -5.87! exciting.
 
 As expected, we changed the inputs by the gradient and the circuit now gives a slightly higher value (`-5.87 > -6.0`). That was much simpler than trying random changes to `x` and `y`, right? A fact to appreciate here is that if you take calculus you can prove that the gradient is, in fact, the direction of the steepest increase of the function. There is no need to monkey around trying out random pertubations as done in Strategy #1. Evaluating the gradient requires just three evaluations of the forward pass of our circuit instead of hundreds, and gives the best tug you can hope for (locally) if you are interested in increasing the value of the output.
 
-But. It turns out that we can do *even* better.
+**Bigger step is not always better.** Let me clarify on this point a bit. It is important to note that in this very simple example, using a bigger `step_size` than 0.01  will always work better. For example, `step_size = 1.0` gives output `-1` (higer, better!), and indeed infinite step size would give infinitely good results. The crucial thing to realize is that once our circuits get much more complex (e.g. entire neural networks), the function from inputs to the output value will be more chaotic and wiggly. The gradient guarantees that if you have a very small (indeed, infinitesimally small) step size, then you will definitely get a higher number when you follow its direction, and for that infinitesimally small step size there is no other direction that would have worked better. But if you use a bigger step size (e.g. `step_size = 0.01`) all bets are off. The reason we can get away with a larger step size than infinitesimally small is that our functions are usually relatively smooth. But really, we're crossing our fingers and hoping for the best.
+
+**Hill-climbing analogy.** One analogy I've heard before is that the output value of our circut is like the height of a hill, and we are blindfolded and trying to climb upwards. We can sense the steepness of the hill at our feet (the gradient), so when we shuffle our feet a bit we will go upwards. But if we took a big, overconfident step, we could have stepped right into a hole.
+
+Great, I hope I've convinced you that the numerical gradient is indeed a very useful thing to evaluate, and that it is cheap. But. It turns out that we can do *even* better.
 
 #### Strategy #3: Analytic Gradient
 
@@ -179,14 +188,14 @@ var x_gradient = y; // by our complex mathematical derivation above
 var y_gradient = x;
 
 var step_size = 0.01;
-x += step_size * x_gradient; // -2.03
+x += step_size * x_gradient; // -1.97
 y += step_size * y_gradient; // 2.98
 var out_new = forwardMultiplyGate(x, y); // -5.87. Higher output! Nice.
 ```
 
 To compute the gradient we went from forwarding the circuit hundreds of times (Strategy #1) to forwarding it only on order of number of times twice the number of inputs (Strategy #2), to forwarding it a single time! And it gets EVEN better, since the more expensive strategies (#1 and #2) only give an approximation of the gradient, while #3 (the fastest one by far) gives you the *exact* gradient. No approximations. The only downside is that you should be comfortable with some calculus 101.
 
-Lets recap what have we learned:
+Lets recap what we have learned:
 
 - INPUT: We are given a circuit, some inputs and compute an output value. 
 - OUTPUT: We are then interested finding small changes to each input (independently) that would make the output higher.
@@ -200,9 +209,9 @@ In practice by the way (and we will get to this once again later), all Neural Ne
 
 But hold on, you say: *"The analytic gradient was trivial to derive for your super-simple expression. This is useless. What do I do when the expressions are much larger? Don't the equations get huge and complex very fast?"*. Good question. Yes the expressions get much more complex. No, this doesn't make it much harder. As we will see, every gate will be hanging out by itself, completely unaware of any details of the huge and complex circuit that it could be part of. It will only worry about its inputs and it will compute its local derivatives as seen in the previous section, except now there will be a single extra multiplication it will have to do.
 
-> A single extra multiplication will turn a single (useless gate) into a cog in complex machine that is an entire neural network.
+> A single extra multiplication will turn a single (useless gate) into a cog in the complex machine that is an entire neural network.
 
-I should stop hyping it up now. I hope I've piqued your interest :). Lets drill down into details and get two gates involved with this next example:
+I should stop hyping it up now. I hope I've piqued your interest! Lets drill down into details and get two gates involved with this next example:
 
 <div class="svgdiv">
 <svg width="500" height="150">
@@ -249,7 +258,7 @@ var x = -2, y = 5, z = -4;
 var f = forwardCircuit(x, y, z); // output is -12
 ```
 
-In the above, I am using `a` and `b` as the local variables in the gate functions so that we don't get these confused with our circuit inputs `x,y,z`. As before, we are interested in finding the derivatives with respect to the three inputs `x,y,z`. But how do we compute it now that there are multiply gates involved? First, lets pretend that the `+` gate is not there and that we only have two variables in the circuit: `q,z` and a single `*` gate. Note that the `q` is is output of the `+` gate. If we don't worry about `x` and `y` but only about `q` and `z`, then we are back to having only a single gate, and as far as that single `*` gate is concerned, we know what the (analytic) derivates are from previous section. We can write them down (except here we're replacing `x,y` with `q,z`):
+In the above, I am using `a` and `b` as the local variables in the gate functions so that we don't get these confused with our circuit inputs `x,y,z`. As before, we are interested in finding the derivatives with respect to the three inputs `x,y,z`. But how do we compute it now that there are multiple gates involved? First, lets pretend that the `+` gate is not there and that we only have two variables in the circuit: `q,z` and a single `*` gate. Note that the `q` is is output of the `+` gate. If we don't worry about `x` and `y` but only about `q` and `z`, then we are back to having only a single gate, and as far as that single `*` gate is concerned, we know what the (analytic) derivates are from previous section. We can write them down (except here we're replacing `x,y` with `q,z`):
 
 $$
 f(q,z) = q z \hspace{0.5in} \implies \hspace{0.5in} \frac{\partial f(q,z)}{\partial q} = z, \hspace{1in} \frac{\partial f(q,z)}{\partial z} = q
@@ -261,7 +270,7 @@ $$
 q(x,y) = x + y \hspace{0.5in} \implies \hspace{0.5in} \frac{\partial q(x,y)}{\partial x} = 1, \hspace{1in} \frac{\partial q(x,y)}{\partial y} = 1
 $$
 
-That's right, the derivaties are just 1, regardless of the actual values of `x` and `y`. If you think about it, this makes sense because to make the output of a single addition gate higher, we expect a positive tug on both `x` and `y`.
+That's right, the derivatives are just 1, regardless of the actual values of `x` and `y`. If you think about it, this makes sense because to make the output of a single addition gate higher, we expect a positive tug on both `x` and `y`, regardless of their values.
 
 #### Backpropagation
 
@@ -332,7 +341,7 @@ Isn't it beautiful? The only difference between the case of a single gate and mu
 
 #### Patterns in the "backward" flow
 
-Lets look again at the our example circuit with the numbers filled in. The first circuit shows the raw values, and the second circuit shows the gradients that flow back to the inputs as discussed. Notice that the gradient always starts off with `+1` at the end to start off the chain. This is the (default) pull on the circuit to have its value increased.
+Lets look again at our example circuit with the numbers filled in. The first circuit shows the raw values, and the second circuit shows the gradients that flow back to the inputs as discussed. Notice that the gradient always starts off with `+1` at the end to start off the chain. This is the (default) pull on the circuit to have its value increased.
 
 <div class="svgdiv">
 <svg width="600" height="350">
@@ -423,7 +432,7 @@ $$
 \frac{\partial \sigma(x)}{\partial x} = \sigma(x) (1 - \sigma(x))
 $$
 
-For example, if the sigmoid gate computes some output during forward pass (e.g. `x = 0.7`), then gradient with respect to its input will simply be `dx = (0.7) * (1 - 0.7) = 0.21`.
+For example, if the input to the sigmoid gate is `x = 3`, the gate will compute output `f = 1.0 / (1.0 + Math.exp(-x)) = 0.95`, and then the (local) gradient on its input will simply be `dx = (0.95) * (1 - 0.95) = 0.0475`.
 
 That's all we need to use this gate: we know how to take an input and *forward* it through the sigmoid gate, and we also have the expression for the gradient with respect to its input, so we can also *backprop* through it. Another thing to note is that technically, the sigmoid function is made up of an entire series of gates in a line that compute more *atomic* functions: an exponentiation gate, an addition gate and a division gate. Treating it so would work perfectly fine but for this example I chose to collapse all of these gates into a single gate that just computes sigmoid in one shot, because the gradient expression turns out to be simple.
 
@@ -584,12 +593,12 @@ Over time you will become much more efficient in writing the backward pass, even
 
 ```javascript
 var x = a * b;
-// and we saw that in backprop we simply compute:
+// and given gradient on x (dx), we saw that in backprop we would compute:
 var da = b * dx;
 var db = a * dx;
 ```
 
-In other words, the `*` gate is a *switcher* during backward pass, for lack of better word. It remembers what its inputs were, and the gradients on each one will be the value of the other during the forward pass. And then of course we have to multiply with the gradient from above, which is the chain rule. Here's the `+` gate in this condensed form:
+In the code above, I'm assuming that the variable `dx` is given, coming from somewhere above us in the circuit while we're doing backprop (or it is +1 by default otherwise). I'm writing it out because I want to explicitly show how the gradients get chained together. Note from the equations that the `*` gate acts as a *switcher* during backward pass, for lack of better word. It remembers what its inputs were, and the gradients on each one will be the value of the other during the forward pass. And then of course we have to multiply with the gradient from above, which is the chain rule. Here's the `+` gate in this condensed form:
 
 ```javascript
 var x = a + b;
@@ -606,9 +615,9 @@ var q = a + b; // gate 1
 var x = q + c; // gate 2
 
 // backward pass:
-dc = 1.0 * dx; // backprop first gate
+dc = 1.0 * dx; // backprop gate 2
 dq = 1.0 * dx; 
-da = 1.0 * dq; // backprop second
+da = 1.0 * dq; // backprop gate 1
 db = 1.0 * dq;
 ```
 
@@ -623,7 +632,7 @@ Okay, how about combining gates?:
 
 ```javascript
 var x = a * b + c;
-// backprop in-one-sweep would be =>
+// given dx, backprop in-one-sweep would be =>
 da = b * dx;
 db = a * dx;
 dc = 1.0 * dx;
@@ -636,7 +645,8 @@ If you don't see how the above happened, introduce a temporary variable `q = a *
 var q = a*x + b*y + c;
 var f = sig(q); // sig is the sigmoid function
 // and now backward pass, we are given df, and:
-var dq = (q * (1 - q)) * df;
+var df = 1;
+var dq = (f * (1 - f)) * df;
 // and now we chain it to the inputs
 var da = x * dq;
 var dx = a * dq;
@@ -718,7 +728,7 @@ var dx2 = (-1.0/(x2*x2)) * dx3; // local gradient as shown above, and chain rule
 var da = 1.0 * dx1; // and finally into the original variables
 var db = 1.0 * dx1;
 var dc = 1.0 * dx2;
-var db = 1.0 * dx2;
+var dd = 1.0 * dx2;
 ```
 
 Hopefully you see that we are breaking down expressions, doing the forward pass, and then for every variable (such as `a`) we derive its gradient `da` as we go backwards, one by one, applying the simple local gradients and chaining them with gradients from above. Here's another one:
@@ -957,6 +967,8 @@ training accuracy at iteration 375: 1
 
 We see that initially our classifier only had 33% training accuracy, but by the end all training examples are correctly classifier as the parameters `a,b,c` adjusted their values according to the pulls we exerted. We just trained an SVM! But please don't use this code anywhere in production :) We will see how we can make things much more efficient once we understand what is going on at the core.
 
+**Number of iterations needed**. With this example data, with this example initialization, and with the setting of step size we used, it took about 300 iterations to train the SVM. In practice, this could be many more or many less depending on how hard or large the problem is, how you're initializating, normalizing your data, what step size you're using, and so on. This is just a toy demonstration, but later we will go over all the best practices for actually training these classifiers in practice. For example, it will turn out that the setting of the step size is very imporant and tricky. Small step size will make your model slow to train. Large step size will train faster, but if it is too large, it will make your classifier chaotically jump around and not converge to a good final result. We will eventually use witheld validation data to properly tune it to be just in the sweet spot for your particular data.
+
 One thing I'd like you to appreciate is that the circuit can be arbitrary expression, not just the linear prediction function we used in this example. For example, it can be an entire neural network.
 
 By the way, I intentionally structured the code in a modular way, but we could have trained an SVM with a much simpler code. Here is really what all of these classes and computations boil down to:
@@ -986,6 +998,8 @@ for(var iter = 0; iter < 400; iter++) {
 
 this code gives an identical result. Perhaps by now you can glance at the code and see how these equations came about.
 
+**Variable pull?** A quick note to make at this point: You may have noticed that the pull is always 1,0, or -1. You could imagine doing other things, for example making this pull proportional to how bad the mistake was. This leads to a variation on the SVM that some people refer to as *squared hinge loss* SVM, for reasons that will later become clear. Depending on various features of your dataset, that may work better or worse. For example, if you have very bad outliers in your data, e.g. a negative data point that gets a score `+100`, its influence will be relatively minor on our classifier because we will only pull with force of `-1` regardless of how bad the mistake was. In practice we refer to this property of a classifier as **robustness** to outliers.
+
 Lets **recap**. We introduced the **binary classification** problem, where we are given N D-dimensional vectors and a label +1/-1 for each. We saw that we can combine these features with a set of parameters inside a real-valued circuit (such as a **Support Vector Machine** circuit in our example). Then, we can repeatedly pass our data through the circuit and each time tweak the parameters so that the circuit's output value is consistent with the provided labels. The tweaking relied, crucially, on our ability to **backpropagate** gradients through the circuit. In the end, the final circuit can be used to predict values for unseen instances!
 
 #### Generalizing the SVM into a Neural Network
@@ -996,7 +1010,7 @@ Of interest is the fact that an SVM is just a particular type of a very simple c
 // assume inputs x,y
 var n1 = Math.max(0, a1*x + b1*y + c1); // activation of 1st hidden neuron
 var n2 = Math.max(0, a2*x + b2*y + c2); // 2nd neuron
-var n3 = Math.max(0, a3*x + b3*y + c3); // 2nd neuron
+var n3 = Math.max(0, a3*x + b3*y + c3); // 3rd neuron
 var score = a4*n1 + b4*n2 + c4*n3 + d4; // the score
 ```
 
@@ -1016,7 +1030,7 @@ for(var iter = 0; iter < 400; iter++) {
   // compute forward pass
   var n1 = Math.max(0, a1*x + b1*y + c1); // activation of 1st hidden neuron
   var n2 = Math.max(0, a2*x + b2*y + c2); // 2nd neuron
-  var n3 = Math.max(0, a3*x + b3*y + c3); // 2nd neuron
+  var n3 = Math.max(0, a3*x + b3*y + c3); // 3rd neuron
   var score = a4*n1 + b4*n2 + c4*n3 + d4; // the score
 
   // compute the pull on top
@@ -1088,9 +1102,9 @@ for(var iter = 0; iter < 400; iter++) {
 }
 ```
 
-And that's how you train a neural network. Obviously, you want to modularize your code nicely but I expended this example for you in hope that it makes things much more concrete and simpler to understand. Later, we will look at best practices when implementing these networks and we will structure the code much more neatly in a modular and more sensible way. 
+And that's how you train a neural network. Obviously, you want to modularize your code nicely but I expended this example for you in the hope that it makes things much more concrete and simpler to understand. Later, we will look at best practices when implementing these networks and we will structure the code much more neatly in a modular and more sensible way. 
 
-But for now, I hope your takeaway is that a 2-layer Neural Net is really not such a scary thing: we write a forward pass expression, interpret the value at the end as a score, and then we pull on that value in positive or negative direction depending on what we want that value to be for our current particular example. The parameter update after backprop will ensure that when we see this particular example in the future, the network will be more likely to give us a value we desire, not the one it gave just before the update.
+But for now, I hope your takeaway is that a 2-layer Neural Net is really not such a scary thing: we write a forward pass expression, interpret the value at the end as a score, and then we pull on that value in a positive or negative direction depending on what we want that value to be for our current particular example. The parameter update after backprop will ensure that when we see this particular example in the future, the network will be more likely to give us a value we desire, not the one it gave just before the update.
 
 
 ### A more Conventional Approach: Loss Functions
@@ -1126,7 +1140,9 @@ function cost(X, y, w) {
     // accumulate cost based on how compatible the score is with the label
     var yi = y[i]; // label
     var costi = Math.max(0, - yi * score + 1);
-    console.log('cost for example ' + i + ' is ' + costi.toFixed(3));
+    console.log('example ' + i + ': xi = (' + xi + ') and label = ' + yi);
+    console.log('  score computed to be ' + score.toFixed(3));
+    console.log('  => cost computed to be ' + costi.toFixed(3));
     total_cost += costi;
   }
 
@@ -1156,7 +1172,7 @@ Notice how this expression works: It measures how *bad* our SVM classifier is. L
 - The second datapoint `xi = [-0.3, 0.5]` with label `yi = -1` will give score `0.1*(-0.3) + 0.2*0.5 + 0.3`, which is `0.37`. This isn't looking very good: This score is very high for a negative example. It should be less than -1. Indeed, when we compute the cost: `costi = Math.max(0, 1*0.37 + 1)`, we get `1.37`. That's a very high cost from this example, as it is being misclassified.
 - The last example `xi = [3, 2.5]` with label `yi = 1` gives score `0.1*3 + 0.2*2.5 + 0.3`, and that is `1.1`. In this case, the SVM will compute `costi = Math.max(0, -1*1.1 + 1)`, which is in fact zero. This datapoint is being classified correctly and there is no cost associated with it.
 
-> A cost function is an expression that measuress how bad your classifier is. When the training set if perfectly classified, the cost (ignoring the regularization) will be zero.
+> A cost function is an expression that measuress how bad your classifier is. When the training set is perfectly classified, the cost (ignoring the regularization) will be zero.
 
 Notice that the last term in the loss is the regularization cost, which says that our model parameters should be small values. Due to this term the cost will never actually become zero (because this would mean all parameters of the model except the bias are exactly zero), but the closer we get, the better our classifier will become.
 
@@ -1168,26 +1184,16 @@ I hope I convinced you then, that to get a very good SVM we really want to make 
 
 todo: clean up this section and flesh it out a bit...
 
-
 ## Chapter 3: Backprop in Practice
 
-### Modular Design Tips/Tricks
-
-Structuring the learning code:
-
-- Cost function that returns cost, gradient
-- Modules that implement forward() and backward() API
-- A Net class that maintains (static) connectivity structure
-- A Solver class that handles the dynamics
-- Correctness: Numerical gradient checks and its subtleties (e.g. kinks, relative error)
+### Building up a library
 
 ### Example: Practical Neural Network Classifier
 
-- SVM cost function
 - Multiclass: Structured SVM
-- Multiclass: Logistic Regressions, Softmax
+- Multiclass: Logistic Regression, Softmax
 
-### Example: Regression instead of Classifier
+### Example: Regression
 
 Tiny changes needed to cost function. L2 regularization.
 
@@ -1233,8 +1239,12 @@ Training word vector representations in NLP
 
 Training embeddings for visualizing data
 
+## Acknowledgements
+
+Thanks a lot to the following people who made this guide better: wodenokoto (HN), zackmorris (HN).
+
 ## Comments
 
 This guide is a work in progress and I appreciate feedback, especially regarding parts that were unclear or only made half sense. Thank you!
 
-
+Some of the Javascript code in this tutorial has been translated to Python by Ajit, find it over on [Github](https://github.com/urwithajit9/HG_NeuralNetwork).

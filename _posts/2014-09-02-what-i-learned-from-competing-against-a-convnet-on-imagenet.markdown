@@ -33,6 +33,8 @@ There are now several tasks in Computer Vision where the performance of our mode
 
 In short, I thought that the impressive performance by the winning team would only make sense if it was put in perspective with human accuracy. I was also in the unique position of being able to evaluate it (given that I share office space with ILSVRC organizers), so I set out to quantify the human accuracy and characterize the differences between human predictions with those of the winning model.
 
+*Wait, isn't human accuracy 100%?* Thank you, good question. It's not, because the ILSVRC dataset was not labeled in the same way we are classifying it here. For example, to collect the images for the class "Border Terrier" the organizers searched the query on internet and retrieved a large collection of images. These were then filtered a bit with humans by asking them a binary "Is this a Border Terrier or not?". Whatever made it through became the "Border Terrier" class, and similar for all the other 1000 images. Therefore, the data was not collected in a discriminative but a binary manner, and is also subject to mistakes and inaccuracies. Some images can sometimes also contain multiple of the ILSVRC classes, etc.
+
 *CIFAR-10 digression.* It's fun to note that about 4 years ago I performed a similar (but much quicker and less detailed) human classification accuracy analysis on CIFAR-10. This was back when the state of the art was at 77% by Adam Coates, and my own accuracy turned out to be 94%. I think the best ConvNets now get about 92%. The post about that can be found [here]({% post_url 2011-04-27-manually-classifying-cifar10 %}). I never imagined I'd be doing the same for ImageNet a few years down the road :)
 
 There's one issue to clarify on. You may ask: *But wait, the ImageNet test set labels were obtained from humans in the first place. Why go about re-labeling it all over again? Isn't human performance 0% by definition?* Kind of, but not really. It is important to keep in mind that ImageNet was annotated as a binary ask. For example, to collect images of the dog class "Kelpie", the query was submitted to search engines and then humans on Amazon Mechanical Turk were used for the binary task of filtering out the noise. The ILSVRC classification task, on the other hand, is 1000-way classification. It's not a binary task such as the one used to collect the data.
@@ -119,5 +121,14 @@ EDIT: additional discussions:
 - [Reddit /r/MachineLearning](http://www.reddit.com/r/MachineLearning/comments/2fg0va/what_i_learned_from_competing_against_a_convnet/)
 
 UPDATE: 
-- [ImageNet workshop page](http://image-net.org/challenges/LSVRC/2014/eccv2014) now has links to many of the teams' slides on their methods. Videos of the talks are also *coming soon*.
-- [GoogLeNet paper](http://arxiv.org/abs/1409.4842) on arXiv describes the details of their architecutre. Also of note is close runner up VGG team who describe their architecture [here](http://arxiv.org/pdf/1409.1556.pdf).
+
+- [ImageNet workshop page](http://image-net.org/challenges/LSVRC/2014/eccv2014) now has links to many of the teams' slides and videos.
+- [GoogLeNet paper](http://arxiv.org/abs/1409.4842) on arXiv describes the details of their architecutre.
+
+UPDATE2 (14 Feb 2015):
+
+There have now been several reported results that surpass my 5.1% error on ImageNet. I'm astonished to see such rapid progress. At the same time, I think we should keep in mind the following:
+
+> Human accuracy is not a point. It lives on a tradeoff curve.
+
+We trade off human effort and expertise with the error rate: I am one point on that curve with 5.1%. My labmates with almost no training and less patience are another point, with even up to 15% error. And based on some calculations that consider my exact error types and hypothesizing which ones may be easier to fix than others, it's not unreasonable to suggest that an ensemble of very dedicated expert human labelers might push this down to 3%, with about 2% being an optimistic error rate lower bound. I know it's not as exciting as having a single number, but it's the right way of thinking about it. See more details in my recent [Google+ post](https://plus.google.com/+AndrejKarpathy/posts/dwDNcBuWTWf).
