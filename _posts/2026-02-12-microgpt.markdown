@@ -461,6 +461,21 @@ sample 20: anton
 
 As an alternative to running the script on your computer, you may try to run it directly on this [Google Colab notebook](https://colab.research.google.com/drive/1vyN5zo6rqUp_dYNbT4Yrco66zuWCZKoN?usp=sharing) and ask Gemini questions about it. Try playing with the script! You can try a different dataset. Or you can train for longer (increase `num_steps`) or increase the size of the model to get increasingly better results.
 
+## Progression
+
+To see the code built up piece by piece as layers of the onion, the advised progression looks something like this:
+
+| File | What it adds |
+|------|-------------|
+| `train0.py` | Bigram count table — no neural net, no gradients |
+| `train1.py` | MLP + manual gradients (numerical & analytic) + SGD |
+| `train2.py` | Autograd (Value class) — replaces manual gradients |
+| `train3.py` | Position embeddings + single-head attention + rmsnorm + residuals |
+| `train4.py` | Multi-head attention + layer loop — full GPT architecture |
+| `train5.py` | Adam optimizer — this is `train.py` |
+
+I created a Gist called [build_microgpt.py](https://gist.github.com/karpathy/561ac2de12a47cc06a23691e1be9543a), where in the Revisions you can see all of these versions and the diffs between each step. I think this might be one helpful way to step through the code base, where you add one component at a time.
+
 ## Real stuff
 
 microgpt contains the complete algorithmic essence of training and running a GPT. But between this and a production LLM like ChatGPT, there is a long list of things that change. None of them alter the core algorithm and the overall layout, but they are what makes it actually work at scale. Walking through the same sections in order:
