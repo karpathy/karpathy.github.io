@@ -102,7 +102,7 @@ vocab_size = len(uchars) + 1 # total number of unique tokens, +1 is for BOS
 print(f"vocab size: {vocab_size}")
 ```
 
-In the code above, we collect all unique characters across the dataset (which are just all the lowercase letters a-z), sort them, and each letter gets an id by its index. Note that the integer values themselves have no meaning at all; each token is just a separate discrete symbol. Instead of 0, 1, 2 they might as well be different emoji. In addition, we create one more special token called `BOS` (Beginning of Sequence), which acts as a delimiter: it tells the model "a new document starts/ends here". Later during training, each document gets wrapped with `BOS` on both sides: `[BOS, e, m, m, a, BOS]`. The model learns that `BOS` initates a new name, and that another `BOS` ends it. Therefore, we have a final vocavulary of 27 (26 possible lowercase characters a-z and +1 for the BOS token).
+In the code above, we collect all unique characters across the dataset (which are just all the lowercase letters a-z), sort them, and each letter gets an id by its index. Note that the integer values themselves have no meaning at all; each token is just a separate discrete symbol. Instead of 0, 1, 2 they might as well be different emoji. In addition, we create one more special token called `BOS` (Beginning of Sequence), which acts as a delimiter: it tells the model "a new document starts/ends here". Later during training, each document gets wrapped with `BOS` on both sides: `[BOS, e, m, m, a, BOS]`. The model learns that `BOS` initates a new name, and that another `BOS` ends it. Therefore, we have a final vocabulary of 27 (26 possible lowercase characters a-z and +1 for the BOS token).
 
 ## Autograd
 
@@ -206,7 +206,7 @@ print(b.grad)   # tensor(2.)
 
 This is the same algorithm that PyTorch's `loss.backward()` runs, just on scalars instead of tensors (arrays of scalars) - algorithmically identical, significantly smaller and simpler, but of course a lot less efficient.
 
-Let's spell what the `.backward()` gives us above. Autograd calculated that if `L = a*b + a`, and `a=2` and `b=3`, then `a.grad = 4.0` is telling us about the local influence of `a` on `L`. If you wiggle the inmput `a`, in what direction is `L` changing? Here, the derivative of `L` w.r.t. `a` is 4.0, meaning that if we increase `a` by a tiny amount (say 0.001), `L` would increase by about 4x that (0.004). Similarly, `b.grad = 2.0` means the same nudge to `b` would increase `L` by about 2x that (0.002). In other words, these gradients tell us the direction (positive or negative depending on the sign), and the steepness (the magnitude) of the influence of each individual input on the final output (the loss). This then allows us to interately nudge the parameters of our neural network to lower the loss, and hence improve its predictions.
+Let's spell what the `.backward()` gives us above. Autograd calculated that if `L = a*b + a`, and `a=2` and `b=3`, then `a.grad = 4.0` is telling us about the local influence of `a` on `L`. If you wiggle the input `a`, in what direction is `L` changing? Here, the derivative of `L` w.r.t. `a` is 4.0, meaning that if we increase `a` by a tiny amount (say 0.001), `L` would increase by about 4x that (0.004). Similarly, `b.grad = 2.0` means the same nudge to `b` would increase `L` by about 2x that (0.002). In other words, these gradients tell us the direction (positive or negative depending on the sign), and the steepness (the magnitude) of the influence of each individual input on the final output (the loss). This then allows us to iteratively nudge the parameters of our neural network to lower the loss, and hence improve its predictions.
 
 ## Parameters
 
@@ -434,7 +434,7 @@ step   13 / 1000 | loss 3.0544
 ...
 ```
 
-Watch it go down from ~3.3 (random) toward ~2.37. The lower this number is, the better the network's predictions already were about what token comes next in the sequence. At the end of training, the knowledge of the stastical patterns of the training token sequences is distilled in the model parameters. Fixing these parameters, we can now generate new, hallucinated names. You'll see (again):
+Watch it go down from ~3.3 (random) toward ~2.37. The lower this number is, the better the network's predictions already were about what token comes next in the sequence. At the end of training, the knowledge of the statistical patterns of the training token sequences is distilled in the model parameters. Fixing these parameters, we can now generate new, hallucinated names. You'll see (again):
 
 ```
 sample  1: kamon
