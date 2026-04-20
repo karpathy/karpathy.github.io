@@ -130,7 +130,13 @@ print(secret_key)
     22265090479312778178772228083027296664144
 
 
-This is our secret key - it is a a pretty unassuming integer but anyone who knows it can control all of the funds you own on the Bitcoin blockchain, associated with it. In the simplest, most common vanilla use case of Bitcoin it is the single "password" that controls your account. Of course, in the exceedingly unlikely case that some other Andrej manually generated their secret key as I did above, the wallet associated with this secret key most likely has a balance of zero bitcoin :). If it didn't we'd be very lucky indeed.
+This is our secret key - it is a pretty unassuming integer but anyone who knows
+it can control all of the funds you own on the Bitcoin blockchain, associated
+with it. In the simplest, most common vanilla use case of Bitcoin it is the
+single "password" that controls your account. Of course, in the exceedingly
+unlikely case that some other Andrej manually generated their secret key as I
+did above, the wallet associated with this secret key most likely has a balance
+of zero bitcoin :). If it didn't we'd be very lucky indeed.
 
 We are now going to generate the **public key**, which is where things start to get interesting. The public key is the point on the curve that results from adding the generator point to itself secret_key times. i.e. we have: public_key = G + G + G + (secret key times) + G = secret_key * G. Notice that both the '+' (add) and the '\*' (times) symbol here is very special and slightly confusing. The secret key is an integer, but the generator point G is an (x,y) tuple that is a Point on the Curve, resulting in an (x,y) tuple public key, again a Point on the Curve. This is where we have to actually define the Addition operator on an elliptic curve. It has a very specific definition and a geometric interpretation (see Andrea's post above), but the actual implementation is relatively simple:
 
