@@ -39,7 +39,7 @@ var clean_twitter = function(){
   ugly.push('.action-fav-container');
   ugly.push('.more-tweet-actions');
 
-  for(var i=0;i&lt;ugly.length;i++) {
+  for(var i=0;i<ugly.length;i++) {
     var u = $(ugly[i]).find('b');
     u.text('');
   }
@@ -83,7 +83,7 @@ var charge_tweets = function() {
 
   // get all tweets in twitter timeline
   var items = $('.tweet');
-  for(var i=0;i&lt;items.length;i++) {
+  for(var i=0;i<items.length;i++) {
     var it = items[i];
 
     // extract information from tweet HTML
@@ -136,7 +136,7 @@ Now we just make sure to run load_charge() at start up, and save_charge() anytim
 var display_charges = function() {
 
   var items = $('.tweet');
-  for(var i=0;i&lt;items.length;i++) {
+  for(var i=0;i<items.length;i++) {
     var it = items[i];
 
     // ... as above and then:
@@ -145,7 +145,7 @@ var display_charges = function() {
     var charge_count = charged_tweets.length;
 
     // adjust highlight color of the tweet according to rareness
-    if(charge_percentile &gt; 0) {
+    if(charge_percentile > 0) {
       var ratio = charge_count / charge_percentile;
       var x = Math.floor(Math.min(ratio,1)*255);
       $(it).css('background-color', 'rgb(255,255,' + x + ')');
